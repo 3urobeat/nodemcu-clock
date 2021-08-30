@@ -1,1 +1,6 @@
+.pio
+.vscode
+build
+.ycm_extra_conf.py
 nodemcu-clock.code-workspace
+lib/README
