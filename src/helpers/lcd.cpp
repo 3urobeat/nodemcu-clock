@@ -1,6 +1,4 @@
-#include <Arduino.h>
 #include <iostream>
-#include <LiquidCrystal_I2C.h>
 #include "helpers.h"
 
 void clearLine(LiquidCrystal_I2C lcd, int maxcol, int row)
