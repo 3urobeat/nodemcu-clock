@@ -2,8 +2,8 @@
 #include <LiquidCrystal_I2C.h>
 #include <ESP8266WiFi.h>
 
-#include "./helpers/helpers.h"
-#include "./pages/pages.h"
+#include "helpers/helpers.h"
+#include "pages/pages.h"
 
 
 //--------- config -----------
