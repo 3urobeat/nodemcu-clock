@@ -21,14 +21,14 @@ ESP8266WiFiClass initWifi(LiquidCrystal_I2C lcd, String wifiSSID, String wifiPW,
 
     while (WiFi.status() != WL_CONNECTED)
     {
-        delay(600);
-
         dots++; //add another dot
         if (dots > 3) dots = 0; //reset when 3 dots are present
 
         lcd.setCursor(13, row);
         lcd.print(std::string(dots, '.').c_str()); //add dots amount of dots behind "Connecting"
-        lcd.print("    "); //Clear any dots that might be behind 
+        lcd.print("    "); //Clear any dots that might be behind
+
+        delay(500);
     }
 
 
