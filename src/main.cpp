@@ -17,6 +17,11 @@ String wifiPW   = "";
 
 int    timeoffset = 7200; //your timezone time offset in seconds
 
+String dateformat = "dd.mm.yyyy";
+String timeformat = "hh:mm:ss";
+
+int    pageDelay  = 10000;
+
 String version = "0.1.0";
 
 //----------------------------
@@ -55,4 +60,9 @@ void setup()
 //Use pre-configured loop as pagemanager
 void loop() 
 {
+
+    //Show first page
+    clockpage(lcd, timeClient, dateformat, timeformat, maxcol);
+    delay(pageDelay);
+
 }
