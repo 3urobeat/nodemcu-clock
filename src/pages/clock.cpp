@@ -9,11 +9,11 @@ String formatInt(int value)
         else return (String) value;
 }
 
-void clockpage(LiquidCrystal_I2C lcd, NTPClient timeClient, String dateformat, String timeformat, int maxcol)
+void clockpage(LiquidCrystal_I2C lcd, NTPClient timeClient, String dateformat, String timeformat, int maxcol, unsigned long showuntil)
 {
     lcd.clear();
 
-    while (true)
+    while (showuntil > millis()) //make sure this page only runs how long it is supposed to
     {
         timeClient.update();
         unsigned long epoch = timeClient.getEpochTime(); 
