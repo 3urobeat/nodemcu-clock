@@ -8,9 +8,9 @@ void clearLine(LiquidCrystal_I2C lcd, int maxcol, int row)
 }
 
 
-void centerPrint(String str, LiquidCrystal_I2C lcd, int maxcol, int row)
+void centerPrint(String str, LiquidCrystal_I2C lcd, int maxcol, int row, bool callclearLine)
 {
-    clearLine(lcd, maxcol, row); //clear the line first to avoid old characters corrupting the text
+    if (callclearLine) clearLine(lcd, maxcol, row); //clear the line first to avoid old characters corrupting the text
 
     lcd.setCursor((maxcol - str.length()) / 2, row); //center string
     lcd.print(str);
