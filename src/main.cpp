@@ -20,7 +20,7 @@ int    timeoffset = 7200; //your timezone time offset in seconds
 String dateformat = "dd.mm.yyyy";
 String timeformat = "hh:mm:ss";
 
-int    pageDelay  = 10000;
+int    showuntil      = 5000; //how long a page should be shown in ms
 
 String version = "0.1.0";
 
@@ -62,7 +62,6 @@ void loop()
 {
 
     //Show first page
-    clockpage(lcd, timeClient, dateformat, timeformat, maxcol);
-    delay(pageDelay);
+    clockpage(lcd, timeClient, dateformat, timeformat, maxcol, millis() + showuntil);
 
 }
