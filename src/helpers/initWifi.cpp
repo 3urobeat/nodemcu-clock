@@ -30,6 +30,6 @@ ESP8266WiFiClass initWifi(LiquidCrystal_I2C lcd, String wifiSSID, String wifiPW,
 
 
     //Connection established
-    centerPrint("Connected!", lcd, maxcol, row);
+    centerPrint("Connected!", lcd, maxcol, row, true);
     return WiFi;
 }

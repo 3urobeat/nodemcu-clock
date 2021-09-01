@@ -28,13 +28,13 @@ void setup()
     lcd.backlight();
 
     //Print startup screen
-    centerPrint("nodemcu-clock", lcd, maxcol, 0);
-    centerPrint("v" + version, lcd, maxcol, 1);
+    centerPrint("nodemcu-clock", lcd, maxcol, 0, true);
+    centerPrint("v" + version, lcd, maxcol, 1, true);
     delay(1000);
 
     //Connect to wifi
     ESP8266WiFiClass WiFi = initWifi(lcd, wifiSSID, wifiPW, maxcol, 3);
-    //centerPrint(WiFi.localIP().toString(), lcd, maxcol, 2); //print ip for testing
+    //centerPrint(WiFi.localIP().toString(), lcd, maxcol, 2, true); //print ip for testing
 
 }
 
