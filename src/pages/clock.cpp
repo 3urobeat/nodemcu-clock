@@ -1,38 +1,9 @@
-#include <TimeLib.h>
-
 #include "pages.h"
 #include "helpers/helpers.h"
 
-String formatInt(int value)
+
+void clockpage(LiquidCrystal_I2C lcd, NTPClient timeClient, String dateformat, String timeformat, int maxcol)
 {
-    if (value < 10) return (String) "0" + value;
-        else return (String) value;
-}
-
-void clockpage(LiquidCrystal_I2C lcd, NTPClient timeClient, String dateformat, String timeformat, int maxcol, unsigned long showuntil)
-{
-    lcd.clear();
-
-    while (showuntil > millis()) //make sure this page only runs how long it is supposed to
-    {
-        timeClient.update();
-        unsigned long epoch = timeClient.getEpochTime(); 
-
-        //make copy from original values to not overwrite them
-        String date = dateformat;
-        String time = timeformat;
-
-        date.replace("dd", formatInt(day(epoch)));
-        date.replace("mm", formatInt(month(epoch)));
-        date.replace("yyyy", formatInt(year(epoch)));
-
-        time.replace("hh", formatInt(hour(epoch)));
-        time.replace("mm", formatInt(minute(epoch)));
-        time.replace("ss", formatInt(second(epoch)));
-
-        centerPrint(time.c_str(), lcd, maxcol, 1, false);
-        centerPrint(date.c_str(), lcd, maxcol, 2, false);
-
-        delay(1000);
-    }
+    centerPrint(getTime(timeClient, timeformat).c_str(), lcd, maxcol, 1, false);
+    centerPrint(getDate(timeClient, dateformat).c_str(), lcd, maxcol, 2, false);
 }
