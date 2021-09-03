@@ -25,7 +25,7 @@ String pageOrder[1]   = { "clock" };
 int    showuntil      = 5000; //how long a page should be shown in ms
 bool   alwaysShowTime = true; //always show the time in the upper right corner
 
-String version = "0.1.0";
+String version = "0.2.0";
 
 //----------------------------
 
