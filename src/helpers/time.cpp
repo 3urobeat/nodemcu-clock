@@ -7,9 +7,9 @@ String formatInt(int value)
         else return (String) value;
 }
 
-String getDate(NTPClient timeClient, String dateformat)
+String getDate(NTPClient timeClient, int timeoffset, String dateformat)
 {
-    unsigned long epoch = timeClient.getEpochTime(); 
+    unsigned long epoch = timeClient.getEpochTime() + timeoffset; 
 
     //make copy from original value to not overwrite it
     String date = dateformat;
@@ -22,9 +22,9 @@ String getDate(NTPClient timeClient, String dateformat)
 }
 
 //Provide function to help construct a mini clock that will be called by main.cpp when alwaysShowTime is true
-String getTime(NTPClient timeClient, String timeformat)
+String getTime(NTPClient timeClient, int timeoffset, String timeformat)
 {
-    unsigned long epoch = timeClient.getEpochTime(); 
+    unsigned long epoch = timeClient.getEpochTime() + timeoffset; 
 
     //make copy from original value to not overwrite it
     String time = timeformat;

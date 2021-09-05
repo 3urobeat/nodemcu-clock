@@ -9,5 +9,5 @@ void getLocation(LiquidCrystal_I2C lcd, String *lat, String *lon, int *timeoffse
 ESP8266WiFiClass initWifi(LiquidCrystal_I2C lcd, String wifiSSID, String wifiPW, int maxcol, int row);
 DynamicJsonDocument httpGetJson(String url);
 DynamicJsonDocument httpsGetJson(String url);
-String getDate(NTPClient timeClient, String dateformat);
-String getTime(NTPClient timeClient, String timeformat);
+String getDate(NTPClient timeClient, int timeoffset, String dateformat);
+String getTime(NTPClient timeClient, int timeoffset, String timeformat);

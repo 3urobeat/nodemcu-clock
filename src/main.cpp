@@ -15,7 +15,6 @@ int    maxcol = 20; //width of the display
 String wifiSSID = "";
 String wifiPW   = "";
 
-int    timeoffset = 7200; //your timezone time offset in seconds
 
 String dateformat      = "dd.mm.yyyy";
 String timeformat      = "hh:mm:ss";
@@ -25,33 +24,27 @@ String pageOrder[1]   = { "clock" };
 int    showuntil      = 5000; //how long a page should be shown in ms
 bool   alwaysShowTime = true; //always show the time in the upper right corner
 
-String version = "0.2.0";
-
 //----------------------------
 
 
-LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, maxcol, 4);
+String version = "0.2.0";
 
-WiFiUDP   ntpUDP;
-NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", timeoffset, 60000);
+String lat;        //latitudinal and longitudinal location of your IP
+String lon;        
+int    timeoffset; //timezone offset in seconds
 
 int           currentPage;           //current page index in pageOrder array
 int           oldPage;               //save previous page to determine if we need to call lcd.clear() (useful if user only set one page in pageOrder to avoid blinking every showuntil seconds)
 unsigned long pageupdate;            //save timestamp when page was updated in order to keep track of showuntil without blocking the thread with a delay()
 bool          hideMiniClock = false; //will be set to true when clockpage is active
 
+LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, maxcol, 4);
 
-void miniClock()
-{
-    if (!hideMiniClock)
-    {
-        lcd.setCursor(maxcol - miniClockFormat.length(), 0); //set cursor to the very right of the first line
-
-        lcd.print(getTime(timeClient, miniClockFormat));
-    }
-}
+WiFiUDP   ntpUDP;
+NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 0, 60000); //timeoffset will be added later manually
 
 
+//Setup stuff (will be run on poweron)
 void setup()
 {
 
@@ -71,6 +64,9 @@ void setup()
     //Show loading message
     centerPrint("Loading...", lcd, maxcol, 3, true);
 
+    //geolocate the used IP to get coordinates and the timeoffset
+    getLocation(lcd, &lat, &lon, &timeoffset);
+
     //start syncing time
     timeClient.begin();
 
@@ -80,6 +76,16 @@ void setup()
 
 }
 
+//Call to display mini clock in the top right
+void miniClock()
+{
+    if (!hideMiniClock)
+    {
+        lcd.setCursor(maxcol - miniClockFormat.length(), 0); //set cursor to the very right of the first line
+
+        lcd.print(getTime(timeClient, timeoffset, miniClockFormat));
+    }
+}
 
 //Use pre-configured loop as pagemanager
 void loop() 
@@ -110,7 +116,7 @@ void loop()
 
     if (e == "clock") {
         
-        clockpage(lcd, timeClient, dateformat, timeformat, maxcol);
+        clockpage(lcd, timeClient, timeoffset, dateformat, timeformat, maxcol);
         hideMiniClock = true;
 
     }
