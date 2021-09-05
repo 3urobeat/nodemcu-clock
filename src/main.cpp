@@ -30,7 +30,8 @@ bool   alwaysShowTime = true; //always show the time in the upper right corner
 String version = "0.2.0";
 
 String lat;        //latitudinal and longitudinal location of your IP
-String lon;        
+String lon;
+String city;
 int    timeoffset; //timezone offset in seconds
 
 int           currentPage;           //current page index in pageOrder array
@@ -65,7 +66,7 @@ void setup()
     centerPrint("Loading...", lcd, maxcol, 3, true);
 
     //geolocate the used IP to get coordinates and the timeoffset
-    getLocation(lcd, &lat, &lon, &timeoffset);
+    getLocation(lcd, &lat, &lon, &city, &timeoffset);
 
     //start syncing time
     timeClient.begin();
