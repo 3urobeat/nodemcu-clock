@@ -28,7 +28,7 @@ bool   alwaysShowTime = true; //always show the time in the upper right corner
 //----------------------------
 
 
-String version = "0.2.0";
+String version = "0.3.0";
 
 String lat;        //latitudinal and longitudinal location of your IP
 String lon;
