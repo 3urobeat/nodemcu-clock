@@ -15,12 +15,13 @@ int    maxcol = 20; //width of the display
 String wifiSSID = "";
 String wifiPW   = "";
 
+String openweathermaptoken = "";
 
 String dateformat      = "dd.mm.yyyy";
 String timeformat      = "hh:mm:ss";
 String miniClockFormat = "hh:mm";
 
-String pageOrder[1]   = { "clock" };
+String pageOrder[2]   = { "clock", "weather" };
 int    showuntil      = 5000; //how long a page should be shown in ms
 bool   alwaysShowTime = true; //always show the time in the upper right corner
 
@@ -119,6 +120,10 @@ void loop()
         
         clockpage(lcd, timeClient, timeoffset, dateformat, timeformat, maxcol);
         hideMiniClock = true;
+
+    } else if (e == "weather") {
+
+        weatherpage(lcd, openweathermaptoken, lat, lon, city, maxcol);
 
     }
 
