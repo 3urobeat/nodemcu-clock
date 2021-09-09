@@ -131,6 +131,6 @@ void loop()
     if (alwaysShowTime) miniClock();
 
     //we only need to update every second
-    delay(1000);
+    delay(500);
 
 }

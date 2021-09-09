@@ -3,7 +3,7 @@
 #include "pages.h"
 #include "helpers/helpers.h"
 
-int updateinterval = 1800000; //30 minutes in ms
+int updateinterval = 600000; //10 minutes in ms
 
 unsigned long lastWeatherRefresh;
 
