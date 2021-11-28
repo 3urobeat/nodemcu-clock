@@ -1,6 +1,6 @@
 #include <Wire.h>
 #include <NoiascaLiquidCrystal.h> // Article (german): https://werner.rothschopf.net/202003_arduino_liquid_crystal_umlaute.htm | Direct download: https://werner.rothschopf.net/2020/NoiascaLiquidCrystal.zip
-#include <NoiascaHW/lcd_i2c.h>
+#include <NoiascaHW/lcd_PCF8574.h>
 #include <NTPClient.h>
 #include <iostream>
 
