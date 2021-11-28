@@ -2,7 +2,7 @@
 #include "helpers.h"
 
 
-ESP8266WiFiClass initWifi(LiquidCrystal_I2C lcd, String wifiSSID, String wifiPW, int maxcol, int row) 
+ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID, String wifiPW, int maxcol, int row) 
 {
     clearLine(lcd, maxcol, row); //clear line just to make sure no old characters are left
 

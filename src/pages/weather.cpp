@@ -11,7 +11,7 @@ String temp;        //store the two interesting weather values
 String description;
 
 
-void weatherpage(LiquidCrystal_I2C lcd, String openweathermaptoken, String lat, String lon, String city, int maxcol)
+void weatherpage(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String lat, String lon, String city, int maxcol)
 {
     if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateinterval <= millis())
     {
@@ -27,5 +27,5 @@ void weatherpage(LiquidCrystal_I2C lcd, String openweathermaptoken, String lat, 
     }
 
     centerPrint(city, lcd, maxcol, 1, false);
-    centerPrint(temp + (char)223 + "C, " + description, lcd, maxcol, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal results in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
+    centerPrint(temp + "°C, " + description, lcd, maxcol, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal results in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
 }
