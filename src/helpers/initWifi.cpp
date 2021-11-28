@@ -2,7 +2,7 @@
 #include "helpers.h"
 
 
-ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID, String wifiPW, int maxcol, int row) 
+ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String wifiPW[], size_t ssidamount, int maxcol, int row) 
 {
     clearLine(lcd, maxcol, row); //clear line just to make sure no old characters are left
 
@@ -10,8 +10,24 @@ ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID, String wif
     lcd.print("Connecting");
     delay(500);
 
-    //Connect to wifi with provided credentials
-    WiFi.begin(wifiSSID, wifiPW);
+    //Search for wifi networks in range
+    int  n     = WiFi.scanNetworks();
+    bool found = false;
+
+    //Try to connect by iterating for every found network over all networks in array (I tried doing this with indexOf() to avoid using a nested for loop but it had different results depending on the order in wifiSSID which was weird)
+    for (int i = 0; i <= n; i++) {
+        for (unsigned int j = 0; j <= ssidamount; j++) {
+
+            if (WiFi.SSID(i) == wifiSSID[j]) {
+                WiFi.begin(wifiSSID[j], wifiPW[j]);
+
+                found = true; //stop parent loop
+                break; //stop this loop
+            }
+        }
+
+        if (found) break;
+    }
 
     //Block futher execution until connection is established and show message with waiting animation
     int dots = 0;
