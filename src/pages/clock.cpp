@@ -1,3 +1,20 @@
+/*
+ * File: clock.cpp
+ * Project: pages
+ * Created Date: 01.09.2021 15:17:00
+ * Author: 3urobeat
+ * 
+ * Last Modified: 28.11.2021 16:28:25
+ * Modified By: 3urobeat
+ * 
+ * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
+ * 
+ * Licensed under the MIT license: https://opensource.org/licenses/MIT
+ * Permission is granted to use, copy, modify, and redistribute the work
+ * Full license information available in the project LICENSE file.
+ */
+
+
 #include "pages.h"
 #include "helpers/helpers.h"
 

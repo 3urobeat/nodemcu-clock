@@ -1,3 +1,20 @@
+/*
+ * File: time.cpp
+ * Project: helpers
+ * Created Date: 03.09.2021 10:06:00
+ * Author: 3urobeat
+ * 
+ * Last Modified: 28.11.2021 16:31:53
+ * Modified By: 3urobeat
+ * 
+ * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
+ * 
+ * Licensed under the MIT license: https://opensource.org/licenses/MIT
+ * Permission is granted to use, copy, modify, and redistribute the work
+ * Full license information available in the project LICENSE file.
+ */
+
+
 #include <NTPClient.h>
 #include <TimeLib.h>
 
