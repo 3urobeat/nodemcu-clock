@@ -15,6 +15,9 @@ int    maxcol = 20; //width of the display
 String wifiSSID = "";
 String wifiPW   = "";
 
+String lat = ""; //set your location manually with latitudinal and longitudinal coordinates. If you leave it empty the program will get you general location automatically via your IP.
+String lon = "";
+
 String openweathermaptoken = "";
 
 String dateformat      = "dd.mm.yyyy";
@@ -30,8 +33,6 @@ bool   alwaysShowTime = true; //always show the time in the upper right corner
 
 String version = "0.3.0";
 
-String lat;        //latitudinal and longitudinal location of your IP
-String lon;
 String city;
 int    timeoffset; //timezone offset in seconds
 
@@ -67,7 +68,7 @@ void setup()
     centerPrint("Loading...", lcd, maxcol, 3, true);
 
     //geolocate the used IP to get coordinates and the timeoffset
-    getLocation(lcd, &lat, &lon, &city, &timeoffset);
+    getLocation(lcd, openweathermaptoken, &lat, &lon, &city, &timeoffset);
 
     //start syncing time
     timeClient.begin();
