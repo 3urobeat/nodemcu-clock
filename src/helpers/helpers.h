@@ -8,7 +8,7 @@
 void clearLine(LiquidCrystal_PCF8574 lcd, int maxcol, int row);
 void centerPrint(String str, LiquidCrystal_PCF8574 lcd, int maxcol, int row, bool callclearLine);
 void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *lat, String *lon, String *city, int *timeoffset);
-ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID, String wifiPW, int maxcol, int row);
+ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String wifiPW[], size_t ssidamount, int maxcol, int row);
 DynamicJsonDocument httpGetJson(String url);
 DynamicJsonDocument httpsGetJson(String url);
 String getDate(NTPClient timeClient, int timeoffset, String dateformat);

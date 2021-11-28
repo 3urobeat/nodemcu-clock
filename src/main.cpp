@@ -13,8 +13,8 @@
 
 int    maxcol = 20; //width of the display
 
-String wifiSSID = "";
-String wifiPW   = "";
+String wifiSSID[] = { "", "" }; //you can provide multiple networks if you wish
+String wifiPW[]   = { "", "" };
 
 String lat = ""; //set your location manually with latitudinal and longitudinal coordinates. If you leave it empty the program will get you general location automatically via your IP.
 String lon = "";
@@ -47,6 +47,8 @@ LiquidCrystal_PCF8574 lcd(0x27, maxcol, 4);
 WiFiUDP   ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 0, 60000); //timeoffset will be added later manually
 
+size_t ssidamount = sizeof wifiSSID / sizeof wifiSSID[0]; //calculate wifiSSID size to avoid -Wsizeof-array-argument warning
+
 
 //Setup stuff (will be run on poweron)
 void setup()
@@ -63,7 +65,7 @@ void setup()
     delay(1000);
 
     //Connect to wifi
-    initWifi(lcd, wifiSSID, wifiPW, maxcol, 3);
+    initWifi(lcd, wifiSSID, wifiPW, ssidamount, maxcol, 3);
     delay(500);
 
     //Show loading message
