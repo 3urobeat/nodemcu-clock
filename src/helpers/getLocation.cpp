@@ -1,6 +1,6 @@
 #include "helpers.h"
 
-void getLocation(LiquidCrystal_I2C lcd, String openweathermaptoken, String *lat, String *lon, String *city, int *timeoffset)
+void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *lat, String *lon, String *city, int *timeoffset)
 {
     //If the user didn't provide a lat & lon value then get values from geocoding api
     if (*lat == "" && *lon == "") {

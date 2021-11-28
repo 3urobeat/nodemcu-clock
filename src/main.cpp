@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
+#include <NoiascaLiquidCrystal.h> // Article (german): https://werner.rothschopf.net/202003_arduino_liquid_crystal_umlaute.htm | Direct download: https://werner.rothschopf.net/2020/NoiascaLiquidCrystal.zip
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include <NTPClient.h>
@@ -41,7 +42,7 @@ int           oldPage;               //save previous page to determine if we nee
 unsigned long pageupdate;            //save timestamp when page was updated in order to keep track of showuntil without blocking the thread with a delay()
 bool          hideMiniClock = false; //will be set to true when clockpage is active
 
-LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, maxcol, 4);
+LiquidCrystal_PCF8574 lcd(0x27, maxcol, 4);
 
 WiFiUDP   ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 0, 60000); //timeoffset will be added later manually
@@ -52,7 +53,8 @@ void setup()
 {
 
     //Initiate display
-    lcd.init();
+    Wire.begin();
+    lcd.begin();
     lcd.backlight();
 
     //Print startup screen
