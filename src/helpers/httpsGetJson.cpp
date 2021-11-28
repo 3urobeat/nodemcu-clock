@@ -1,3 +1,20 @@
+/*
+ * File: httpsGetJson.cpp
+ * Project: helpers
+ * Created Date: 30.08.2021 22:37:00
+ * Author: 3urobeat
+ * 
+ * Last Modified: 28.11.2021 16:30:49
+ * Modified By: 3urobeat
+ * 
+ * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
+ * 
+ * Licensed under the MIT license: https://opensource.org/licenses/MIT
+ * Permission is granted to use, copy, modify, and redistribute the work
+ * Full license information available in the project LICENSE file.
+ */
+
+
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>

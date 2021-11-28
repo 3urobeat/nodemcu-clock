@@ -1,3 +1,20 @@
+/*
+ * File: initWifi.cpp
+ * Project: helpers
+ * Created Date: 30.08.2021 15:42:00
+ * Author: 3urobeat
+ * 
+ * Last Modified: 28.11.2021 16:31:08
+ * Modified By: 3urobeat
+ * 
+ * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
+ * 
+ * Licensed under the MIT license: https://opensource.org/licenses/MIT
+ * Permission is granted to use, copy, modify, and redistribute the work
+ * Full license information available in the project LICENSE file.
+ */
+
+
 #include <iostream>
 #include "helpers.h"
 
