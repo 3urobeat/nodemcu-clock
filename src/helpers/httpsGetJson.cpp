@@ -1,10 +1,10 @@
 /*
  * File: httpsGetJson.cpp
- * Project: helpers
+ * Project: nodemcu-clock
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 28.11.2021 16:30:49
+ * Last Modified: 29.11.2021 17:37:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>

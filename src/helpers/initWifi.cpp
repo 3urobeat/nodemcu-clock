@@ -1,10 +1,10 @@
 /*
  * File: initWifi.cpp
- * Project: helpers
+ * Project: nodemcu-clock
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 28.11.2021 16:31:08
+ * Last Modified: 29.11.2021 17:37:55
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>

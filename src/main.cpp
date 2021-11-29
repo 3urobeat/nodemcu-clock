@@ -30,13 +30,13 @@
 
 int    maxcol = 20; //width of the display
 
-String wifiSSID[] = { "", "" }; //you can provide multiple networks if you wish
-String wifiPW[]   = { "", "" };
+String wifiSSID[] = { "k3k!Box 7430 DW", "Tom's iPhone", "InternetBidde" }; //you can provide multiple networks if you wish
+String wifiPW[]   = { "90242291710765374988", "tomhatspass123", "75269815320489" };
 
-String lat = ""; //set your location manually with latitudinal and longitudinal coordinates. If you leave it empty the program will get you general location automatically via your IP.
-String lon = "";
+String lat = "53.8742"; //set your location manually with latitudinal and longitudinal coordinates. If you leave it empty the program will get you general location automatically via your IP.
+String lon = "10.6766";
 
-String openweathermaptoken = "";
+String openweathermaptoken = "874bf3ee47066f11bd7c69f697ecf6e8";
 
 String dateformat      = "dd.mm.yyyy";
 String timeformat      = "hh:mm:ss";
