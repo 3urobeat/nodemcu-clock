@@ -1,10 +1,10 @@
 /*
  * File: pages.h
- * Project: pages
+ * Project: nodemcu-clock
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 28.11.2021 16:28:46
+ * Last Modified: 29.11.2021 17:37:47
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
