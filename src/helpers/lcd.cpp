@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 14:54:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.11.2021 21:06:39
+ * Last Modified: 30.11.2021 21:12:44
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -48,7 +48,7 @@ void lcdPrint(String str)
 
 void centerPrint(String str, int row, bool callclearLine)
 {
-    if (callclearLine) clearLine(maxcol, row); //clear the line first to avoid old characters corrupting the text
+    if (callclearLine && lcdContent[row] != str) clearLine(maxcol, row); //clear the line first to avoid old characters corrupting the text when content is not the same
 
     lcd.setCursor((maxcol - str.length()) / 2, row); //center string
     lcd.print(str);
