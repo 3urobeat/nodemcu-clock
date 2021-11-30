@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 30.11.2021 18:39:56
+ * Last Modified: 30.11.2021 21:11:49
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -20,3 +20,5 @@
 
 extern LiquidCrystal_PCF8574 lcd;
 extern int maxcol;
+extern int lcdCursorPos[2];
+extern String lcdContent[4];

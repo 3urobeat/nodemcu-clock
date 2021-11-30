@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.11.2021 20:27:42
+ * Last Modified: 30.11.2021 21:10:56
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -59,6 +59,9 @@ int           oldPage;               //save previous page to determine if we nee
 unsigned long pageupdate;            //save timestamp when page was updated in order to keep track of showuntil without blocking the thread with a delay()
 bool          hideMiniClock = false; //will be set to true when clockpage is active
 
+int    lcdCursorPos[2] = { 0, 0 };           //save current cursor position
+String lcdContent[4]   = { "", "", "", "" }; //save content of lcd when printing to be able to compare content later
+
 LiquidCrystal_PCF8574 lcd(0x27, maxcol, 4);
 
 WiFiUDP   ntpUDP;
@@ -105,9 +108,9 @@ void miniClock()
 {
     if (!hideMiniClock)
     {
-        lcd.setCursor(maxcol - miniClockFormat.length(), 0); //set cursor to the very right of the first line
+        lcdSetCursor(maxcol - miniClockFormat.length(), 0); //set cursor to the very right of the first line
 
-        lcd.print(getTime(timeClient, timeoffset, miniClockFormat));
+        lcdPrint(getTime(timeClient, timeoffset, miniClockFormat));
     }
 }
 

@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 14:54:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.11.2021 21:03:39
+ * Last Modified: 30.11.2021 21:06:39
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -22,8 +22,27 @@
 
 void clearLine(int maxcol, int row)
 {
-    lcd.setCursor(0, row);
-    lcd.print(std::string(maxcol, ' ').c_str()); //print maxcol amount of spaces to effectively clear the line
+    lcdSetCursor(0, row);
+    lcdPrint(std::string(maxcol, ' ').c_str()); //print maxcol amount of spaces to effectively clear the line
+}
+
+
+//Custom setCursor function to be able to track cursor position
+void lcdSetCursor(int row, int col)
+{
+    lcdSetCursor(row, col);
+
+    lcdCursorPos[0] = row;
+    lcdCursorPos[1] = col;
+}
+
+
+//Custom print function to be able to track content of display
+void lcdPrint(String str)
+{
+    lcd.print(str);
+    
+    lcdContent[lcdCursorPos[0]] = str;
 }
 
 
@@ -33,4 +52,6 @@ void centerPrint(String str, int row, bool callclearLine)
 
     lcd.setCursor((maxcol - str.length()) / 2, row); //center string
     lcd.print(str);
+
+    lcdContent[row] = str;
 };
