@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 29.11.2021 17:37:46
+ * Last Modified: 30.11.2021 17:17:08
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -43,6 +43,6 @@ void weatherpage(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String l
         lastWeatherRefresh = millis();
     }
 
-    centerPrint(city, lcd, maxcol, 1, false);
-    centerPrint(temp + "°C, " + description, lcd, maxcol, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal results in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
+    centerPrint(city, 1, false);
+    centerPrint(temp + "°C, " + description, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal results in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
 }

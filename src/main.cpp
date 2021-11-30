@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 28.11.2021 16:27:53
+ * Last Modified: 30.11.2021 20:27:42
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -77,8 +77,8 @@ void setup()
     lcd.backlight();
 
     //Print startup screen
-    centerPrint("nodemcu-clock", lcd, maxcol, 0, true);
-    centerPrint("v" + version, lcd, maxcol, 1, true);
+    centerPrint("nodemcu-clock", 0, true);
+    centerPrint("v" + version, 1, true);
     delay(1000);
 
     //Connect to wifi
@@ -86,7 +86,7 @@ void setup()
     delay(500);
 
     //Show loading message
-    centerPrint("Loading...", lcd, maxcol, 3, true);
+    centerPrint("Loading...", 3, true);
 
     //geolocate the used IP to get coordinates and the timeoffset
     getLocation(lcd, openweathermaptoken, &lat, &lon, &city, &timeoffset);

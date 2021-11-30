@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 29.11.2021 17:37:49
+ * Last Modified: 30.11.2021 21:04:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -21,6 +21,6 @@
 
 void clockpage(LiquidCrystal_PCF8574 lcd, NTPClient timeClient, int timeoffset, String dateformat, String timeformat, int maxcol)
 {
-    centerPrint(getTime(timeClient, timeoffset, timeformat).c_str(), lcd, maxcol, 1, false);
-    centerPrint(getDate(timeClient, timeoffset, dateformat).c_str(), lcd, maxcol, 2, false);
+    centerPrint(getTime(timeClient, timeoffset, timeformat).c_str(), 1, false);
+    centerPrint(getDate(timeClient, timeoffset, dateformat).c_str(), 2, false);
 }
