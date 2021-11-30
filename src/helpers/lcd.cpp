@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 14:54:00
  * Author: 3urobeat
  * 
- * Last Modified: 29.11.2021 17:37:53
+ * Last Modified: 30.11.2021 21:03:39
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -17,17 +17,19 @@
 
 #include <iostream>
 #include "helpers.h"
+#include "main.h"
 
-void clearLine(LiquidCrystal_PCF8574 lcd, int maxcol, int row)
+
+void clearLine(int maxcol, int row)
 {
     lcd.setCursor(0, row);
     lcd.print(std::string(maxcol, ' ').c_str()); //print maxcol amount of spaces to effectively clear the line
 }
 
 
-void centerPrint(String str, LiquidCrystal_PCF8574 lcd, int maxcol, int row, bool callclearLine)
+void centerPrint(String str, int row, bool callclearLine)
 {
-    if (callclearLine) clearLine(lcd, maxcol, row); //clear the line first to avoid old characters corrupting the text
+    if (callclearLine) clearLine(maxcol, row); //clear the line first to avoid old characters corrupting the text
 
     lcd.setCursor((maxcol - str.length()) / 2, row); //center string
     lcd.print(str);

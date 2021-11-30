@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 29.11.2021 17:37:55
+ * Last Modified: 30.11.2021 21:02:13
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -21,7 +21,7 @@
 
 ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String wifiPW[], size_t ssidamount, int maxcol, int row) 
 {
-    clearLine(lcd, maxcol, row); //clear line just to make sure no old characters are left
+    clearLine(maxcol, row); //clear line just to make sure no old characters are left
 
     lcd.setCursor(3, row);
     lcd.print("Connecting");
@@ -63,6 +63,6 @@ ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String w
 
 
     //Connection established
-    centerPrint("Connected!", lcd, maxcol, row, true);
+    centerPrint("Connected!", row, true);
     return WiFi;
 }

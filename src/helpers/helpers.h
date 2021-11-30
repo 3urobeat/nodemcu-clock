@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 29.11.2021 17:37:59
+ * Last Modified: 30.11.2021 21:01:42
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -22,8 +22,8 @@
 #include <ArduinoJson.h>
 #include <NTPClient.h>
 
-void clearLine(LiquidCrystal_PCF8574 lcd, int maxcol, int row);
-void centerPrint(String str, LiquidCrystal_PCF8574 lcd, int maxcol, int row, bool callclearLine);
+void clearLine(int maxcol, int row);
+void centerPrint(String str, int row, bool callclearLine);
 void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *lat, String *lon, String *city, int *timeoffset);
 ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String wifiPW[], size_t ssidamount, int maxcol, int row);
 DynamicJsonDocument httpGetJson(String url);
