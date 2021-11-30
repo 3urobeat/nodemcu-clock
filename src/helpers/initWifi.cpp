@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.11.2021 21:02:13
+ * Last Modified: 30.11.2021 21:06:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -23,8 +23,8 @@ ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String w
 {
     clearLine(maxcol, row); //clear line just to make sure no old characters are left
 
-    lcd.setCursor(3, row);
-    lcd.print("Connecting");
+    lcdSetCursor(3, row);
+    lcdPrint("Connecting");
     delay(500);
 
     //Search for wifi networks in range
@@ -54,9 +54,9 @@ ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String w
         dots++; //add another dot
         if (dots > 3) dots = 0; //reset when 3 dots are present
 
-        lcd.setCursor(13, row);
-        lcd.print(std::string(dots, '.').c_str()); //add dots amount of dots behind "Connecting"
-        lcd.print("    "); //Clear any dots that might be behind
+        lcdSetCursor(13, row);
+        lcdPrint(std::string(dots, '.').c_str()); //add dots amount of dots behind "Connecting"
+        lcdPrint("    "); //Clear any dots that might be behind
 
         delay(500);
     }
