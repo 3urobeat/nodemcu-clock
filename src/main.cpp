@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.11.2021 21:10:56
+ * Last Modified: 01.12.2021 11:57:16
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -30,13 +30,13 @@
 
 int    maxcol = 20; //width of the display
 
-String wifiSSID[] = { "k3k!Box 7430 DW", "Tom's iPhone", "InternetBidde" }; //you can provide multiple networks if you wish
-String wifiPW[]   = { "90242291710765374988", "tomhatspass123", "75269815320489" };
+String wifiSSID[] = { "", "" }; //you can provide multiple networks if you wish
+String wifiPW[]   = { "", "" };
 
-String lat = "53.8742"; //set your location manually with latitudinal and longitudinal coordinates. If you leave it empty the program will get you general location automatically via your IP.
-String lon = "10.6766";
+String lat = ""; //set your location manually with latitudinal and longitudinal coordinates. If you leave it empty the program will get you general location automatically via your IP.
+String lon = "";
 
-String openweathermaptoken = "874bf3ee47066f11bd7c69f697ecf6e8";
+String openweathermaptoken = "";
 
 String dateformat      = "dd.mm.yyyy";
 String timeformat      = "hh:mm:ss";
