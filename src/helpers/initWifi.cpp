@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.11.2021 21:06:30
+ * Last Modified: 01.12.2021 15:01:29
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -17,6 +17,9 @@
 
 #include <iostream>
 #include "helpers.h"
+
+
+void(* resetFunc) (void) = 0; // create a standard reset function
 
 
 ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String wifiPW[], size_t ssidamount, int maxcol, int row) 
@@ -44,6 +47,13 @@ ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String w
         }
 
         if (found) break;
+
+        //Display error message if no network from wifiSSID array was found
+        if (i == n && !found) {
+            centerPrint("No match found!", row, false);
+            delay(10000); //wait a few sec and reset to rescan
+            resetFunc();
+        }
     }
 
     //Block futher execution until connection is established and show message with waiting animation
