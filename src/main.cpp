@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 01.12.2021 11:57:16
+ * Last Modified: 01.12.2021 14:42:24
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -42,9 +42,10 @@ String dateformat      = "dd.mm.yyyy";
 String timeformat      = "hh:mm:ss";
 String miniClockFormat = "hh:mm";
 
-String pageOrder[2]   = { "clock", "weather" };
-int    showuntil      = 5000; //how long a page should be shown in ms
-bool   alwaysShowTime = true; //always show the time in the upper right corner
+String pageOrder[2]       = { "clock", "weather" };
+int    showuntil          = 5000; //how long a page should be shown in ms
+bool   alwaysShowTime     = true; //always show the time in the upper right corner
+int    clockWeekdaySwitch = 2500; //after how much ms the clock page should switch between date and weekday. Set to 0 to disable
 
 //----------------------------
 
@@ -132,8 +133,8 @@ void loop()
         //reset currentPage if we exceeded the amount of pages in the array
         if (currentPage + 1 > *(&pageOrder + 1) - pageOrder) currentPage = 0; //credit for array size hack: https://www.geeksforgeeks.org/how-to-find-size-of-array-in-cc-without-using-sizeof-operator/
 
-        hideMiniClock = false; //default
-        pageupdate = millis(); //update timestamp
+        hideMiniClock = false;    //default
+        pageupdate    = millis(); //update timestamp
 
         if (oldPage != currentPage) lcd.clear();
     }
@@ -143,7 +144,7 @@ void loop()
 
     if (e == "clock") {
         
-        clockpage(lcd, timeClient, timeoffset, dateformat, timeformat, maxcol);
+        clockpage(lcd, timeClient, timeoffset, clockWeekdaySwitch, dateformat, timeformat, maxcol);
         hideMiniClock = true;
 
     } else if (e == "weather") {
