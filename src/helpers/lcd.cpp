@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 14:54:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.11.2021 21:12:44
+ * Last Modified: 01.12.2021 12:02:14
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -30,7 +30,7 @@ void clearLine(int maxcol, int row)
 //Custom setCursor function to be able to track cursor position
 void lcdSetCursor(int row, int col)
 {
-    lcdSetCursor(row, col);
+    lcd.setCursor(row, col);
 
     lcdCursorPos[0] = row;
     lcdCursorPos[1] = col;
