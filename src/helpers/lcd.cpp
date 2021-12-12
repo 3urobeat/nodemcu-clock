@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 14:54:00
  * Author: 3urobeat
  * 
- * Last Modified: 01.12.2021 13:33:02
+ * Last Modified: 12.12.2021 22:48:21
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -50,7 +50,11 @@ void centerPrint(String str, int row, bool callclearLine)
 {
     if (callclearLine && lcdContent[row] != str) clearLine(maxcol, row); //clear the line first to avoid old characters corrupting the text when content is not the same
 
-    lcd.setCursor((maxcol - str.length()) / 2, row); //center string
+    //Calculate column
+    int offset = maxcol - str.length();
+    if (offset < 0) offset = 0; //set offset to 0 if it would be negative
+
+    lcd.setCursor(offset / 2, row); //center string
     lcd.print(str);
 
     lcdContent[row] = str;
