@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.11.2021 17:17:08
+ * Last Modified: 12.12.2021 22:02:11
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -28,7 +28,7 @@ String temp;        //store the two interesting weather values
 String description;
 
 
-void weatherpage(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String lat, String lon, String city, int maxcol)
+void weatherpage(String openweathermaptoken, String lat, String lon, String city)
 {
     if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateinterval <= millis())
     {

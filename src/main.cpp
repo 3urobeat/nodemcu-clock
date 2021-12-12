@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 01.12.2021 14:42:24
+ * Last Modified: 12.12.2021 22:02:25
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -144,12 +144,12 @@ void loop()
 
     if (e == "clock") {
         
-        clockpage(lcd, timeClient, timeoffset, clockWeekdaySwitch, dateformat, timeformat, maxcol);
+        clockpage(timeClient, timeoffset, clockWeekdaySwitch, dateformat, timeformat);
         hideMiniClock = true;
 
     } else if (e == "weather") {
 
-        weatherpage(lcd, openweathermaptoken, lat, lon, city, maxcol);
+        weatherpage(openweathermaptoken, lat, lon, city);
 
     }
 
