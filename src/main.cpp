@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 12.12.2021 22:02:25
+ * Last Modified: 12.12.2021 22:38:47
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -53,6 +53,7 @@ int    clockWeekdaySwitch = 2500; //after how much ms the clock page should swit
 String version = "0.4.0";
 
 String city;
+String country;
 int    timeoffset; //timezone offset in seconds
 
 int           currentPage;           //current page index in pageOrder array
@@ -93,7 +94,7 @@ void setup()
     centerPrint("Loading...", 3, true);
 
     //geolocate the used IP to get coordinates and the timeoffset
-    getLocation(lcd, openweathermaptoken, &lat, &lon, &city, &timeoffset);
+    getLocation(lcd, openweathermaptoken, &lat, &lon, &city, &country, &timeoffset);
 
     //start syncing time
     timeClient.begin();
