@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.11.2021 21:06:03
+ * Last Modified: 14.12.2021 14:32:19
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -26,7 +26,7 @@ void clearLine(int maxcol, int row);
 void lcdSetCursor(int row, int col);
 void lcdPrint(String str);
 void centerPrint(String str, int row, bool callclearLine);
-void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *lat, String *lon, String *city, int *timeoffset);
+void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *lat, String *lon, String *city, String *country, int *timeoffset);
 ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String wifiPW[], size_t ssidamount, int maxcol, int row);
 DynamicJsonDocument httpGetJson(String url);
 DynamicJsonDocument httpsGetJson(String url);
