@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 15:11:49
+ * Last Modified: 15.12.2021 15:21:22
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -27,7 +27,7 @@ unsigned long lastWeatherRefresh;
 String temp;        //store the two interesting weather values
 String description;
 
-DynamicJsonDocument weatherResult(512);
+DynamicJsonDocument weatherResult(1024);
 
 
 void weatherpage(String openweathermaptoken, String lat, String lon, String city)
