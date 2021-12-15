@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 12.12.2021 22:02:19
+ * Last Modified: 15.12.2021 20:16:29
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -23,3 +23,4 @@
 
 void clockpage(NTPClient timeClient, int timeoffset, int clockWeekdaySwitch, String dateformat, String timeformat);
 void weatherpage(String openweathermaptoken, String lat, String lon, String city);
+void newspage(String newsapitoken, int showuntil, String country, int timeoffset, String miniClockFormat);

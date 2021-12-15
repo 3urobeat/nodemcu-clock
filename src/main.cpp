@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 15:32:19
+ * Last Modified: 15.12.2021 21:52:59
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -37,12 +37,13 @@ String lat = ""; //set your location manually with latitudinal and longitudinal 
 String lon = "";
 
 String openweathermaptoken = "";
+String newsapitoken        = "";
 
 String dateformat      = "dd.mm.yyyy";
 String timeformat      = "hh:mm:ss";
 String miniClockFormat = "hh:mm";
 
-String pageOrder[2]       = { "clock", "weather" };
+String pageOrder[3]       = { "clock", "weather", "news" };
 int    showuntil[3]       = { 5000, 5000, 30000 }; //how long each page should be shown in ms
 bool   alwaysShowTime     = true; //always show the time in the upper right corner
 int    clockWeekdaySwitch = 2500; //after how much ms the clock page should switch between date and weekday. Set to 0 to disable
@@ -166,6 +167,10 @@ void loop()
     } else if (e == "weather") {
 
         weatherpage(openweathermaptoken, lat, lon, city);
+
+    } else if (e == "news") {
+
+        newspage(newsapitoken, showuntil[currentPage], country, timeoffset, miniClockFormat);
 
     }
 
