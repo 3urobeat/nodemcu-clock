@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 14:16:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 15:20:56
+ * Last Modified: 15.12.2021 17:17:10
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -23,7 +23,10 @@ void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *
 
     //If the user didn't provide a lat & lon value then get values from geocoding api
     if (*lat == "" && *lon == "") {
-        httpGetJson("http://ip-api.com/json?fields=lat,lon,offset,city,country", &locationResult);
+        StaticJsonDocument<0> filter;
+        filter.set(true);
+
+        httpGetJson("http://ip-api.com/json?fields=lat,lon,offset,city,country", &locationResult, filter);
 
         //Only overwrite lat and lon if user didn't provide a location manually
         *lat = (String) locationResult["lat"];
@@ -34,7 +37,13 @@ void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *
         *timeoffset = (int) locationResult["offset"];
 
     } else { //...otherwise ping openweathermap once with the coords to get the city name and timeoffset
-        httpGetJson("http://api.openweathermap.org/data/2.5/weather?lat=" + *lat + "&lon=" + *lon + "&appid=" + openweathermaptoken, &locationResult);
+        StaticJsonDocument<128> filter;
+        filter["name"] = true;
+        filter["sys"]["country"] = true;
+        filter["timezone"] = true;
+
+
+        httpGetJson("http://api.openweathermap.org/data/2.5/weather?lat=" + *lat + "&lon=" + *lon + "&appid=" + openweathermaptoken, &locationResult, filter);
 
         *city = (String) locationResult["name"];
         *country = (String) locationResult["sys"]["country"];

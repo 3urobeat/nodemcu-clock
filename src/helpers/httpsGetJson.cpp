@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 15:05:42
+ * Last Modified: 15.12.2021 17:15:22
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -41,7 +41,7 @@ void debug(String url, int port, int httpCode, int size, DynamicJsonDocument jso
 }
 
 
-void httpGetJson(String url, DynamicJsonDocument *doc)
+void httpGetJson(String url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter)
 {
     WiFiClient client;
     HTTPClient http;
@@ -56,7 +56,7 @@ void httpGetJson(String url, DynamicJsonDocument *doc)
 
     int httpCode = http.GET();
 
-    if (httpCode == HTTP_CODE_OK) deserializeJson(*doc, http.getStream());
+    if (httpCode == HTTP_CODE_OK) deserializeJson(*doc, http.getStream(), DeserializationOption::Filter(filter));
         else (*doc).add("http error (" + (String) httpCode + "): " + http.errorToString(httpCode)); //tbh idk what to write here
 
     http.end(); //Close connection
@@ -66,7 +66,7 @@ void httpGetJson(String url, DynamicJsonDocument *doc)
 }
 
 
-void httpsGetJson(String url, DynamicJsonDocument *doc)
+void httpsGetJson(String url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter)
 {
     WiFiClientSecure    client;
     HTTPClient          http;
@@ -83,7 +83,7 @@ void httpsGetJson(String url, DynamicJsonDocument *doc)
 
     int httpCode = http.GET();
 
-    if (httpCode == HTTP_CODE_OK) deserializeJson(*doc, http.getStream());
+    if (httpCode == HTTP_CODE_OK) deserializeJson(*doc, http.getStream(), DeserializationOption::Filter(filter));
         else (*doc).add("https error (" + (String) httpCode + "): " + http.errorToString(httpCode)); //tbh idk what to write here
 
     http.end(); //Close connection

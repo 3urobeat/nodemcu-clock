@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 15:21:22
+ * Last Modified: 15.12.2021 17:12:23
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -27,14 +27,20 @@ unsigned long lastWeatherRefresh;
 String temp;        //store the two interesting weather values
 String description;
 
-DynamicJsonDocument weatherResult(1024);
+DynamicJsonDocument weatherResult(512);
 
 
 void weatherpage(String openweathermaptoken, String lat, String lon, String city)
 {
     if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateinterval <= millis())
     {
-        httpGetJson("http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + openweathermaptoken, &weatherResult);
+        StaticJsonDocument<128> filter;
+        
+        filter["main"]["temp"] = true;
+        filter["weather"][0]["main"] = true;
+        
+
+        httpGetJson("http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + openweathermaptoken, &weatherResult, filter);
 
         //refresh both weather values
         temp = (String) round((double) weatherResult["main"]["temp"] - 273.15);
