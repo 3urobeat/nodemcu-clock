@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 17:15:22
+ * Last Modified: 15.12.2021 22:38:06
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -24,20 +24,14 @@
 
 void debug(String url, int port, int httpCode, int size, DynamicJsonDocument jsondata)
 {
-    //Set to true for debugging response in serial monitor
-    bool printDebug = true;
+    Serial.begin(9600);
+    Serial.println("\nPinging \'" + url + "\' on port \'" + (String) port + "\'...");
+    Serial.println("Result (Code " + (String) httpCode + ") (Size: " + size + "):");
 
-    if (printDebug)
-    {
-        Serial.begin(9600);
-        Serial.println("\nPinging \'" + url + "\' on port \'" + (String) port + "\'...");
-        Serial.println("Result (Code " + (String) httpCode + ") (Size: " + size + "):");
+    String responseStr;
+    serializeJson(jsondata, responseStr);
 
-        String responseStr;
-        serializeJson(jsondata, responseStr);
-
-        Serial.println(responseStr);
-    }
+    Serial.println(responseStr);
 }
 
 
@@ -62,7 +56,7 @@ void httpGetJson(String url, DynamicJsonDocument *doc, StaticJsonDocument<128> f
     http.end(); //Close connection
     client.stop();
 
-    debug(url, port, httpCode, http.getSize(), (*doc));
+    //debug(url, port, httpCode, http.getSize(), (*doc));
 }
 
 
@@ -89,6 +83,6 @@ void httpsGetJson(String url, DynamicJsonDocument *doc, StaticJsonDocument<128> 
     http.end(); //Close connection
     client.stop();
 
-    debug(url, port, httpCode, http.getSize(), (*doc));
+    //debug(url, port, httpCode, http.getSize(), (*doc));
 
 }
