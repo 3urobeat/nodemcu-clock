@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 12.12.2021 22:02:11
+ * Last Modified: 15.12.2021 15:11:49
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -27,16 +27,18 @@ unsigned long lastWeatherRefresh;
 String temp;        //store the two interesting weather values
 String description;
 
+DynamicJsonDocument weatherResult(512);
+
 
 void weatherpage(String openweathermaptoken, String lat, String lon, String city)
 {
     if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateinterval <= millis())
     {
-        DynamicJsonDocument result = httpGetJson("http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + openweathermaptoken);
+        httpGetJson("http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + openweathermaptoken, &weatherResult);
 
         //refresh both weather values
-        temp = (String) round((double) result["main"]["temp"] - 273.15);
-        description = (String) result["weather"][0]["main"];
+        temp = (String) round((double) weatherResult["main"]["temp"] - 273.15);
+        description = (String) weatherResult["weather"][0]["main"];
 
         temp.replace(".00", ""); //You are probably thinking: Wtf? - and I completely agree with you. The output from round() contains decimals (18.00 for example) and it seems like removing those is challenging (spent ~15 min searching). And since this is already a String I'm just gonna do it like this. Fuck it.
 

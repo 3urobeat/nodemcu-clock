@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 14.12.2021 16:40:01
+ * Last Modified: 15.12.2021 15:05:42
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -21,10 +21,11 @@
 
 #include "helpers.h"
 
+
 void debug(String url, int port, int httpCode, int size, DynamicJsonDocument jsondata)
 {
     //Set to true for debugging response in serial monitor
-    bool printDebug = false;
+    bool printDebug = true;
 
     if (printDebug)
     {
@@ -39,11 +40,13 @@ void debug(String url, int port, int httpCode, int size, DynamicJsonDocument jso
     }
 }
 
-DynamicJsonDocument httpGetJson(String url)
+
+void httpGetJson(String url, DynamicJsonDocument *doc)
 {
-    WiFiClient          client;
-    HTTPClient          http;
-    DynamicJsonDocument response(2048);
+    WiFiClient client;
+    HTTPClient http;
+
+    (*doc).clear();
 
     int port = 80;
 
@@ -53,22 +56,22 @@ DynamicJsonDocument httpGetJson(String url)
 
     int httpCode = http.GET();
 
-    if (httpCode == HTTP_CODE_OK) deserializeJson(response, http.getStream());
-        else response.add("https error: " + (String) httpCode); //tbh idk what to write here
+    if (httpCode == HTTP_CODE_OK) deserializeJson(*doc, http.getStream());
+        else (*doc).add("http error (" + (String) httpCode + "): " + http.errorToString(httpCode)); //tbh idk what to write here
 
     http.end(); //Close connection
     client.stop();
 
-    debug(url, port, httpCode, http.getSize(), response);
-
-    return response;
+    debug(url, port, httpCode, http.getSize(), (*doc));
 }
 
-DynamicJsonDocument httpsGetJson(String url)
+
+void httpsGetJson(String url, DynamicJsonDocument *doc)
 {
     WiFiClientSecure    client;
     HTTPClient          http;
-    DynamicJsonDocument response(2048);
+    
+    (*doc).clear();
 
     int port = 443;
 
@@ -80,13 +83,12 @@ DynamicJsonDocument httpsGetJson(String url)
 
     int httpCode = http.GET();
 
-    if (httpCode == HTTP_CODE_OK) deserializeJson(response, http.getStream());
-        else response.add("https error: " + (String) httpCode); //tbh idk what to write here
+    if (httpCode == HTTP_CODE_OK) deserializeJson(*doc, http.getStream());
+        else (*doc).add("https error (" + (String) httpCode + "): " + http.errorToString(httpCode)); //tbh idk what to write here
 
     http.end(); //Close connection
     client.stop();
 
-    debug(url, port, httpCode, http.getSize(), response);
+    debug(url, port, httpCode, http.getSize(), (*doc));
 
-    return response;
 }

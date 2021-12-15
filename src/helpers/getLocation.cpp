@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 14:16:00
  * Author: 3urobeat
  * 
- * Last Modified: 12.12.2021 22:33:29
+ * Last Modified: 15.12.2021 15:11:34
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -19,24 +19,26 @@
 
 void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *lat, String *lon, String *city, String *country, int *timeoffset)
 {
+    DynamicJsonDocument locationResult(512);
+
     //If the user didn't provide a lat & lon value then get values from geocoding api
     if (*lat == "" && *lon == "") {
-        DynamicJsonDocument result = httpGetJson("http://ip-api.com/json?fields=lat,lon,offset,city,country");
+        httpGetJson("http://ip-api.com/json?fields=lat,lon,offset,city,country", &locationResult);
 
         //Only overwrite lat and lon if user didn't provide a location manually
-        *lat = (String) result["lat"];
-        *lon = (String) result["lon"];
+        *lat = (String) locationResult["lat"];
+        *lon = (String) locationResult["lon"];
 
-        *city = (String) result["city"];
-        *country = (String) result["countryCode"];
-        *timeoffset = (int) result["offset"];
+        *city = (String) locationResult["city"];
+        *country = (String) locationResult["countryCode"];
+        *timeoffset = (int) locationResult["offset"];
 
     } else { //...otherwise ping openweathermap once with the coords to get the city name and timeoffset
-        DynamicJsonDocument result = httpGetJson("http://api.openweathermap.org/data/2.5/weather?lat=" + *lat + "&lon=" + *lon + "&appid=" + openweathermaptoken);
+        httpGetJson("http://api.openweathermap.org/data/2.5/weather?lat=" + *lat + "&lon=" + *lon + "&appid=" + openweathermaptoken, &locationResult);
 
-        *city = (String) result["name"];
-        *country = (String) result["sys"]["country"];
-        *timeoffset = (int) result["timezone"];
+        *city = (String) locationResult["name"];
+        *country = (String) locationResult["sys"]["country"];
+        *timeoffset = (int) locationResult["timezone"];
     }
     
 }
