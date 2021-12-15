@@ -43,7 +43,7 @@ String timeformat      = "hh:mm:ss";
 String miniClockFormat = "hh:mm";
 
 String pageOrder[2]       = { "clock", "weather" };
-int    showuntil          = 5000; //how long a page should be shown in ms
+int    showuntil[3]       = { 5000, 5000, 30000 }; //how long each page should be shown in ms
 bool   alwaysShowTime     = true; //always show the time in the upper right corner
 int    clockWeekdaySwitch = 2500; //after how much ms the clock page should switch between date and weekday. Set to 0 to disable
 
@@ -139,8 +139,8 @@ void loop()
     //save currentPage
     oldPage = currentPage;
 
-    //update currentPage if showuntil time passed
-    if (pageupdate + showuntil <= millis())
+    //update currentPage if showuntil time for this page passed
+    if (pageupdate + showuntil[currentPage] <= millis())
     {
         currentPage++;
 
@@ -172,7 +172,7 @@ void loop()
     //update miniClock if enabled
     if (alwaysShowTime) miniClock();
 
-    //we only need to update every second
-    delay(500);
+    //wait a moment before updating again
+    delay(250);
 
 }
