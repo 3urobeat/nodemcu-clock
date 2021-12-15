@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 15:02:36
+ * Last Modified: 15.12.2021 17:15:01
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -29,7 +29,7 @@ void centerPrint(String str, int row, bool callclearLine);
 void movingPrint(String str, int row, bool callclearLine);
 void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *lat, String *lon, String *city, String *country, int *timeoffset);
 ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String wifiPW[], size_t ssidamount, int maxcol, int row);
-void httpGetJson(String url, DynamicJsonDocument *doc);
-void httpsGetJson(String url, DynamicJsonDocument *doc);
+void httpGetJson(String url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter);
+void httpsGetJson(String url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter);
 String getDate(NTPClient timeClient, int timeoffset, String dateformat);
 String getTime(NTPClient timeClient, int timeoffset, String timeformat);
