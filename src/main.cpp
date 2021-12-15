@@ -110,8 +110,10 @@ void setup()
 
 //Helper function to quickly debug memory usage
 void debugMemory() {
-    Serial.println("getFreeHeap(): " + ESP.getFreeHeap());
-    Serial.print("getFreeContStack(): " + ESP.getFreeContStack());
+    Serial.print("getFreeHeap(): ");
+    Serial.println(ESP.getFreeHeap());
+    Serial.print("getFreeContStack(): ");
+    Serial.println(ESP.getFreeContStack());
 }
 
 
