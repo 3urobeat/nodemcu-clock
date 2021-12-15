@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 21:39:29
+ * Last Modified: 15.12.2021 22:18:24
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -22,7 +22,7 @@
 
 int updateInterval = 1200000; //20 min in ms
 
-DynamicJsonDocument newsCache(1536);
+DynamicJsonDocument newsCache(2048);
 unsigned int        lastRefresh;
 unsigned int        lastArticleShown;
 
