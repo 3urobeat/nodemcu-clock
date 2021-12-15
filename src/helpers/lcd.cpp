@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 14:54:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 11:29:43
+ * Last Modified: 15.12.2021 20:41:16
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -40,6 +40,8 @@ void lcdSetCursor(int col, int row)
 //Custom print function to be able to track content of display
 void lcdPrint(String str)
 {
+    if (str.length() > (unsigned int) maxcol) str = str.substring(0, maxcol); //Cut String if it is too long to prevent it overflowing to another row
+
     lcd.print(str);
     
     lcdContent[lcdCursorPos[1]] = str;
