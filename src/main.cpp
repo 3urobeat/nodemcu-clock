@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 12.12.2021 22:38:47
+ * Last Modified: 15.12.2021 15:32:19
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -81,6 +81,8 @@ void setup()
     lcd.begin();
     lcd.backlight();
 
+    //Serial.begin(9600);
+
     //Print startup screen
     centerPrint("nodemcu-clock", 0, true);
     centerPrint("v" + version, 1, true);
@@ -105,6 +107,14 @@ void setup()
 
 }
 
+
+//Helper function to quickly debug memory usage
+void debugMemory() {
+    Serial.println("getFreeHeap(): " + ESP.getFreeHeap());
+    Serial.print("getFreeContStack(): " + ESP.getFreeContStack());
+}
+
+
 //Call to display mini clock in the top right
 void miniClock()
 {
@@ -115,6 +125,7 @@ void miniClock()
         lcdPrint(getTime(timeClient, timeoffset, miniClockFormat));
     }
 }
+
 
 //Use pre-configured loop as pagemanager
 void loop() 
@@ -139,6 +150,8 @@ void loop()
 
         if (oldPage != currentPage) lcd.clear();
     }
+
+    //debugMemory();    
 
     //get current page to shorten these ugly if else statements
     String e = pageOrder[currentPage];
