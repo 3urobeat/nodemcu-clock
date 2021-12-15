@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 14:54:00
  * Author: 3urobeat
  * 
- * Last Modified: 12.12.2021 22:48:21
+ * Last Modified: 15.12.2021 11:29:43
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -54,8 +54,34 @@ void centerPrint(String str, int row, bool callclearLine)
     int offset = maxcol - str.length();
     if (offset < 0) offset = 0; //set offset to 0 if it would be negative
 
-    lcd.setCursor(offset / 2, row); //center string
-    lcd.print(str);
-
-    lcdContent[row] = str;
+    lcdSetCursor(offset / 2, row); //center string
+    lcdPrint(str);
 };
+
+
+String       currentStr;
+unsigned int moveOffset = 0;
+
+/**
+ * Prints a String that will be moved on the screen each time the method is called
+ */
+void movingPrint(String str, int row, bool callclearLine)
+{
+    if (callclearLine && currentStr != str) clearLine(maxcol, row);
+
+    if (str.length() > (unsigned int) maxcol) { //check if we actually have to move something, if not display it as a center string
+        if (currentStr != str) {
+            moveOffset = 0; //reset offset if the string isn't the same anymore
+            currentStr = str;
+        }
+
+        moveOffset++;
+        if (moveOffset + maxcol > str.length()) moveOffset = 0; //reset if string was fully displayed
+
+        lcdSetCursor(0, row);
+        lcdPrint(str.substring(moveOffset, maxcol + moveOffset));
+
+    } else {
+        centerPrint(str, row, callclearLine);
+    }
+}
