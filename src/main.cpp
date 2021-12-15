@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 21:52:59
+ * Last Modified: 15.12.2021 22:39:13
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -51,7 +51,7 @@ int    clockWeekdaySwitch = 2500; //after how much ms the clock page should swit
 //----------------------------
 
 
-String version = "0.4.0";
+String version = "0.5.0";
 
 String city;
 String country;
