@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 14:16:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 17:17:10
+ * Last Modified: 19.12.2021 18:06:22
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -26,7 +26,7 @@ void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *
         StaticJsonDocument<0> filter;
         filter.set(true);
 
-        httpGetJson("http://ip-api.com/json?fields=lat,lon,offset,city,country", &locationResult, filter);
+        httpGetJson("http://ip-api.com/json?fields=lat,lon,offset,city,countryCode", &locationResult, filter);
 
         //Only overwrite lat and lon if user didn't provide a location manually
         *lat = (String) locationResult["lat"];
