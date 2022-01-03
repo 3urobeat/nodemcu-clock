@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 20:19:18
+ * Last Modified: 03.01.2022 13:17:52
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -21,16 +21,19 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 #include <NTPClient.h>
+#include "main.h"
 
 void clearLine(int maxcol, int row);
-void lcdSetCursor(int row, int col);
-void lcdPrint(String str);
-void centerPrint(String str, int row, bool callclearLine);
-void movingPrint(String str, int row, bool callclearLine);
-void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *lat, String *lon, String *city, String *country, int *timeoffset);
-ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String wifiPW[], size_t ssidamount, int maxcol, int row);
-void httpGetJson(String url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter);
-void httpsGetJson(String url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter);
-String formatInt(int value);
-String getDate(NTPClient timeClient, int timeoffset, String dateformat);
-String getTime(NTPClient timeClient, int timeoffset, String timeformat);
+void lcdSetCursor(int col, int row);
+void lcdPrint(const char *str);
+void centerPrint(const char *str, int row, bool callclearLine);
+void movingPrint(const char *str, int row, bool callclearLine);
+void getLocation(LiquidCrystal_PCF8574 lcd, const char *openweathermaptoken, char *lat, char *lon, char *city, char *country, int *timeoffset);
+ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, const char *wifiSSID[], const char *wifiPW[], size_t ssidamount, int maxcol, int row);
+void httpGetJson(const char *url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter);
+void httpsGetJson(const char *url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter);
+char *formatInt(char *buf, int value);
+void getDate(char *dest, NTPClient timeClient, int timeoffset, const char *dateformat);
+void getTime(char *dest, NTPClient timeClient, int timeoffset, const char *timeformat);
+void strrpl(char *src, const char *oldchars, const char *newchars);
+char *mystrcat(char* dest, const char* src);

@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 22:33:30
+ * Last Modified: 29.12.2021 12:50:52
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -24,32 +24,47 @@ int updateinterval = 600000; //10 minutes in ms
 
 unsigned long lastWeatherRefresh;
 
-String temp;        //store the two interesting weather values
-String description;
+char fullStr[30]; //store string to show
 
 
-void weatherpage(String openweathermaptoken, String lat, String lon, String city)
+void weatherpage(const char *openweathermaptoken, const char *lat, const char *lon, const char *city)
 {
     if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateinterval <= millis())
     {
+        //create filter
         StaticJsonDocument<128> filter;
         
         filter["main"]["temp"] = true;
         filter["weather"][0]["main"] = true;
         
-        DynamicJsonDocument weatherResult(512);
+        //Construct URL
+        char requestStr[200] = "http://api.openweathermap.org/data/2.5/weather?lat=";
+        char *p = requestStr;
+
+        p = mystrcat(p, lat);
+        p = mystrcat(p, "&lon=");
+        p = mystrcat(p, lon);
+        p = mystrcat(p, "&appid=");
+        p = mystrcat(p, openweathermaptoken);
+        *(p) = '\0'; //add null char to the end
         
-        httpGetJson("http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + openweathermaptoken, &weatherResult, filter);
+        //Make API call
+        DynamicJsonDocument weatherResult(256);
+        httpGetJson(requestStr, &weatherResult, filter);
 
-        //refresh both weather values
-        temp = (String) round((double) weatherResult["main"]["temp"] - 273.15);
-        description = (String) weatherResult["weather"][0]["main"];
 
-        temp.replace(".00", ""); //You are probably thinking: Wtf? - and I completely agree with you. The output from round() contains decimals (18.00 for example) and it seems like removing those is challenging (spent ~15 min searching). And since this is already a String I'm just gonna do it like this. Fuck it.
+        //refresh fullStr
+        itoa((int) round((double) weatherResult["main"]["temp"] - 273.15), fullStr, 10); //convert temp to string and write into fullStr
+
+        char *fSp = fullStr;
+        
+        fSp = mystrcat(fSp, "°C, ");
+        fSp = mystrcat(fSp, weatherResult["weather"][0]["main"]);
+        *(p) = '\0'; //add null char to the end just to be sure, I think there might already be one
 
         lastWeatherRefresh = millis();
-    }
+    }    
 
     centerPrint(city, 1, false);
-    centerPrint(temp + "°C, " + description, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal results in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
+    centerPrint(fullStr, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal results in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
 }

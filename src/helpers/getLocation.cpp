@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 14:16:00
  * Author: 3urobeat
  * 
- * Last Modified: 19.12.2021 18:06:22
+ * Last Modified: 30.12.2021 22:24:01
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -15,26 +15,32 @@
  */
 
 
+#include <string.h>
 #include "helpers.h"
 
-void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *lat, String *lon, String *city, String *country, int *timeoffset)
+void getLocation(LiquidCrystal_PCF8574 lcd, const char *openweathermaptoken, char *lat, char *lon, char *city, char *country, int *timeoffset)
 {
-    DynamicJsonDocument locationResult(1024);
+    DynamicJsonDocument locationResult(256);
 
     //If the user didn't provide a lat & lon value then get values from geocoding api
-    if (*lat == "" && *lon == "") {
+    if (strlen(lat) == 0 && strlen(lon) == 0) {
         StaticJsonDocument<0> filter;
         filter.set(true);
 
         httpGetJson("http://ip-api.com/json?fields=lat,lon,offset,city,countryCode", &locationResult, filter);
 
-        //Only overwrite lat and lon if user didn't provide a location manually
-        *lat = (String) locationResult["lat"];
-        *lon = (String) locationResult["lon"];
+        char temp[8];
 
-        *city = (String) locationResult["city"];
-        *country = (String) locationResult["countryCode"];
-        *timeoffset = (int) locationResult["offset"];
+        dtostrf(locationResult["lat"], 6, 4, temp); //convert double to string
+        strcpy(lat, temp);
+
+        dtostrf(locationResult["lon"], 6, 4, temp);
+        strcpy(lon, temp);
+
+        strcpy(city, locationResult["city"]);
+        strcpy(country, locationResult["countryCode"]);
+
+        *timeoffset = locationResult["offset"];
 
     } else { //...otherwise ping openweathermap once with the coords to get the city name and timeoffset
         StaticJsonDocument<128> filter;
@@ -42,12 +48,22 @@ void getLocation(LiquidCrystal_PCF8574 lcd, String openweathermaptoken, String *
         filter["sys"]["country"] = true;
         filter["timezone"] = true;
 
+        char fullstr[200] = "http://api.openweathermap.org/data/2.5/weather?lat=";
+        char *p = fullstr;
 
-        httpGetJson("http://api.openweathermap.org/data/2.5/weather?lat=" + *lat + "&lon=" + *lon + "&appid=" + openweathermaptoken, &locationResult, filter);
+        p = mystrcat(p, lat);
+        p = mystrcat(p, "&lon=");
+        p = mystrcat(p, lon);
+        p = mystrcat(p, "&appid=");
+        p = mystrcat(p, openweathermaptoken);
+        *(p) = '\0'; //add null char to the end
 
-        *city = (String) locationResult["name"];
-        *country = (String) locationResult["sys"]["country"];
-        *timeoffset = (int) locationResult["timezone"];
+        httpGetJson(fullstr, &locationResult, filter);
+
+        strcpy(city, locationResult["name"]);
+        strcpy(country, locationResult["sys"]["country"]);
+
+        *timeoffset = locationResult["timezone"];
     }
     
 }

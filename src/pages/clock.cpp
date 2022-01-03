@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 12.12.2021 22:01:59
+ * Last Modified: 27.12.2021 16:14:56
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -20,17 +20,21 @@
 
 #include <TimeLib.h>
 
+char timeResult[9];
+char dateResult[11];
 
 unsigned long lastPageMod = millis();
 bool          currentmod  = false;    //in this case we only have two mods, so lets choose a boolean
 
 
-void clockpage(NTPClient timeClient, int timeoffset, int clockWeekdaySwitch, String dateformat, String timeformat)
+void clockpage(NTPClient timeClient, int timeoffset, int clockWeekdaySwitch, const char *dateformat, const char *timeformat)
 {
-    String dayNames[] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }; //structure is weird, but look at the docs: https://github.com/PaulStoffregen/Time#functionality
+    const char *dayNames[] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }; //structure is weird, but look at the docs: https://github.com/PaulStoffregen/Time#functionality
 
     //Always print the current time
-    centerPrint(getTime(timeClient, timeoffset, timeformat).c_str(), 1, false);
+    getTime(timeResult, timeClient, timeoffset, timeformat);
+
+    centerPrint(timeResult, 1, false);
 
 
     //Switch between date and weekday when clockWeekdaySwitch ms passed since last mod switch
@@ -45,6 +49,8 @@ void clockpage(NTPClient timeClient, int timeoffset, int clockWeekdaySwitch, Str
 
         centerPrint(dayNames[weekday(epoch) - 1], 2, true);
     } else {
-        centerPrint(getDate(timeClient, timeoffset, dateformat).c_str(), 2, true);
+        getDate(dateResult, timeClient, timeoffset, dateformat);
+
+        centerPrint(dateResult, 2, true);
     }
 }

@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 20:16:29
+ * Last Modified: 27.12.2021 16:09:37
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -21,6 +21,6 @@
 #include <NTPClient.h>
 #include <iostream>
 
-void clockpage(NTPClient timeClient, int timeoffset, int clockWeekdaySwitch, String dateformat, String timeformat);
-void weatherpage(String openweathermaptoken, String lat, String lon, String city);
-void newspage(String newsapitoken, int showuntil, String country, int timeoffset, String miniClockFormat);
+void clockpage(NTPClient timeClient, int timeoffset, int clockWeekdaySwitch, const char *dateformat, const char *timeformat);
+void weatherpage(const char *openweathermaptoken, const char *lat, const char *lon, const char *city);
+void newspage(const char *newsapitoken, int showuntil, const char *country, int timeoffset, const char *miniClockFormat);
