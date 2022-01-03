@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 01.12.2021 15:01:29
+ * Last Modified: 30.12.2021 19:50:57
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -22,7 +22,7 @@
 void(* resetFunc) (void) = 0; // create a standard reset function
 
 
-ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String wifiPW[], size_t ssidamount, int maxcol, int row) 
+ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, const char *wifiSSID[], const char *wifiPW[], size_t ssidamount, int maxcol, int row) 
 {
     clearLine(maxcol, row); //clear line just to make sure no old characters are left
 
@@ -34,11 +34,15 @@ ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String w
     int  n     = WiFi.scanNetworks();
     bool found = false;
 
+    char thisSSID[64]; //wifi SSIDs should have a max length of 32 characters
+
     //Try to connect by iterating for every found network over all networks in array (I tried doing this with indexOf() to avoid using a nested for loop but it had different results depending on the order in wifiSSID which was weird)
     for (int i = 0; i <= n; i++) {
-        for (unsigned int j = 0; j <= ssidamount; j++) {
+        for (unsigned int j = 0; j < ssidamount; j++) {
+            WiFi.SSID(i).toCharArray(thisSSID, 64, 0);
 
-            if (WiFi.SSID(i) == wifiSSID[j]) {
+            if (strcmp(thisSSID, wifiSSID[j]) == 0) {
+
                 WiFi.begin(wifiSSID[j], wifiPW[j]);
 
                 found = true; //stop parent loop
@@ -65,8 +69,12 @@ ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, String wifiSSID[], String w
         if (dots > 3) dots = 0; //reset when 3 dots are present
 
         lcdSetCursor(13, row);
-        lcdPrint(std::string(dots, '.').c_str()); //add dots amount of dots behind "Connecting"
-        lcdPrint("    "); //Clear any dots that might be behind
+        lcdPrint("    "); //Clear all dots
+
+        for (int i = 0; i < dots; i++) {
+            lcdSetCursor(13 + i, row); 
+            lcdPrint("."); //add dots amount of dots behind "Connecting"
+        }
 
         delay(500);
     }

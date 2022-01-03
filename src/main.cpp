@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 19.12.2021 19:01:42
+ * Last Modified: 03.01.2022 15:30:28
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -15,7 +15,6 @@
  */
 
 
-#include <Arduino.h>
 #include <Wire.h>
 #include <NoiascaLiquidCrystal.h> // Article (german): https://werner.rothschopf.net/202003_arduino_liquid_crystal_umlaute.htm | Direct download: https://werner.rothschopf.net/2020/NoiascaLiquidCrystal.zip
 #include <ESP8266WiFi.h>
@@ -28,49 +27,49 @@
 
 //--------- config -----------
 
-int    maxcol = 20; //width of the display
+const int maxcol = 20; //width of the display
 
-String wifiSSID[] = { "", "" }; //you can provide multiple networks if you wish
-String wifiPW[]   = { "", "" };
+const char *wifiSSID[2] = { "", "" }; //you can provide multiple networks if you wish
+const char *wifiPW[2]   = { "", "" };
 
-String lat = ""; //set your location manually with latitudinal and longitudinal coordinates. If you leave it empty the program will get you general location automatically via your IP.
-String lon = "";
+char lat[8] = ""; //set your location manually with latitudinal and longitudinal coordinates. If you leave it empty the program will get you general location automatically via your IP.
+char lon[8] = "";
 
-String openweathermaptoken = "";
-String newsapitoken        = "";
+const char openweathermaptoken[33] = "";
+const char newsapitoken[33]        = "";
 
-String dateformat      = "dd.mm.yyyy";
-String timeformat      = "hh:mm:ss";
-String miniClockFormat = "hh:mm";
+const char dateformat[11]      = "dd.mm.yyyy";
+const char timeformat[9]       = "hh:mm:ss";
+const char miniClockFormat[6]  = "hh:mm";
 
-String pageOrder[3]       = { "clock", "weather", "news" };
-int    showuntil[3]       = { 5000, 5000, 30000 }; //how long each page should be shown in ms
-bool   alwaysShowTime     = true; //always show the time in the upper right corner
-int    clockWeekdaySwitch = 2500; //after how much ms the clock page should switch between date and weekday. Set to 0 to disable
+const char *pageOrder[3]       = { "clock", "weather", "news" };
+const int   showuntil[3]       = { 5000, 5000, 30000 }; //how long each page should be shown in ms
+const bool  alwaysShowTime     = true; //always show the time in the upper right corner
+const int   clockWeekdaySwitch = 2500; //after how much ms the clock page should switch between date and weekday. Set to 0 to disable
 
 //----------------------------
 
 
-String version = "0.5.1";
+char version[] = "v0.5.1";
 
-String city;
-String country;
-int    timeoffset; //timezone offset in seconds
+char city[64];   //Yes, we can store the longest city names: https://largest.org/geography/city-names/
+char country[3]; //two char long country codes
+int  timeoffset; //timezone offset in seconds
 
 int           currentPage;           //current page index in pageOrder array
 int           oldPage;               //save previous page to determine if we need to call lcd.clear() (useful if user only set one page in pageOrder to avoid blinking every showuntil seconds)
 unsigned long pageupdate;            //save timestamp when page was updated in order to keep track of showuntil without blocking the thread with a delay()
 bool          hideMiniClock = false; //will be set to true when clockpage is active
 
-int    lcdCursorPos[2] = { 0, 0 };           //save current cursor position
-String lcdContent[4]   = { "", "", "", "" }; //save content of lcd when printing to be able to compare content later
+int  lcdCursorPos[2]   = { 0, 0 }; //save current cursor position
+char lcdContent[4][32] = { };      //save content of lcd when printing to be able to compare content later
 
 LiquidCrystal_PCF8574 lcd(0x27, maxcol, 4);
 
 WiFiUDP   ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 0, 60000); //timeoffset will be added later manually
 
-size_t ssidamount = sizeof wifiSSID / sizeof wifiSSID[0]; //calculate wifiSSID size to avoid -Wsizeof-array-argument warning
+const size_t ssidamount = sizeof wifiSSID / sizeof wifiSSID[0]; //calculate wifiSSID size to avoid -Wsizeof-array-argument warning
 
 
 //Setup stuff (will be run on poweron)
@@ -86,7 +85,7 @@ void setup()
 
     //Print startup screen
     centerPrint("nodemcu-clock", 0, true);
-    centerPrint("v" + version, 1, true);
+    centerPrint(version, 1, true);
     delay(1000);
 
     //Connect to wifi
@@ -97,7 +96,7 @@ void setup()
     centerPrint("Loading...", 3, true);
 
     //geolocate the used IP to get coordinates and the timeoffset
-    getLocation(lcd, openweathermaptoken, &lat, &lon, &city, &country, &timeoffset);
+    getLocation(lcd, openweathermaptoken, lat, lon, city, country, &timeoffset);
 
     //start syncing time
     timeClient.begin();
@@ -119,13 +118,16 @@ void debugMemory() {
 
 
 //Call to display mini clock in the top right
+char miniClockResult[6];
+
 void miniClock()
 {
     if (!hideMiniClock)
     {
-        lcdSetCursor(maxcol - miniClockFormat.length(), 0); //set cursor to the very right of the first line
+        getTime(miniClockResult, timeClient, timeoffset, miniClockFormat);
 
-        lcdPrint(getTime(timeClient, timeoffset, miniClockFormat));
+        lcdSetCursor(maxcol - strlen(miniClockFormat), 0); //set cursor to the very right of the first line
+        lcdPrint(miniClockResult);
     }
 }
 
@@ -154,21 +156,18 @@ void loop()
         if (oldPage != currentPage) lcd.clear();
     }
 
-    //debugMemory();    
+    //debugMemory();
 
-    //get current page to shorten these ugly if else statements
-    String e = pageOrder[currentPage];
-
-    if (e == "clock") {
+    if (strcmp(pageOrder[currentPage], "clock") == 0) { // why strcmp? https://stackoverflow.com/questions/2603039/warning-comparison-with-string-literals-results-in-unspecified-behaviour
         
         clockpage(timeClient, timeoffset, clockWeekdaySwitch, dateformat, timeformat);
         hideMiniClock = true;
 
-    } else if (e == "weather") {
+    } else if (strcmp(pageOrder[currentPage], "weather") == 0) {
 
         weatherpage(openweathermaptoken, lat, lon, city);
 
-    } else if (e == "news") {
+    } else if (strcmp(pageOrder[currentPage], "news") == 0) {
 
         newspage(newsapitoken, showuntil[currentPage], country, timeoffset, miniClockFormat);
 

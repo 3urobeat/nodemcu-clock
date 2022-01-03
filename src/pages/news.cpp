@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 22:18:24
+ * Last Modified: 03.01.2022 15:26:31
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -20,60 +20,87 @@
 
 #include "helpers/helpers.h"
 
-int updateInterval = 1200000; //20 min in ms
+const int  updateInterval = 1200000; //20 min in ms
 
-DynamicJsonDocument newsCache(2048);
-unsigned int        lastRefresh;
-unsigned int        lastArticleShown;
+unsigned int lastRefresh;
+unsigned int lastArticleShown;
 
-unsigned int        lastArticleSwitch = millis();
+char sourceCache[4][32];
+char pubAtCache[4][6];
+char titleCache[4][256];
+
+unsigned int lastArticleSwitch = millis();
 
 
-void newspage(String newsapitoken, int showuntil, String country, int timeoffset, String miniClockFormat)
+void newspage(const char *newsapitoken, int showuntil, const char *country, int timeoffset, const char *miniClockFormat)
 {
     //Check if updateInterval ms passed and update newsCache
     if (lastRefresh == 0 || lastRefresh + updateInterval <= millis()) {
-        StaticJsonDocument<128> filter; //create filter to reduce memory load
+        //create filter to reduce memory load
+        StaticJsonDocument<128> filter;
         
         JsonObject filter_articles_0 = filter["articles"].createNestedObject(); //makes creating a filter 10 times easier: https://arduinojson.org/v6/assistant/
         filter_articles_0["source"]["name"] = true;
         filter_articles_0["title"] = true;
         filter_articles_0["publishedAt"] = true;
 
+        //build request url
+        char fullstr[200] = "https://newsapi.org/v2/top-headlines?country=";
+        char *p = fullstr;
 
-        httpsGetJson("https://newsapi.org/v2/top-headlines?country=" + country + "&pageSize=4" + "&apiKey=" + newsapitoken, &newsCache, filter);
+        p = mystrcat(p, country);
+        p = mystrcat(p, "&pageSize=4&apiKey=");
+        p = mystrcat(p, newsapitoken);
+        *(p) = '\0'; //add null char to the end
 
-        if (newsCache[0] != "https error (-1): connection failed") lastRefresh = millis(); //if the request didn't succeed then let it ping the api again on the next iteration
-            else newsCache["articles"][lastArticleShown]["title"] = "Error getting news!";
+        //make request
+        DynamicJsonDocument newsCache(2048);
 
+        httpsGetJson(fullstr, &newsCache, filter);
+
+        //Disabled for now as it causes an error
+        //if (strcmp(newsCache[0], "connection failed") != 0) //if the request didn't succeed then let it ping the api again on the next iteration
+        lastRefresh = millis();
 
         for (unsigned int i = 0; i < newsCache["articles"].size(); i++) {
 
-            //Remove date from time
-            String pubAt = newsCache["articles"][i]["publishedAt"];
-            pubAt = pubAt.substring(pubAt.indexOf("T") + 1, pubAt.indexOf("Z") - 2); //2021-12-15T07:15:04Z -> 07:15
+            //Copy source name into cache
+            strncpy(sourceCache[i], newsCache["articles"][i]["source"]["name"], 31);
+            
+
+            // ------ Process publishedAt ------
+            char pubAtBuf[10];
+
+            //Pseudo: substring(dest, src pointer + offset, length)          | Expected result: 2021-12-15T07:15:04Z -> 07:15
+            strncpy(pubAtBuf, newsCache["articles"][i]["publishedAt"].as<const char*>() + strcspn(newsCache["articles"][i]["publishedAt"].as<const char*>(), "T") + 1, 8);
 
             //Convert hours and minutes in String to seconds
             unsigned long inLocalSeconds;
-            String hours   = (String) pubAt.charAt(0) + (String) pubAt.charAt(1);
-            String minutes = (String) pubAt.charAt(3) + (String) pubAt.charAt(4);
+            char hours[3] = { pubAtBuf[0], pubAtBuf[1], '\0' };
+            char minutes[3] = { pubAtBuf[3], pubAtBuf[4], '\0' };
 
-            inLocalSeconds = (hours.toInt() * 3600) + (minutes.toInt() * 60) + timeoffset; //add timeoffset
+            inLocalSeconds = (atoi(hours) * 3600) + (atoi(minutes) * 60) + timeoffset; //add timeoffset
 
-            //Format time using miniClockFormat
-            String time = miniClockFormat;
-            time.replace("hh", formatInt(hour(inLocalSeconds)));
-            time.replace("mm", formatInt(minute(inLocalSeconds)));
+            //Format time using miniClockFormat and reuse pubAtBuf
+            strncpy(pubAtBuf, miniClockFormat, 5);
 
-            newsCache["articles"][i]["publishedAt"] = time;
-
-
-            //Remove article source from the end of the title
-            String source = newsCache["articles"][i]["source"]["name"];
-            String title  = newsCache["articles"][i]["title"];
+            char buf[3];
             
-            //Title looks like this "title text - source name" which sucks on a screen with limited size when I already show the source directly above
-            newsCache["articles"][i]["title"] = title.substring(0, title.indexOf(" - ", title.length() - source.length() - 7)); //Search for " - ", starting from the end, minus the source length and some characters. This should avoid accidentaly finding a minus in the actual title
+            strrpl(pubAtBuf, "hh", formatInt(buf, hour(inLocalSeconds)));
+            strrpl(pubAtBuf, "mm", formatInt(buf, minute(inLocalSeconds)));
+
+            //write new time string
+            strncpy(pubAtCache[i], pubAtBuf, 5);
+  
+           
+            //Add two spaces to the front and back of the string
+            strcpy(titleCache[i], "  "); //copy first part, cat the other parts
+
+            char *tp = titleCache[i];
+            
+            tp = mystrcat(tp, newsCache["articles"][i]["title"]);
+            tp = mystrcat(tp, "  ");
+            *(tp) = '\0'; //add null char to the end
         }
     }
 
@@ -82,21 +109,23 @@ void newspage(String newsapitoken, int showuntil, String country, int timeoffset
         lastArticleShown++;
         lastArticleSwitch = millis();
 
-        if (lastArticleShown > newsCache["articles"].size() - 1) lastArticleShown = 0; //reset
+        if (lastArticleShown >= 4) lastArticleShown = 0; //reset
 
         //Show page title
         lcdSetCursor(0, 0);
         lcdPrint("News");
 
         //Show article source
+        clearLine(maxcol, 1);
+
         lcdSetCursor(0, 1);
-        lcdPrint(newsCache["articles"][lastArticleShown]["source"]["name"]);
+        lcdPrint(sourceCache[lastArticleShown]);
 
         //Show article date
         lcdSetCursor(0, 2);
-        lcdPrint(newsCache["articles"][lastArticleShown]["publishedAt"]);
+        lcdPrint(pubAtCache[lastArticleShown]);
     }
 
     //Call the movingPrint method to refresh string position
-    movingPrint("  " + (String) newsCache["articles"][lastArticleShown]["title"] + "  ", 3, false); //add two spaces to make animation start and end look smoother
+    movingPrint(titleCache[lastArticleShown], 3, false); //add two spaces to make animation start and end look smoother
 }

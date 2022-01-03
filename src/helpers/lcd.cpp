@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 14:54:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.12.2021 20:41:16
+ * Last Modified: 03.01.2022 15:15:10
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -15,15 +15,25 @@
  */
 
 
+#include <string.h>
 #include <iostream>
 #include "helpers.h"
-#include "main.h"
 
 
 void clearLine(int maxcol, int row)
 {
     lcdSetCursor(0, row);
-    lcdPrint(std::string(maxcol, ' ').c_str()); //print maxcol amount of spaces to effectively clear the line
+
+    //print maxcol amount of spaces to effectively clear the line
+    char str[maxcol + 1];
+
+    for (int i = 0; i < maxcol; i++) {
+        str[i] = ' ';
+    }
+
+    str[maxcol] = '\0';
+
+    lcdPrint(str);
 }
 
 
@@ -38,22 +48,29 @@ void lcdSetCursor(int col, int row)
 
 
 //Custom print function to be able to track content of display
-void lcdPrint(String str)
+void lcdPrint(const char *str)
 {
-    if (str.length() > (unsigned int) maxcol) str = str.substring(0, maxcol); //Cut String if it is too long to prevent it overflowing to another row
+    //Either print directly or cut string and then print the shortened string if it is wider than the display
+    if (strlen(str) <= (unsigned int) maxcol) {
+        lcd.print(str);
 
-    lcd.print(str);
-    
-    lcdContent[lcdCursorPos[1]] = str;
+        strncpy(lcdContent[lcdCursorPos[1]], str, maxcol);
+    } else {
+        char temp[maxcol + 1]; // +1 for the null char
+        strncpy(temp, str, maxcol); //Cut String if it is too long to prevent it overflowing to another row
+        lcd.print(temp);
+
+        strncpy(lcdContent[lcdCursorPos[1]], temp, maxcol);
+    }
 }
 
 
-void centerPrint(String str, int row, bool callclearLine)
+void centerPrint(const char *str, int row, bool callclearLine)
 {
     if (callclearLine && lcdContent[row] != str) clearLine(maxcol, row); //clear the line first to avoid old characters corrupting the text when content is not the same
 
     //Calculate column
-    int offset = maxcol - str.length();
+    int offset = maxcol - strlen(str);
     if (offset < 0) offset = 0; //set offset to 0 if it would be negative
 
     lcdSetCursor(offset / 2, row); //center string
@@ -61,28 +78,32 @@ void centerPrint(String str, int row, bool callclearLine)
 };
 
 
-String       currentStr;
+char         currentStr[256];
 unsigned int moveOffset = 0;
 
 /**
- * Prints a String that will be moved on the screen each time the method is called
+ * Prints a String that will be moved on the screen each time the method is called (max 256 chars!)
  */
-void movingPrint(String str, int row, bool callclearLine)
+void movingPrint(const char *str, int row, bool callclearLine)
 {
-    if (callclearLine && currentStr != str) clearLine(maxcol, row);
+    if (callclearLine && strcmp(currentStr, str) != 0) clearLine(maxcol, row);
 
-    if (str.length() > (unsigned int) maxcol) { //check if we actually have to move something, if not display it as a center string
-        if (currentStr != str) {
+    if (strlen(str) > (unsigned int) maxcol) { //check if we actually have to move something, if not display it as a center string
+        if (strcmp(currentStr, str) != 0) {
             moveOffset = 0; //reset offset if the string isn't the same anymore
-            currentStr = str;
+
+            strncpy(currentStr, str, 255); //cut after 255 chars
         }
 
-        moveOffset++;
-        if (moveOffset + maxcol > str.length()) moveOffset = 0; //reset if string was fully displayed
+        if (moveOffset + maxcol > strlen(str)) moveOffset = 0; //reset if string was fully displayed
+
+        char temp[maxcol + 1];
+        strncpy(temp, str + moveOffset, maxcol); //substring to current offset
 
         lcdSetCursor(0, row);
-        lcdPrint(str.substring(moveOffset, maxcol + moveOffset));
+        lcdPrint(temp);
 
+        moveOffset++;
     } else {
         centerPrint(str, row, callclearLine);
     }

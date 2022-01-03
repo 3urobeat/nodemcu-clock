@@ -4,7 +4,7 @@
  * Created Date: 03.09.2021 10:06:00
  * Author: 3urobeat
  * 
- * Last Modified: 29.11.2021 17:37:51
+ * Last Modified: 31.12.2021 15:41:29
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -17,38 +17,49 @@
 
 #include <NTPClient.h>
 #include <TimeLib.h>
+#include <helpers/helpers.h>
 
-String formatInt(int value)
+char *formatInt(char *buf, int value)
 {
-    if (value < 10) return (String) "0" + value;
-        else return (String) value;
+    itoa(value, buf, 10); //int value to string
+
+    if (value < 10) {
+        char buf2[strlen(buf) + 2];
+
+        //copy current value in buf into second buffer, then overwrite first buffer with "0" and add buf2 back to buf again
+        strcpy(buf2, buf); //looks shit, probably is shit but I've got no other idea right now
+        strcpy(buf, "0");
+        strcat(buf, buf2);
+    }
+
+    return buf;
 }
 
-String getDate(NTPClient timeClient, int timeoffset, String dateformat)
+void getDate(char *dest, NTPClient timeClient, int timeoffset, const char *dateformat)
 {
-    unsigned long epoch = timeClient.getEpochTime() + timeoffset; 
+    unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
-    //make copy from original value to not overwrite it
-    String date = dateformat;
+    char buf[5];
 
-    date.replace("dd", formatInt(day(epoch)));
-    date.replace("mm", formatInt(month(epoch)));
-    date.replace("yyyy", formatInt(year(epoch)));
+    //copy dateformat into dest
+    memcpy(dest, dateformat, strlen(dateformat));
 
-    return date;
+    strrpl(dest, "dd", formatInt(buf, day(epoch)));
+    strrpl(dest, "mm", formatInt(buf, month(epoch)));
+    strrpl(dest, "yyyy", formatInt(buf, year(epoch)));
 }
 
 //Provide function to help construct a mini clock that will be called by main.cpp when alwaysShowTime is true
-String getTime(NTPClient timeClient, int timeoffset, String timeformat)
+void getTime(char *dest, NTPClient timeClient, int timeoffset, const char *timeformat)
 {
-    unsigned long epoch = timeClient.getEpochTime() + timeoffset; 
+    unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
-    //make copy from original value to not overwrite it
-    String time = timeformat;
+    char buf[5];
 
-    time.replace("hh", formatInt(hour(epoch)));
-    time.replace("mm", formatInt(minute(epoch)));
-    time.replace("ss", formatInt(second(epoch)));
+    //copy dateformat into dest
+    memcpy(dest, timeformat, strlen(timeformat));
 
-    return time;
+    strrpl(dest, "hh", formatInt(buf, hour(epoch)));
+    strrpl(dest, "mm", formatInt(buf, minute(epoch)));
+    strrpl(dest, "ss", formatInt(buf, second(epoch)));
 }
