@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 03.01.2022 15:26:31
+ * Last Modified: 09.02.2022 13:19:39
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -65,6 +65,7 @@ void newspage(const char *newsapitoken, int showuntil, const char *country, int 
         for (unsigned int i = 0; i < newsCache["articles"].size(); i++) {
 
             //Copy source name into cache
+            memset(sourceCache[i], 0, sizeof sourceCache[i]); //clear old content just to make sure there is no gibberish left that could f us in the ass later
             strncpy(sourceCache[i], newsCache["articles"][i]["source"]["name"], 31);
             
 
@@ -90,10 +91,12 @@ void newspage(const char *newsapitoken, int showuntil, const char *country, int 
             strrpl(pubAtBuf, "mm", formatInt(buf, minute(inLocalSeconds)));
 
             //write new time string
+            memset(pubAtCache[i], 0, sizeof pubAtCache[i]); //clear old content just to make sure there is no gibberish left that could f us in the ass later
             strncpy(pubAtCache[i], pubAtBuf, 5);
   
            
             //Add two spaces to the front and back of the string
+            memset(titleCache[i], 0, sizeof titleCache[i]); //clear old content just to make sure there is no gibberish left that could f us in the ass later
             strcpy(titleCache[i], "  "); //copy first part, cat the other parts
 
             char *tp = titleCache[i];
