@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 03.01.2022 13:17:52
+ * Last Modified: 09.02.2022 14:08:53
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -37,3 +37,4 @@ void getDate(char *dest, NTPClient timeClient, int timeoffset, const char *datef
 void getTime(char *dest, NTPClient timeClient, int timeoffset, const char *timeformat);
 void strrpl(char *src, const char *oldchars, const char *newchars);
 char *mystrcat(char* dest, const char* src);
+size_t utf8_strlen(const char *str);
