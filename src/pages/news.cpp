@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 09.02.2022 13:19:39
+ * Last Modified: 09.02.2022 17:11:17
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -36,6 +36,11 @@ void newspage(const char *newsapitoken, int showuntil, const char *country, int 
 {
     //Check if updateInterval ms passed and update newsCache
     if (lastRefresh == 0 || lastRefresh + updateInterval <= millis()) {
+        //Display loading message as the display otherwise is just empty, leaving user unsure if the device crashed
+        lcdSetCursor(0, 0);
+        lcdPrint("News");
+        centerPrint("Loading...", 2, false);
+
         //create filter to reduce memory load
         StaticJsonDocument<128> filter;
         
