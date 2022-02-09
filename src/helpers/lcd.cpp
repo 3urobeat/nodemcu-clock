@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 14:54:00
  * Author: 3urobeat
  * 
- * Last Modified: 03.01.2022 15:15:10
+ * Last Modified: 09.02.2022 13:18:45
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -92,12 +92,13 @@ void movingPrint(const char *str, int row, bool callclearLine)
         if (strcmp(currentStr, str) != 0) {
             moveOffset = 0; //reset offset if the string isn't the same anymore
 
+            memset(currentStr, 0, sizeof currentStr);
             strncpy(currentStr, str, 255); //cut after 255 chars
         }
 
         if (moveOffset + maxcol > strlen(str)) moveOffset = 0; //reset if string was fully displayed
 
-        char temp[maxcol + 1];
+        char temp[maxcol + 1] = "";
         strncpy(temp, str + moveOffset, maxcol); //substring to current offset
 
         lcdSetCursor(0, row);
