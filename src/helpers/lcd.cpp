@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 14:54:00
  * Author: 3urobeat
  * 
- * Last Modified: 09.02.2022 13:18:45
+ * Last Modified: 09.02.2022 17:03:39
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -51,7 +51,7 @@ void lcdSetCursor(int col, int row)
 void lcdPrint(const char *str)
 {
     //Either print directly or cut string and then print the shortened string if it is wider than the display
-    if (strlen(str) <= (unsigned int) maxcol) {
+    if (utf8_strlen(str) <= (unsigned int) maxcol) {
         lcd.print(str);
 
         strncpy(lcdContent[lcdCursorPos[1]], str, maxcol);
@@ -70,7 +70,7 @@ void centerPrint(const char *str, int row, bool callclearLine)
     if (callclearLine && lcdContent[row] != str) clearLine(maxcol, row); //clear the line first to avoid old characters corrupting the text when content is not the same
 
     //Calculate column
-    int offset = maxcol - strlen(str);
+    int offset = maxcol - utf8_strlen(str);
     if (offset < 0) offset = 0; //set offset to 0 if it would be negative
 
     lcdSetCursor(offset / 2, row); //center string
@@ -99,7 +99,10 @@ void movingPrint(const char *str, int row, bool callclearLine)
         if (moveOffset + maxcol > strlen(str)) moveOffset = 0; //reset if string was fully displayed
 
         char temp[maxcol + 1] = "";
+
         strncpy(temp, str + moveOffset, maxcol); //substring to current offset
+        strncat(temp, str + maxcol + moveOffset, maxcol - utf8_strlen(temp)); //add more chars if at least one two byte long char is included to avoid message being too short on the display
+        //Using Umlaute is still a bit janky but this is definitely an improvement. I'm not sure right now what else I could do.
 
         lcdSetCursor(0, row);
         lcdPrint(temp);
