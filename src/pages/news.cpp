@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 09.02.2022 17:11:17
+ * Last Modified: 11.02.2022 11:27:41
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -130,6 +130,7 @@ void newspage(const char *newsapitoken, int showuntil, const char *country, int 
         lcdPrint(sourceCache[lastArticleShown]);
 
         //Show article date
+        clearLine(maxcol, 2); //Make sure "Loading..." is definitely gone
         lcdSetCursor(0, 2);
         lcdPrint(pubAtCache[lastArticleShown]);
     }
