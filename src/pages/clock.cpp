@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 27.12.2021 16:14:56
+ * Last Modified: 14.02.2022 12:10:50
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -41,16 +41,17 @@ void clockpage(NTPClient timeClient, int timeoffset, int clockWeekdaySwitch, con
     if (clockWeekdaySwitch > 0 && millis() >= lastPageMod + clockWeekdaySwitch) {
         currentmod = !currentmod;
         lastPageMod = millis();
+        clearLine(maxcol, 2); //clear date/weekday line
     }
 
     //Show weekday if true and date if false, starts with false
     if (currentmod) {
         unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
-        centerPrint(dayNames[weekday(epoch) - 1], 2, true);
+        centerPrint(dayNames[weekday(epoch) - 1], 2, false);
     } else {
         getDate(dateResult, timeClient, timeoffset, dateformat);
 
-        centerPrint(dateResult, 2, true);
+        centerPrint(dateResult, 2, false);
     }
 }
