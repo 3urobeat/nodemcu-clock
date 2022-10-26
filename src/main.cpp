@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 26.10.2022 13:42:30
+ * Last Modified: 26.10.2022 13:52:24
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -17,10 +17,10 @@
 
 #include <Wire.h>
 #include <NoiascaLiquidCrystal.h> // Article (german): https://werner.rothschopf.net/202003_arduino_liquid_crystal_umlaute.htm | Direct download: https://werner.rothschopf.net/2020/NoiascaLiquidCrystal.zip
+#include <lcdHelper.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include <NTPClient.h>
-#include <lcdHelper.h>
 
 #include "helpers/helpers.h"
 #include "pages/pages.h"
@@ -87,14 +87,14 @@ void setup()
     delay(1000);
 
     //Connect to wifi
-    initWifi(lcd, wifiSSID, wifiPW, ssidamount, maxcol, 3);
+    initWifi(wifiSSID, wifiPW, ssidamount, maxcol, 3);
     delay(500);
 
     //Show loading message
     lcd.centerPrint("Loading...", 3, true);
 
     //geolocate the used IP to get coordinates and the timeoffset
-    getLocation(lcd, openweathermaptoken, lat, lon, city, country, &timeoffset);
+    getLocation(openweathermaptoken, lat, lon, city, country, &timeoffset);
 
     //start syncing time
     timeClient.begin();
