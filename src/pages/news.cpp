@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 26.10.2022 14:21:22
+ * Last Modified: 26.10.2022 15:53:43
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -20,7 +20,7 @@
 
 #include "helpers/helpers.h"
 
-const int  updateInterval = 1200000; //20 min in ms
+const int updateInterval = 1200000; //20 min in ms
 
 unsigned int lastRefresh;
 unsigned int lastArticleShown;
@@ -39,7 +39,9 @@ void newspage(const char *newsapitoken, int showuntil, const char *country, int 
     //Check if updateInterval ms passed and update newsCache
     if (lastRefresh == 0 || lastRefresh + updateInterval <= millis()) {
         //Display loading message as the display otherwise is just empty, leaving user unsure if the device crashed
+        lcd.clear();
         lcd.setCursor(0, 0);
+
         lcd.print("News");
         lcd.centerPrint("Loading...", 2, false);
 
