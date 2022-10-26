@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 26.10.2022 14:09:56
+ * Last Modified: 26.10.2022 15:28:39
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -51,7 +51,7 @@ const int   clockWeekdaySwitch = 2500; //after how much ms the clock page should
 //----------------------------
 
 
-char version[] = "v0.5.1";
+char version[] = "v0.5.2";
 
 char city[64];   //Yes, we can store the longest city names: https://largest.org/geography/city-names/
 char country[3]; //two char long country codes
