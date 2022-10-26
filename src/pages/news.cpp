@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 26.10.2022 15:53:43
+ * Last Modified: 26.10.2022 16:33:54
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -31,7 +31,7 @@ char sourceCache[4][32];
 char pubAtCache[4][6];
 char titleCache[4][256];
 
-unsigned int lastArticleSwitch = millis();
+unsigned int lastArticleSwitch = 0;
 
 
 void newspage(const char *newsapitoken, int showuntil, const char *country, int timeoffset, const char *miniClockFormat)
@@ -117,12 +117,12 @@ void newspage(const char *newsapitoken, int showuntil, const char *country, int 
     }
 
     //Check if the page just changed to this one and show the next article
-    if (lastArticleSwitch + showuntil < millis()) {
-        lastArticleShown++;
+    if (lastArticleSwitch + showuntil < millis() || lastArticleSwitch == 0) { // Check for lastArticleSwitch == 0 to show this stuff on first execute
+        if (lastArticleSwitch > 0) lastArticleShown++; // Only switch to next article if first article was shown at least once
         lastArticleSwitch = millis();
         moveOffset = 0; // Reset moveOffset so the next article starts from index 0
 
-        if (lastArticleShown >= 4) lastArticleShown = 0; //reset
+        if (lastArticleShown >= 4) lastArticleShown = 0; // Reset to first article if last has been displayed
 
         //Show page title
         lcd.setCursor(0, 0);
