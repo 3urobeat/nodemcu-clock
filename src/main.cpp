@@ -1,10 +1,10 @@
 /*
  * File: main.cpp
- * Project: src
+ * Project: nodemcu-clock
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 26.10.2022 13:52:24
+ * Last Modified: 26.10.2022 14:09:56
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
