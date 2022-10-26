@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.12.2021 19:50:57
+ * Last Modified: 26.10.2022 13:42:49
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -24,10 +24,10 @@ void(* resetFunc) (void) = 0; // create a standard reset function
 
 ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, const char *wifiSSID[], const char *wifiPW[], size_t ssidamount, int maxcol, int row) 
 {
-    clearLine(maxcol, row); //clear line just to make sure no old characters are left
+    lcd.clearLine(row); //clear line just to make sure no old characters are left
 
-    lcdSetCursor(3, row);
-    lcdPrint("Connecting");
+    lcd.setCursor(3, row);
+    lcd.print("Connecting");
     delay(500);
 
     //Search for wifi networks in range
@@ -54,7 +54,7 @@ ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, const char *wifiSSID[], con
 
         //Display error message if no network from wifiSSID array was found
         if (i == n && !found) {
-            centerPrint("No match found!", row, false);
+            lcd.centerPrint("No match found!", row, false);
             delay(10000); //wait a few sec and reset to rescan
             resetFunc();
         }
@@ -68,12 +68,12 @@ ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, const char *wifiSSID[], con
         dots++; //add another dot
         if (dots > 3) dots = 0; //reset when 3 dots are present
 
-        lcdSetCursor(13, row);
-        lcdPrint("    "); //Clear all dots
+        lcd.setCursor(13, row);
+        lcd.print("    "); //Clear all dots
 
         for (int i = 0; i < dots; i++) {
-            lcdSetCursor(13 + i, row); 
-            lcdPrint("."); //add dots amount of dots behind "Connecting"
+            lcd.setCursor(13 + i, row); 
+            lcd.print("."); //add dots amount of dots behind "Connecting"
         }
 
         delay(500);
@@ -81,6 +81,6 @@ ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, const char *wifiSSID[], con
 
 
     //Connection established
-    centerPrint("Connected!", row, true);
+    lcd.centerPrint("Connected!", row, true);
     return WiFi;
 }

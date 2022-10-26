@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 03.01.2022 15:30:28
+ * Last Modified: 26.10.2022 13:42:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -20,6 +20,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include <NTPClient.h>
+#include <lcdHelper.h>
 
 #include "helpers/helpers.h"
 #include "pages/pages.h"
@@ -61,10 +62,7 @@ int           oldPage;               //save previous page to determine if we nee
 unsigned long pageupdate;            //save timestamp when page was updated in order to keep track of showuntil without blocking the thread with a delay()
 bool          hideMiniClock = false; //will be set to true when clockpage is active
 
-int  lcdCursorPos[2]   = { 0, 0 }; //save current cursor position
-char lcdContent[4][32] = { };      //save content of lcd when printing to be able to compare content later
-
-LiquidCrystal_PCF8574 lcd(0x27, maxcol, 4);
+lcdHelper<LiquidCrystal_PCF8574> lcd(0x27, maxcol, 4);
 
 WiFiUDP   ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 0, 60000); //timeoffset will be added later manually
@@ -84,8 +82,8 @@ void setup()
     //Serial.begin(9600);
 
     //Print startup screen
-    centerPrint("nodemcu-clock", 0, true);
-    centerPrint(version, 1, true);
+    lcd.centerPrint("nodemcu-clock", 0, true);
+    lcd.centerPrint(version, 1, true);
     delay(1000);
 
     //Connect to wifi
@@ -93,7 +91,7 @@ void setup()
     delay(500);
 
     //Show loading message
-    centerPrint("Loading...", 3, true);
+    lcd.centerPrint("Loading...", 3, true);
 
     //geolocate the used IP to get coordinates and the timeoffset
     getLocation(lcd, openweathermaptoken, lat, lon, city, country, &timeoffset);
@@ -126,8 +124,8 @@ void miniClock()
     {
         getTime(miniClockResult, timeClient, timeoffset, miniClockFormat);
 
-        lcdSetCursor(maxcol - strlen(miniClockFormat), 0); //set cursor to the very right of the first line
-        lcdPrint(miniClockResult);
+        lcd.setCursor(maxcol - strlen(miniClockFormat), 0); //set cursor to the very right of the first line
+        lcd.print(miniClockResult);
     }
 }
 

@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 11.02.2022 11:27:41
+ * Last Modified: 26.10.2022 13:41:14
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -25,6 +25,8 @@ const int  updateInterval = 1200000; //20 min in ms
 unsigned int lastRefresh;
 unsigned int lastArticleShown;
 
+uint8_t moveOffset = 0; // Track moveOffset to be able to reset it when news article changes
+
 char sourceCache[4][32];
 char pubAtCache[4][6];
 char titleCache[4][256];
@@ -37,9 +39,9 @@ void newspage(const char *newsapitoken, int showuntil, const char *country, int 
     //Check if updateInterval ms passed and update newsCache
     if (lastRefresh == 0 || lastRefresh + updateInterval <= millis()) {
         //Display loading message as the display otherwise is just empty, leaving user unsure if the device crashed
-        lcdSetCursor(0, 0);
-        lcdPrint("News");
-        centerPrint("Loading...", 2, false);
+        lcd.setCursor(0, 0);
+        lcd.print("News");
+        lcd.centerPrint("Loading...", 2, false);
 
         //create filter to reduce memory load
         StaticJsonDocument<128> filter;
@@ -116,25 +118,26 @@ void newspage(const char *newsapitoken, int showuntil, const char *country, int 
     if (lastArticleSwitch + showuntil < millis()) {
         lastArticleShown++;
         lastArticleSwitch = millis();
+        moveOffset = 0; // Reset moveOffset so the next article starts from index 0
 
         if (lastArticleShown >= 4) lastArticleShown = 0; //reset
 
         //Show page title
-        lcdSetCursor(0, 0);
-        lcdPrint("News");
+        lcd.setCursor(0, 0);
+        lcd.print("News");
 
         //Show article source
-        clearLine(maxcol, 1);
+        lcd.clearLine(1);
 
-        lcdSetCursor(0, 1);
-        lcdPrint(sourceCache[lastArticleShown]);
+        lcd.setCursor(0, 1);
+        lcd.print(sourceCache[lastArticleShown]);
 
         //Show article date
-        clearLine(maxcol, 2); //Make sure "Loading..." is definitely gone
-        lcdSetCursor(0, 2);
-        lcdPrint(pubAtCache[lastArticleShown]);
+        lcd.clearLine(2); //Make sure "Loading..." is definitely gone
+        lcd.setCursor(0, 2);
+        lcd.print(pubAtCache[lastArticleShown]);
     }
 
     //Call the movingPrint method to refresh string position
-    movingPrint(titleCache[lastArticleShown], 3, false); //add two spaces to make animation start and end look smoother
+    lcd.movingPrint(titleCache[lastArticleShown], &moveOffset, 3);
 }
