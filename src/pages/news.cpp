@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 26.10.2022 13:41:14
+ * Last Modified: 26.10.2022 14:21:22
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -139,5 +139,6 @@ void newspage(const char *newsapitoken, int showuntil, const char *country, int 
     }
 
     //Call the movingPrint method to refresh string position
-    lcd.movingPrint(titleCache[lastArticleShown], &moveOffset, 3);
+    lcd.setCursor(0, 3);
+    lcd.movingPrint(titleCache[lastArticleShown], &moveOffset, maxcol);
 }
