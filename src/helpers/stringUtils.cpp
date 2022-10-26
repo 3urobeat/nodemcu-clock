@@ -4,7 +4,7 @@
  * Created Date: 23.12.2021 15:58:05
  * Author: 3urobeat
  * 
- * Last Modified: 09.02.2022 14:07:49
+ * Last Modified: 26.10.2022 12:51:04
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -53,16 +53,4 @@ char *mystrcat(char *dest, const char *src) //Credit: https://stackoverflow.com/
     while (*dest) dest++;
     while ((*dest++ = *src++));
     return --dest;
-}
-
-
-/**
- * Better strlen function to correctly count chars that are two bytes long (like ä ö or ü)
- * Credit: https://forum.arduino.cc/t/frage-zu-chararray-strlen-und-umlaut/897224/12 and https://stackoverflow.com/a/4063229
- */
-size_t utf8_strlen(const char * str)
-{
-    int len = 0;
-    while (*str) len += (*str++ & 0xc0) != 0x80;
-    return len;
 }

@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 09.02.2022 14:08:53
+ * Last Modified: 26.10.2022 13:21:10
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -23,11 +23,6 @@
 #include <NTPClient.h>
 #include "main.h"
 
-void clearLine(int maxcol, int row);
-void lcdSetCursor(int col, int row);
-void lcdPrint(const char *str);
-void centerPrint(const char *str, int row, bool callclearLine);
-void movingPrint(const char *str, int row, bool callclearLine);
 void getLocation(LiquidCrystal_PCF8574 lcd, const char *openweathermaptoken, char *lat, char *lon, char *city, char *country, int *timeoffset);
 ESP8266WiFiClass initWifi(LiquidCrystal_PCF8574 lcd, const char *wifiSSID[], const char *wifiPW[], size_t ssidamount, int maxcol, int row);
 void httpGetJson(const char *url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter);
@@ -37,4 +32,3 @@ void getDate(char *dest, NTPClient timeClient, int timeoffset, const char *datef
 void getTime(char *dest, NTPClient timeClient, int timeoffset, const char *timeformat);
 void strrpl(char *src, const char *oldchars, const char *newchars);
 char *mystrcat(char* dest, const char* src);
-size_t utf8_strlen(const char *str);

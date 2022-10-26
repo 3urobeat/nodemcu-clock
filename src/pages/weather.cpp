@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 29.12.2021 12:50:52
+ * Last Modified: 26.10.2022 13:37:16
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -65,6 +65,6 @@ void weatherpage(const char *openweathermaptoken, const char *lat, const char *l
         lastWeatherRefresh = millis();
     }    
 
-    centerPrint(city, 1, false);
-    centerPrint(fullStr, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal results in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
+    lcd.centerPrint(city, 1, false);
+    lcd.centerPrint(fullStr, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal results in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
 }
