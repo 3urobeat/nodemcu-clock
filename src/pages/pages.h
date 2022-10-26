@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 27.12.2021 16:09:37
+ * Last Modified: 26.10.2022 13:51:26
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -16,8 +16,6 @@
 
 
 #include <Wire.h>
-#include <NoiascaLiquidCrystal.h> // Article (german): https://werner.rothschopf.net/202003_arduino_liquid_crystal_umlaute.htm | Direct download: https://werner.rothschopf.net/2020/NoiascaLiquidCrystal.zip
-#include <NoiascaHW/lcd_PCF8574.h>
 #include <NTPClient.h>
 #include <iostream>
 

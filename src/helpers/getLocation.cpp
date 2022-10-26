@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 14:16:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.12.2021 22:24:01
+ * Last Modified: 26.10.2022 13:52:33
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -18,7 +18,7 @@
 #include <string.h>
 #include "helpers.h"
 
-void getLocation(LiquidCrystal_PCF8574 lcd, const char *openweathermaptoken, char *lat, char *lon, char *city, char *country, int *timeoffset)
+void getLocation(const char *openweathermaptoken, char *lat, char *lon, char *city, char *country, int *timeoffset)
 {
     DynamicJsonDocument locationResult(256);
 
