@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 13:14:56
+ * Last Modified: 15.11.2022 15:26:27
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -20,6 +20,17 @@
 #include "helpers/helpers.h" // Include helpers header which also includes main header
 
 
-void clockpage(NTPClient timeClient);
-void weatherpage();
-void newspage();
+namespace clockPage {
+    void setup();
+    void update();
+}
+
+namespace weatherPage {
+    void setup();
+    void update();
+}
+
+namespace newsPage {
+    void setup();
+    void update();
+}

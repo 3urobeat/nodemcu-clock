@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 13:09:35
+ * Last Modified: 15.11.2022 16:15:49
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -32,13 +32,59 @@ char titleCache[4][256];
 unsigned int lastArticleSwitch = 0;
 
 
-/**
- * Shows the news page
- */
-void newspage()
+namespace newsPage
 {
-    // Check if updateInterval ms passed and update newsCache
-    if (lastRefresh == 0 || lastRefresh + updateInterval <= millis()) {
+    // Declare function here and define it later below to reduce clutter while being accessible from setup()
+    void refreshCache();
+
+
+    /**
+     * Setup the news page
+     */
+    void setup()
+    {
+        // Check if updateInterval ms passed and update newsCache
+        if (lastRefresh == 0 || lastRefresh + updateInterval <= millis()) refreshCache();
+
+        // Switch to next article if first article was shown at least once
+        if (lastArticleSwitch > 0) lastArticleShown++;
+        lastArticleSwitch = millis();
+        moveOffset = 0; // Reset moveOffset so the next article headline starts from index 0
+
+        // Reset to first article if last has been displayed
+        if (lastArticleShown >= 4) lastArticleShown = 0;
+
+        // Show page title
+        lcd.setCursor(0, 0);
+        lcd.print("News");
+
+        // Show article source
+        lcd.clearLine(1);
+
+        lcd.setCursor(0, 1);
+        lcd.print(sourceCache[lastArticleShown]);
+
+        // Show article date
+        lcd.clearLine(2); // Make sure "Loading..." is definitely gone
+        lcd.setCursor(0, 2);
+        lcd.print(pubAtCache[lastArticleShown]);
+    }
+
+
+    /**
+     * Shows the news page
+     */
+    void update()
+    {
+        // Call movingPrint() to refresh article title string position
+        lcd.setCursor(0, 3);
+        lcd.movingPrint(titleCache[lastArticleShown], &moveOffset, Config::maxcol);
+    }
+
+
+    // Helper function to refresh newsCache, called by setup function // TODO: Can this function be optimized memory wise?
+    void refreshCache()
+    {
         // Display loading message as the display otherwise is just empty, leaving user unsure if the device crashed
         lcd.clear();
         lcd.setCursor(0, 0);
@@ -103,8 +149,8 @@ void newspage()
             // Write new time string
             memset(pubAtCache[i], 0, sizeof(pubAtCache[i]) - 1); // Clear old content just to make sure there is no gibberish left that could f us in the ass later
             strncpy(pubAtCache[i], pubAtBuf, 5);
-  
-           
+
+        
             // Add two spaces to the front and back of the string
             memset(titleCache[i], 0, sizeof(titleCache[i]) - 1); // Clear old content just to make sure there is no gibberish left that could f us in the ass later
             strcpy(titleCache[i], "  "); // Copy first part, cat the other parts
@@ -116,35 +162,4 @@ void newspage()
             *(tp) = '\0'; // Add null char to the end
         }
     }
-
-    // Check if the page just changed to this one and show the next article
-    if (lastArticleSwitch + (unsigned int) Config::showuntil[currentPage] <= millis() || lastArticleSwitch == 0) { // Check for lastArticleSwitch == 0 to show this stuff on first execute
-    
-        // Switch to next article if first article was shown at least once
-        if (lastArticleSwitch > 0) lastArticleShown++;
-        lastArticleSwitch = millis();
-        moveOffset = 0; // Reset moveOffset so the next article headline starts from index 0
-
-        // Reset to first article if last has been displayed
-        if (lastArticleShown >= 4) lastArticleShown = 0;
-
-        // Show page title
-        lcd.setCursor(0, 0);
-        lcd.print("News");
-
-        // Show article source
-        lcd.clearLine(1);
-
-        lcd.setCursor(0, 1);
-        lcd.print(sourceCache[lastArticleShown]);
-
-        // Show article date
-        lcd.clearLine(2); // Make sure "Loading..." is definitely gone
-        lcd.setCursor(0, 2);
-        lcd.print(pubAtCache[lastArticleShown]);
-    }
-
-    // Call the movingPrint method to refresh string position
-    lcd.setCursor(0, 3);
-    lcd.movingPrint(titleCache[lastArticleShown], &moveOffset, Config::maxcol);
 }

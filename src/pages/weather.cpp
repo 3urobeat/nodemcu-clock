@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 13:09:23
+ * Last Modified: 15.11.2022 16:15:16
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -23,12 +23,39 @@ unsigned long lastWeatherRefresh;
 char          fullStr[30]; // Store string to show
 
 
-/**
- * Shows the weather page
- */
-void weatherpage()
+namespace weatherPage
 {
-    if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateinterval <= millis()) {
+    // Declare function here and define it later below to reduce clutter while being accessible from setup()
+    void refreshCache();
+
+
+    /**
+     * Setup the weather page
+     */
+    void setup()
+    {
+        // Check if it's time to update weather cache
+        if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateinterval <= millis()) {
+            refreshCache();
+        }
+
+        lcd.centerPrint(city, 1, false);
+        lcd.centerPrint(fullStr, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal would result in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
+    }
+
+
+    /**
+     * Shows the weather page
+     */
+    void update()
+    {
+        // Nothing to do here, setup() prints content already and there is nothing changing on this page
+    }
+
+
+    // Helper function to refresh weatherCache, called by setup function
+    void refreshCache()
+    {
         // Create filter so we don't get unneeded data back from the API
         StaticJsonDocument<128> filter;
         
@@ -61,7 +88,4 @@ void weatherpage()
 
         lastWeatherRefresh = millis();
     }
-
-    lcd.centerPrint(city, 1, false);
-    lcd.centerPrint(fullStr, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal would result in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
 }
