@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 31.12.2021 15:52:58
+ * Last Modified: 15.11.2022 13:18:24
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -14,10 +14,6 @@
  * Full license information available in the project LICENSE file.
  */
 
-
-#include <ArduinoJson.h>
-#include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
 
 #include "helpers.h"
 

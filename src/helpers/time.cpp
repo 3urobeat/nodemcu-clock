@@ -4,7 +4,7 @@
  * Created Date: 03.09.2021 10:06:00
  * Author: 3urobeat
  * 
- * Last Modified: 26.10.2022 13:47:38
+ * Last Modified: 15.11.2022 13:19:19
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -15,9 +15,8 @@
  */
 
 
-#include <NTPClient.h>
-#include <TimeLib.h>
 #include "helpers.h"
+
 
 char *formatInt(char *buf, int value)
 {
@@ -35,29 +34,31 @@ char *formatInt(char *buf, int value)
     return buf;
 }
 
-void getDate(char *dest, NTPClient timeClient, int timeoffset, const char *dateformat)
+
+void getDate(char *dest, NTPClient timeClient, int timeoffset)
 {
     unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
     char buf[5];
 
     //copy dateformat into dest
-    memcpy(dest, dateformat, strlen(dateformat));
+    memcpy(dest, Config::dateformat, strlen(Config::dateformat));
 
     strrpl(dest, "dd", formatInt(buf, day(epoch)));
     strrpl(dest, "mm", formatInt(buf, month(epoch)));
     strrpl(dest, "yyyy", formatInt(buf, year(epoch)));
 }
 
-//Provide function to help construct a mini clock that will be called by main.cpp when alwaysShowTime is true
-void getTime(char *dest, NTPClient timeClient, int timeoffset, const char *timeformat)
+
+// Provide function to help construct time string
+void getTime(char *dest, NTPClient timeClient, int timeoffset, const char *format)
 {
     unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
     char buf[5];
 
     //copy dateformat into dest
-    memcpy(dest, timeformat, strlen(timeformat));
+    memcpy(dest, format, strlen(format));
 
     strrpl(dest, "hh", formatInt(buf, hour(epoch)));
     strrpl(dest, "mm", formatInt(buf, minute(epoch)));
