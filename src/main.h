@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 13:23:28
+ * Last Modified: 15.11.2022 14:27:23
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -34,30 +34,9 @@
 #include <ArduinoJson.h>
 
 
-namespace Config 
-{
-    extern const int maxcol;
+// Include config
+#include "../config/config.h"
 
-    extern const char *wifiSSID[2];
-    extern const char *wifiPW[2];
-
-    extern char lat[8];
-    extern char lon[8];
-
-    extern const char openweathermaptoken[33];
-    extern const char newsapitoken[33];
-
-    extern const char dateformat[11];
-    extern const char timeformat[9];
-    extern const char miniClockFormat[6];
-
-    extern const char *pageOrder[3];
-    extern const int   showuntil[3];
-    extern const bool  alwaysShowTime;
-    extern const int   clockWeekdaySwitch;
-
-    extern const bool DEBUG;
-}
 
 extern const char version[];
 

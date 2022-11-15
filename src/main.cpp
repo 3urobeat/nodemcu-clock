@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 13:23:20
+ * Last Modified: 15.11.2022 14:29:29
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -16,37 +16,10 @@
 
 
 #include "main.h"
+#include "../config/config.cpp" // I don't know why I need to include config.cpp here but it otherwise results in an undefined reference to Config::... linker error
 
-
-// TODO: Move config to separate file
-/* --------- Config variables  --------- */
-namespace Config
-{
-    const int maxcol = 20; // Width of the display
-
-    const char *wifiSSID[2] = { "", "" }; // You can provide multiple networks if you wish
-    const char *wifiPW[2]   = { "", "" };
-
-    char lat[8] = ""; // Set your location manually with latitudinal and longitudinal coordinates. If you leave it empty the program will get you general location automatically via your IP.
-    char lon[8] = "";
-
-    const char openweathermaptoken[33] = "";
-    const char newsapitoken[33]        = "";
-
-    const char dateformat[11]      = "dd.mm.yyyy";
-    const char timeformat[9]       = "hh:mm:ss";
-    const char miniClockFormat[6]  = "hh:mm";
-
-    const char *pageOrder[3]       = { "clock", "weather", "news" };
-    const int   showuntil[3]       = { 5000, 5000, 30000 }; // How long each page should be shown in ms
-    const bool  alwaysShowTime     = true; // Always show the time in the upper right corner
-    const int   clockWeekdaySwitch = 2500; // After how much ms the clock page should switch between date and weekday. Set to 0 to disable
-
-    const bool DEBUG = false;
-}
 
 const char version[] = "v0.5.2";
-
 
 
 /* --------- Call libs  --------- */
