@@ -4,7 +4,7 @@
  * Created Date: 23.12.2021 15:58:05
  * Author: 3urobeat
  * 
- * Last Modified: 26.10.2022 12:51:04
+ * Last Modified: 15.11.2022 13:19:08
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -15,7 +15,8 @@
  */
 
 
-#include <string.h>
+#include "helpers.h"
+
 
 /**
  * Replace function for char arrays

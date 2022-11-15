@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 26.10.2022 13:48:09
+ * Last Modified: 15.11.2022 13:17:51
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -15,13 +15,13 @@
  */
 
 
-#include <iostream>
 #include "helpers.h"
+
 
 void(* resetFunc) (void) = 0; // create a standard reset function
 
 
-ESP8266WiFiClass initWifi(const char *wifiSSID[], const char *wifiPW[], size_t ssidamount, int maxcol, int row) 
+ESP8266WiFiClass initWifi(size_t ssidamount, int row) 
 {
     lcd.clearLine(row); //clear line just to make sure no old characters are left
 
@@ -40,9 +40,9 @@ ESP8266WiFiClass initWifi(const char *wifiSSID[], const char *wifiPW[], size_t s
         for (unsigned int j = 0; j < ssidamount; j++) {
             WiFi.SSID(i).toCharArray(thisSSID, 64, 0);
 
-            if (strcmp(thisSSID, wifiSSID[j]) == 0) {
+            if (strcmp(thisSSID, Config::wifiSSID[j]) == 0) {
 
-                WiFi.begin(wifiSSID[j], wifiPW[j]);
+                WiFi.begin(Config::wifiSSID[j], Config::wifiPW[j]);
 
                 found = true; //stop parent loop
                 break; //stop this loop
