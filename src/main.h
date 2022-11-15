@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 14:27:23
+ * Last Modified: 15.11.2022 15:21:56
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -49,6 +49,7 @@ extern int timeoffset;
 
 // Loop
 extern int currentPage;
+extern bool hideMiniClock;
 
 
 // Main
