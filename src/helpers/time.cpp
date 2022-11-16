@@ -4,7 +4,7 @@
  * Created Date: 03.09.2021 10:06:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 13:19:19
+ * Last Modified: 16.11.2022 19:30:34
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -18,7 +18,7 @@
 #include "helpers.h"
 
 
-char *formatInt(char *buf, int value)
+char *formatInt(char *buf, int16_t value)
 {
     itoa(value, buf, 10); //int value to string
 
@@ -35,7 +35,7 @@ char *formatInt(char *buf, int value)
 }
 
 
-void getDate(char *dest, NTPClient timeClient, int timeoffset)
+void getDate(char *dest, NTPClient timeClient, uint16_t timeoffset)
 {
     unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
@@ -51,7 +51,7 @@ void getDate(char *dest, NTPClient timeClient, int timeoffset)
 
 
 // Provide function to help construct time string
-void getTime(char *dest, NTPClient timeClient, int timeoffset, const char *format)
+void getTime(char *dest, NTPClient timeClient, uint16_t timeoffset, const char *format)
 {
     unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
