@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 12:24:21
+ * Last Modified: 16.11.2022 19:09:46
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -18,7 +18,7 @@
 #include "helpers/helpers.h"
 
 
-int  timeoffset; // Timezone offset in seconds
+uint16_t timeoffset; // Timezone offset in seconds
 
 char city[64];   // Yes, we can store the longest city names: https://largest.org/geography/city-names/
 char country[3]; // Two char long country codes

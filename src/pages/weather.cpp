@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 16:15:16
+ * Last Modified: 16.11.2022 19:33:38
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -18,9 +18,9 @@
 #include "pages.h"
 
 
-int           updateinterval = 600000; // 10 minutes in ms
-unsigned long lastWeatherRefresh;
-char          fullStr[30]; // Store string to show
+const uint32_t updateinterval = 600000; // 10 minutes in ms
+unsigned long  lastWeatherRefresh;
+char           fullStr[30]; // Store string to show
 
 
 namespace weatherPage
@@ -78,7 +78,7 @@ namespace weatherPage
         httpGetJson(requestStr, &weatherResult, filter);
 
         // Refresh fullStr
-        itoa((int) round((double) weatherResult["main"]["temp"] - 273.15), fullStr, 10); // Convert temp to string and write into fullStr
+        itoa((int8_t) round((double) weatherResult["main"]["temp"] - 273.15), fullStr, 10); // Convert temp to string and write into fullStr
 
         char *fSp = fullStr;
         

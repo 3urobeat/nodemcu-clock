@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 15:21:56
+ * Last Modified: 16.11.2022 19:10:10
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -42,19 +42,19 @@ extern const char version[];
 
 
 // Setup
-extern char city[64];
-extern char country[3];
-extern int timeoffset;
+extern char     city[64];
+extern char     country[3];
+extern uint16_t timeoffset;
 
 
 // Loop
-extern int currentPage;
-extern bool hideMiniClock;
+extern int8_t currentPage;
+extern bool   hideMiniClock;
 
 
 // Main
 extern lcdHelper<LiquidCrystal_PCF8574> lcd;
-extern WiFiUDP ntpUDP;
+extern WiFiUDP   ntpUDP;
 extern NTPClient timeClient;
 
 

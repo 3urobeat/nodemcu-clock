@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:16:25
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 14:32:00
+ * Last Modified: 16.11.2022 19:03:14
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -21,7 +21,7 @@
 // Declare config variables
 namespace Config 
 {
-    extern const int maxcol;
+    extern const uint8_t maxcol;
 
     extern const char *wifiSSID[2];
     extern const char *wifiPW[2];
@@ -36,10 +36,10 @@ namespace Config
     extern const char timeformat[9];
     extern const char miniClockFormat[6];
 
-    extern const char *pageOrder[3];
-    extern const int   showuntil[3];
-    extern const bool  alwaysShowTime;
-    extern const int   clockWeekdaySwitch;
+    extern const char    *pageOrder[3];
+    extern const uint32_t showuntil[3];
+    extern const bool     alwaysShowTime;
+    extern const uint16_t clockWeekdaySwitch;
 
     extern const bool DEBUG;
 }

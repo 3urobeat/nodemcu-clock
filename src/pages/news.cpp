@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 16:15:49
+ * Last Modified: 16.11.2022 19:03:32
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -18,10 +18,10 @@
 #include "pages.h"
 
 
-const int updateInterval = 1200000; // 20 min in ms
+const uint32_t updateInterval = 1200000; // 20 min in ms
 
-unsigned int lastRefresh;
-unsigned int lastArticleShown;
+uint8_t lastRefresh;
+uint8_t lastArticleShown;
 
 uint8_t moveOffset = 0; // Track moveOffset to be able to reset it when news article changes
 
@@ -29,7 +29,7 @@ char sourceCache[4][32];
 char pubAtCache[4][6];
 char titleCache[4][256];
 
-unsigned int lastArticleSwitch = 0;
+uint8_t lastArticleSwitch = 0;
 
 
 namespace newsPage
@@ -118,7 +118,7 @@ namespace newsPage
         //if (strcmp(newsCache[0], "connection failed") != 0) //if the request didn't succeed then let it ping the api again on the next iteration
         lastRefresh = millis();
 
-        for (unsigned int i = 0; i < newsCache["articles"].size(); i++) {
+        for (uint8_t i = 0; i < newsCache["articles"].size(); i++) {
 
             // Copy source name into cache
             memset(sourceCache[i], 0, sizeof(sourceCache[i]) - 1); // Clear old content just to make sure there is no gibberish left that could f us in the ass later
