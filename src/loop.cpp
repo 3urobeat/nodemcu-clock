@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:32
  * Author: 3urobeat
  * 
- * Last Modified: 16.11.2022 19:05:49
+ * Last Modified: 16.11.2022 19:47:51
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -71,7 +71,7 @@ void nextPage()
     hideMiniClock = false;    // Default
     pageUpdate    = millis(); // Update timestamp
 
-    if (oldPage != currentPage) lcd.clear();
+    lcd.clear(); // Clear content of old page
 
     // Call setup function for incoming page
     if (strcmp(Config::pageOrder[currentPage], "clock") == 0) {

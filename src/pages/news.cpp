@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 16.11.2022 19:03:32
+ * Last Modified: 16.11.2022 19:48:26
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -59,13 +59,10 @@ namespace newsPage
         lcd.print("News");
 
         // Show article source
-        lcd.clearLine(1);
-
         lcd.setCursor(0, 1);
         lcd.print(sourceCache[lastArticleShown]);
 
         // Show article date
-        lcd.clearLine(2); // Make sure "Loading..." is definitely gone
         lcd.setCursor(0, 2);
         lcd.print(pubAtCache[lastArticleShown]);
     }
@@ -86,9 +83,7 @@ namespace newsPage
     void refreshCache()
     {
         // Display loading message as the display otherwise is just empty, leaving user unsure if the device crashed
-        lcd.clear();
         lcd.setCursor(0, 0);
-
         lcd.print("News");
         lcd.centerPrint("Loading...", 2, false);
 
@@ -161,5 +156,8 @@ namespace newsPage
             tp = mystrcat(tp, "  ");
             *(tp) = '\0'; // Add null char to the end
         }
+
+        // Clear "Loading..."
+        lcd.clearLine(2);
     }
 }
