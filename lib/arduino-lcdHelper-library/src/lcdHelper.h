@@ -4,7 +4,7 @@
  * Created Date: 26.08.2022 12:04:51
  * Author: 3urobeat
  * 
- * Last Modified: 08.09.2022 20:07:47
+ * Last Modified: 21.11.2022 19:16:44
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -14,6 +14,7 @@
  * Full license information available in the project LICENSE file. 
  */
 
+// Version 1.0.0
 
 #ifndef LCDHELPER_H
 #define LCDHELPER_H
@@ -41,31 +42,40 @@ public:
     void clearLine(uint8_t row);
 
     /**
-     * Print a string centered on your display
-     * @param str The string to print
-     * @param row The row to print the string in
-     * @param callClearLine Set to true if line should be cleared before printing
+     * Print a char array centered in a row on your display.
+     * @param str The char array to print
+     * @param row The row to print the char array in
+     * @param callClearLine Optional: Set to true if line should be cleared before printing
      */
-    void centerPrint(const char *str, uint8_t row, bool callClearLine);
+    void centerPrint(const char *str, uint8_t row, bool callClearLine = false);
 
     /**
-     * Prints a String that will be moved by one char each time the method is called
-     * @param str The string to print
+     * Prints a char array that will be moved across a row by one char each time the function is called
+     * @param str The char array to print
      * @param moveOffset Pointer to int tracking offset
-     * @param width Width of the space on screen the string will be moved across
+     * @param width Width of the space on screen the char array will be moved across
      */
     void movingPrint(const char *str, uint8_t *moveOffset, uint8_t width);
 
     /**
-     * Print a string aligned left, center or right to a fixed width.
+     * Print a char array aligned left, center or right to a fixed width.
      * @param align "left", "center" or "right"
-     * @param str The string to print
-     * @param width The fixed width of the resulting string, which str will be aligned to
+     * @param str The char array to print
+     * @param width The fixed width of the resulting char array, which str will be aligned to
      */
     void alignedPrint(const char *align, const char *str, uint8_t width);
+
+    /**
+     * Prints a char array to the display with a limited length (UTF-8 aware) without making a copy.
+     * @param str The char array to print
+     * @param length The length to limit str to
+     */
+    void limitedPrint(const char *str, uint8_t length);
     
     /**
-     * Better strlen function to correctly count chars that are two bytes long (like ä ö or ü)
+     * Custom strlen function to correctly count chars that are two bytes long (like ä ö or ü)
+     * @param str The char array to get the length of
+     * @return Length of str
      */
     size_t utf8_strlen(const char *str);
 
@@ -86,8 +96,7 @@ private:
 };
 
 
-// Include template implementation files
+// Include template implementation file
 #include "lcdHelper.tpp"
-#include "helpers/stringUtils.tpp"
 
 #endif
