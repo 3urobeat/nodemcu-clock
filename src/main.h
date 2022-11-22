@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 16.11.2022 19:10:10
+ * Last Modified: 22.11.2022 19:35:09
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -19,7 +19,7 @@
 
 // Import all needed libs for the entire project
 #include <Wire.h>
-#include <NoiascaLiquidCrystal.h> // Article (german): https://werner.rothschopf.net/202003_arduino_liquid_crystal_umlaute.htm | Direct download: https://werner.rothschopf.net/2020/NoiascaLiquidCrystal.zip
+#include <NoiascaLiquidCrystal.h> // Article (download at the bottom): https://werner.rothschopf.net/202009_arduino_liquid_crystal_intro.htm
 #include <NoiascaHW/lcd_PCF8574.h>
 #include <lcdHelper.h>
 
