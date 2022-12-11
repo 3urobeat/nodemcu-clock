@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 16.11.2022 19:48:26
+ * Last Modified: 11.12.2022 15:16:29
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -20,8 +20,8 @@
 
 const uint32_t updateInterval = 1200000; // 20 min in ms
 
-uint8_t lastRefresh;
-uint8_t lastArticleShown;
+uint32_t lastRefresh;
+uint8_t  lastArticleShown;
 
 uint8_t moveOffset = 0; // Track moveOffset to be able to reset it when news article changes
 
@@ -29,7 +29,7 @@ char sourceCache[4][32];
 char pubAtCache[4][6];
 char titleCache[4][256];
 
-uint8_t lastArticleSwitch = 0;
+uint32_t lastArticleSwitch = 0;
 
 
 namespace newsPage
