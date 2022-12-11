@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 16.11.2022 19:33:38
+ * Last Modified: 11.12.2022 15:17:09
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -19,7 +19,7 @@
 
 
 const uint32_t updateinterval = 600000; // 10 minutes in ms
-unsigned long  lastWeatherRefresh;
+uint32_t       lastWeatherRefresh;
 char           fullStr[30]; // Store string to show
 
 
