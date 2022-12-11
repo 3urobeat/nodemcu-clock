@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 17:59:00
+ * Last Modified: 11.12.2022 16:32:29
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -19,7 +19,7 @@
 #include "../config/config.cpp" // I don't know why I need to include config.cpp here but it otherwise results in an undefined reference to Config::... linker error
 
 
-const char version[] = "v0.6.0";
+const char version[] = "v0.7.0";
 
 
 /* --------- Call libs  --------- */
