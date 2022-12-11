@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 16.11.2022 19:15:00
+ * Last Modified: 11.12.2022 16:30:40
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -60,26 +60,17 @@ ESP8266WiFiClass initWifi(size_t ssidamount, uint8_t row)
     }
 
     // Block futher execution until connection is established and show message with waiting animation
-    uint8_t dots = 0;
+    uint8_t animationFrame = 1; // Skip first frame which is empty anyway
 
     while (WiFi.status() != WL_CONNECTED)
     {
-        dots++; //add another dot
-        if (dots > 3) dots = 0; //reset when 3 dots are present
-
-        lcd.setCursor(13, row);
-        lcd.print("    "); //Clear all dots
-
-        for (uint8_t i = 0; i < dots; i++) {
-            lcd.setCursor(13 + i, row); 
-            lcd.print("."); //add dots amount of dots behind "Connecting"
-        }
+        lcd.animationPrint(lcd.animations.waiting, 5, &animationFrame, 13, row); // Use lcdHelper's animationPrint and default waiting animation
 
         delay(500);
     }
 
-
     //Connection established
     lcd.centerPrint("Connected!", row, true);
+
     return WiFi;
 }
