@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 15:26:54
+ * Last Modified: 11.12.2022 15:17:26
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -23,8 +23,8 @@ const char *dayNames[] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday
 char timeResult[9];
 char dateResult[11];
 
-unsigned long lastPageMod = millis();
-bool          currentmod  = false;    //in this case we only have two mods, so lets choose a boolean
+uint32_t lastPageMod = millis();
+bool     currentmod  = false;    //in this case we only have two mods, so lets choose a boolean
 
 
 namespace clockPage
