@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 11.12.2022 15:16:29
+ * Last Modified: 11.12.2022 15:29:39
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -138,8 +138,8 @@ namespace newsPage
 
             char buf[3];
             
-            strrpl(pubAtBuf, "hh", formatInt(buf, hour(inLocalSeconds)));
-            strrpl(pubAtBuf, "mm", formatInt(buf, minute(inLocalSeconds)));
+            strrpl(pubAtBuf, "hh", lcd.toFixedLengthNumber(buf, hour(inLocalSeconds), 2));
+            strrpl(pubAtBuf, "mm", lcd.toFixedLengthNumber(buf, minute(inLocalSeconds), 2));
 
             // Write new time string
             memset(pubAtCache[i], 0, sizeof(pubAtCache[i]) - 1); // Clear old content just to make sure there is no gibberish left that could f us in the ass later
