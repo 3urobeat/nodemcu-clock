@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 24.12.2022 14:08:20
+ * Last Modified: 24.12.2022 14:39:20
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -18,7 +18,7 @@
 #include "setupMode.h"
 
 
-const uint8_t switchPin = D4;
+const uint8_t switchPin = D0;
 bool setupModeEnabled = false;
 
 
@@ -26,10 +26,10 @@ bool setupModeEnabled = false;
 bool setupSetupMode()
 {
     // Initialize switch pin as input
-    pinMode(switchPin, INPUT);
+    pinMode(switchPin, INPUT_PULLUP);
 
     // Read switch state and update setupModeEnabled
-    setupModeEnabled = (digitalRead(switchPin) == HIGH); // Set to true if return is HIGH
+    setupModeEnabled = (digitalRead(switchPin) == LOW); // Set to true if return is LOW, aka switchPin is connected to GND, default is HIGH because of PULLUP
 
     return setupModeEnabled;
 }
@@ -38,7 +38,7 @@ bool setupSetupMode()
 // Host wifi network and webserver for setup
 void hostSetupMode()
 {
-    lcd.centerPrint("Entering Setup...", 3);   
+    lcd.centerPrint("Entering Setup...", 3);
 }
 
 
