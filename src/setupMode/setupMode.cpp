@@ -1,13 +1,13 @@
 /*
  * File: setupMode.cpp
- * Project: setupMode
+ * Project: nodemcu-clock
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 24.12.2022 18:51:22
+ * Last Modified: 24.12.2022 18:58:22
  * Modified By: 3urobeat
  * 
- * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
+ * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
  * 
  * Licensed under the MIT license: https://opensource.org/licenses/MIT
  * Permission is granted to use, copy, modify, and redistribute the work.
