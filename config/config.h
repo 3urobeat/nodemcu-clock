@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:16:25
  * Author: 3urobeat
  * 
- * Last Modified: 16.11.2022 19:03:14
+ * Last Modified: 24.12.2022 18:27:40
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -25,6 +25,8 @@ namespace Config
 
     extern const char *wifiSSID[2];
     extern const char *wifiPW[2];
+
+    extern const char *setupWifiPW;
 
     extern char lat[8];
     extern char lon[8];

@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:12:41
  * Author: 3urobeat
  * 
- * Last Modified: 16.11.2022 19:03:00
+ * Last Modified: 24.12.2022 18:50:07
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -22,6 +22,8 @@ namespace Config
 
     const char *wifiSSID[2] = { "", "" }; // You can provide multiple networks if you wish
     const char *wifiPW[2]   = { "", "" };
+
+    const char *setupWifiPW = "setuppassword136"; // Password used for hosted wifi network in setup mode
 
     char lat[8] = ""; // Set your location manually with latitudinal and longitudinal coordinates. If you leave it empty the program will get you general location automatically via your IP.
     char lon[8] = "";
