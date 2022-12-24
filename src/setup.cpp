@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 16.11.2022 19:09:46
+ * Last Modified: 24.12.2022 13:36:52
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -16,6 +16,7 @@
 
 
 #include "helpers/helpers.h"
+#include "setupMode/setupMode.h"
 
 
 uint16_t timeoffset; // Timezone offset in seconds
@@ -47,19 +48,30 @@ void setupHandler()
     lcd.centerPrint(version, 1, true);
     delay(1000);
 
-    // Connect to wifi
-    initWifi(ssidAmount, 3);
-    delay(500);
 
-    // Show loading message
-    lcd.centerPrint("Loading...", 3, true);
+    // Check for setup mode and continue with desired mode
+    if (setupSetupMode()) {
+        
+        // Host wifi network and webserver
+        hostSetupMode();
 
-    // Geolocate the used IP to get coordinates and the timeoffset
-    getLocation();
+    } else {
 
-    // Start syncing time
-    timeClient.begin();
+        // Connect to wifi
+        initWifi(ssidAmount, 3);
+        delay(500);
 
-    // Clear display and let page manager do page manager things (aka show a page lol)
-    lcd.clear();
+        // Show loading message
+        lcd.centerPrint("Loading...", 3, true);
+
+        // Geolocate the used IP to get coordinates and the timeoffset
+        getLocation();
+
+        // Start syncing time
+        timeClient.begin();
+
+        // Clear display and let page manager do page manager things (aka show a page lol)
+        lcd.clear();
+
+    }
 }

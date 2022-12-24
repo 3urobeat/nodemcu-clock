@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:32
  * Author: 3urobeat
  * 
- * Last Modified: 16.11.2022 19:47:51
+ * Last Modified: 24.12.2022 13:52:57
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -16,6 +16,7 @@
 
 
 #include "helpers/helpers.h"
+#include "setupMode/setupMode.h"
 #include "pages/pages.h"
 
 
@@ -34,6 +35,12 @@ void debugMemory();
  */
 void loopHandler()
 {
+    // Call handleSetupMode() if setupMode is enabled
+    if (setupModeEnabled) {
+        handleSetupMode();
+        return; // Stop further execution of "normal" mode
+    }    
+
     // Let timelib check if it is time to update the time
     timeClient.update();
 
