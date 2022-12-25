@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 22.11.2022 19:35:09
+ * Last Modified: 25.12.2022 17:36:20
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -31,6 +31,7 @@
 #include <NTPClient.h>
 
 #include <iostream>
+#include <LittleFS.h>
 #include <ArduinoJson.h>
 
 
