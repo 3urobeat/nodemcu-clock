@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 24.12.2022 19:35:18
+ * Last Modified: 25.12.2022 15:16:47
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -19,7 +19,6 @@
 
 
 const uint8_t switchPin = D0;
-
 const IPAddress localIP(192, 168, 1, 1);
 const IPAddress gatewayIP(192, 168, 1, 1);
 const IPAddress subnet(255, 255, 255, 0);
@@ -49,8 +48,9 @@ void hostSetupMode()
     lcd.centerPrint("Entering Setup...", 3);
     delay(250);
 
-    // Launch Wifi AP - Credit: https://www.survivingwithandroid.com/esp8266-web-server/
-    if (WiFi.softAP(setupWifiSSID, Config::setupWifiPW)) WiFi.softAPConfig(localIP, gatewayIP, subnet);
+    // Launch Wifi AP
+    WiFi.softAPConfig(localIP, gatewayIP, subnet);
+    WiFi.softAP(setupWifiSSID, Config::setupWifiPW);
 
     // Start webserver
     webserver.on("/", setupModeWebPage);
