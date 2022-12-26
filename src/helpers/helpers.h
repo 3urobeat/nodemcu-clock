@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 25.12.2022 19:41:35
+ * Last Modified: 26.12.2022 23:57:44
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -19,9 +19,6 @@
 
 #include "main.h"
 
-
-char *readFromFS(char *dest, const char *filename);
-void writeToFS(const char *filename, char *content);
 
 void getLocation();
 

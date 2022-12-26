@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 25.12.2022 22:01:29
+ * Last Modified: 26.12.2022 23:58:37
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -32,11 +32,11 @@ const size_t ssidAmount = sizeof Config::wifiSSID / sizeof Config::wifiSSID[0]; 
  */
 void setupHandler()
 {
-    // Initiate display & filesystem
+    // Initiate display
     Wire.begin();
     lcd.begin();
     lcd.backlight();
-    LittleFS.begin();
+    prefs.begin("nodemcu-clock");
 
     // Debug?
     if (Config::DEBUG) {
