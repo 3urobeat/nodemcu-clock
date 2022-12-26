@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 25.12.2022 17:36:20
+ * Last Modified: 26.12.2022 23:58:10
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -31,7 +31,7 @@
 #include <NTPClient.h>
 
 #include <iostream>
-#include <LittleFS.h>
+#include <Preferences.h>
 #include <ArduinoJson.h>
 
 
@@ -55,8 +55,9 @@ extern bool   hideMiniClock;
 
 // Main
 extern lcdHelper<LiquidCrystal_PCF8574> lcd;
-extern WiFiUDP   ntpUDP;
-extern NTPClient timeClient;
+extern WiFiUDP     ntpUDP;
+extern NTPClient   timeClient;
+extern Preferences prefs;
 
 
 void setupHandler();

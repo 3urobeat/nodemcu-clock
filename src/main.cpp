@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 11.12.2022 16:32:29
+ * Last Modified: 26.12.2022 23:55:52
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -27,6 +27,7 @@ lcdHelper<LiquidCrystal_PCF8574> lcd(0x27, Config::maxcol, 4);
 
 WiFiUDP   ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 0, 60000); //timeoffset will be added later manually
+Preferences prefs;
 
 
 
