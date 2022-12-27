@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 26.12.2022 23:57:44
+ * Last Modified: 27.12.2022 14:40:23
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -19,6 +19,10 @@
 
 #include "main.h"
 
+
+bool configDetectFirstStart();
+void readConfigFromStorage();
+void writeConfigToStorage();
 
 void getLocation();
 
