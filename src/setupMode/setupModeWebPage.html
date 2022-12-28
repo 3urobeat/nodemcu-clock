@@ -4,7 +4,7 @@ Project: nodemcu-clock
 Created Date: 24.12.2022 19:10:23
 Author: 3urobeat
 
-Last Modified: 24.12.2022 19:40:02
+Last Modified: 28.12.2022 23:13:09
 Modified By: 3urobeat
 
 Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -17,14 +17,63 @@ Full license information available in the project LICENSE file.
 
 <!-- This page holds the actual HTML source -->
 
-<html> 
+<!DOCTYPE HTML>
+<html>
     <head>
         <title>nodemcu-clock Setup Page</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+        <style>
+        </style>
+  
+        <script>
+        </script>
     </head>
-    
     <body>
         <h1>nodemcu-clock Setup Page</h1>
         
-        <p>Hello World</p>
+        <form action="/get" target="hidden-form">
+            <!-- Wifi Settings -->
+            <h3>Wifi Settings</h3>
+            <div id="wifi_networks">
+                <p>Network 1:</p>
+                SSID: <input type="text" name="wifiSSID_input1" value=""><br>
+                Password: <input type="text" name="wifiPW_input1" value=""><br>
+
+                <br>
+                <input type="button" id="addWifi_button" value="+ Add another network"><br> <!-- Button to add another SSID and PW field -->
+                <br>
+            </div>
+            Setup-Wifi Password: <input type="text" name="setupWifiPW_input" value=""><br>
+            <br><br>
+
+            <!-- API Keys -->
+            <h3>API Keys</h3>
+            OpenWeatherMap API Key: <input type="text" name="openweathermaptoken_input" value=""><br>
+            News API Key: <input type="text" name="newsapitoken_input" value=""><br>
+            <br><br>
+
+            <!-- Localization -->
+            <h3>Localization</h3>
+            Coordinates - Lateral (optional): <input type="text" name="lat_input" value=""><br>
+            Coordinates - Longitudinal (optional): <input type="text" name="lon_input" value=""><br>
+            Date Format: <input type="text" name="dateformat_input" value=""><br>
+            Time Format: <input type="text" name="timeformat_input" value=""><br>
+            Mini-Clock Format: <input type="text" name="miniClockFormat_input" value=""><br>
+            <br><br>
+
+            <!-- System config -->
+            <h3>System Config:</h3>
+            LCD Columns: <input type="number" name="maxcol_input" value=""><br>
+            Page Order: <input type="text" name="pageOrder_input" value=""><br>
+            Page Duration: <input type="text" name="showuntil_input" value=""><br>
+            Enable Mini-Clock: <input type="checkbox" name="alwaysShowTime_input"><br>
+            Clock-Weekday-Switch Delay: <input type="number" name="clockWeekdaySwitch_input" value=""><br>
+            <br><br>
+            
+            <!-- Save button -->
+            <input type="submit" value="Save">
+        </form>
+        <iframe style="display:none" name="hidden-form"></iframe>
     </body>
 </html>
