@@ -4,7 +4,7 @@ Project: nodemcu-clock
 Created Date: 24.12.2022 19:10:23
 Author: 3urobeat
 
-Last Modified: 28.12.2022 23:13:09
+Last Modified: 29.12.2022 13:31:26
 Modified By: 3urobeat
 
 Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -16,19 +16,12 @@ Full license information available in the project LICENSE file.
 
 
 <!-- This page holds the actual HTML source -->
-
-<!DOCTYPE HTML>
 <html>
     <head>
         <title>nodemcu-clock Setup Page</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-        <style>
-        </style>
-  
-        <script>
-        </script>
     </head>
+    
     <body>
         <h1>nodemcu-clock Setup Page</h1>
         
@@ -39,11 +32,10 @@ Full license information available in the project LICENSE file.
                 <p>Network 1:</p>
                 SSID: <input type="text" name="wifiSSID_input1" value=""><br>
                 Password: <input type="text" name="wifiPW_input1" value=""><br>
-
-                <br>
-                <input type="button" id="addWifi_button" value="+ Add another network"><br> <!-- Button to add another SSID and PW field -->
-                <br>
             </div>
+            <br>
+            <input type="button" id="addWifi_button" value="+ Add another network" onclick="addWifiNetworkToDiv()"><br> <!-- Button to add another SSID and PW field -->
+            <br>
             Setup-Wifi Password: <input type="text" name="setupWifiPW_input" value=""><br>
             <br><br>
 
@@ -76,4 +68,29 @@ Full license information available in the project LICENSE file.
         </form>
         <iframe style="display:none" name="hidden-form"></iframe>
     </body>
+
+    <script>
+        // TODO: Add amount of wifi networks specified in config on page load
+        let wifiNetworksDiv      = document.getElementById("wifi_networks");
+        let amountOfWifiNetworks = 2;
+
+        for (let i = 2; i <= amountOfWifiNetworks; i++) {
+            wifiNetworksDiv.innerHTML += `
+                <p>Network ${i}:</p>
+                SSID: <input type="text" name="wifiSSID_input${i}" value=""><br>
+                Password: <input type="text" name="wifiPW_input${i}" value=""><br>
+            `
+        }
+
+        // Function that will be called by button onclick
+        function addWifiNetworkToDiv() {
+            amountOfWifiNetworks++;
+
+            wifiNetworksDiv.innerHTML += `
+                <p>Network ${amountOfWifiNetworks}:</p>
+                SSID: <input type="text" name="wifiSSID_input${amountOfWifiNetworks}" value=""><br>
+                Password: <input type="text" name="wifiPW_input${amountOfWifiNetworks}" value=""><br>
+            `
+        }
+    </script>
 </html>
