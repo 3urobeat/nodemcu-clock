@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:51:00
  * Author: 3urobeat
  * 
- * Last Modified: 30.12.2022 21:54:37
+ * Last Modified: 30.12.2022 22:42:17
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -39,7 +39,7 @@ const char webpage[] PROGMEM = R"rawliteral(
     </head>
     
     <body>
-        <h1>nodemcu-clock Setup Page Hello</h1>
+        <h1>nodemcu-clock Setup Page</h1>
         
         <!-- %variable% in value fields are placeholders that get replaced by processor function before sending to client -->
         <form action="/get" target="hidden-form">
@@ -73,11 +73,11 @@ const char webpage[] PROGMEM = R"rawliteral(
 
             <!-- System config -->
             <h3>System Config:</h3>
-            LCD Columns: <input type="number" name="maxcol_input" value="%maxcol_input%"><br>
+            LCD Columns: <input type="text" name="maxcol_input" value="%maxcol_input%"><br>
             Page Order: <input type="text" name="pageOrder_input" value="%pageOrder_input%"><br>
             Page Duration: <input type="text" name="showuntil_input" value="%showuntil_input%"><br>
-            Enable Mini-Clock: <input type="checkbox" name="alwaysShowTime_input" checked="%alwaysShowTime_input%"><br>
-            Clock-Weekday-Switch Delay: <input type="number" name="clockWeekdaySwitch_input" value="%clockWeekdaySwitch_input%"><br>
+            Enable Mini-Clock: <input type="checkbox" name="alwaysShowTime_input" %alwaysShowTime_input%><br>
+            Clock-Weekday-Switch Delay: <input type="text" name="clockWeekdaySwitch_input" value="%clockWeekdaySwitch_input%"><br>
             <br><br>
             
             <!-- Save button -->
