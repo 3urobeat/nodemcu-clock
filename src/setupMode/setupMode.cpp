@@ -30,7 +30,7 @@ ESP8266WebServer webserver(80); // Init webserver on port 80
 
 
 // Initialize setup switch input and check state
-bool setupSetupMode()
+bool setupModeEnabledCheck()
 {
     // Initialize switch pin as input
     pinMode(switchPin, INPUT_PULLUP);
@@ -43,7 +43,7 @@ bool setupSetupMode()
 
 
 // Host wifi network and webserver for setupMode, is called from setup
-void hostSetupMode()
+void setupModeSetup()
 {
     lcd.centerPrint("Entering Setup...", 3);
     delay(250);
@@ -66,8 +66,8 @@ void hostSetupMode()
 
 uint8_t animFrame = 0; // Tracking var for animation frame
 
-// Handles the running setupMode webserver, is called from loop
-void handleSetupMode()
+// Displays animation on screen while setupMode is active
+void setupModeLoop()
 {
     // Display an animation so the device does not look like being softlocked
     lcd.setCursor(0, 3);

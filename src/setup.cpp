@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 26.12.2022 23:58:37
+ * Last Modified: 30.12.2022 14:44:39
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -50,11 +50,11 @@ void setupHandler()
     delay(1000);
 
 
-    // Check for setup mode and continue with desired mode
-    if (setupSetupMode()) {
+    // Check for setup mode and continue with desired mode (or force setupMode and display welcome msg when config is empty)
+    if (setupModeEnabledCheck()) {
         
         // Host wifi network and webserver
-        hostSetupMode();
+        setupModeSetup();
 
     } else {
 
