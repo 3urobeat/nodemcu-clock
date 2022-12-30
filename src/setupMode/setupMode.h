@@ -17,14 +17,14 @@
 
 #pragma once
 
-#include <ESP8266WebServer.h>
+#include <ESPAsyncWebServer.h>
 #include "helpers/helpers.h" // Include helpers header which also includes main header
 
 extern bool setupModeEnabled;
-extern ESP8266WebServer webserver;
+extern AsyncWebServer webserver;
 
 bool setupModeEnabledCheck();
 void setupModeSetup();
 void setupModeLoop();
 
-void setupModeWebPage();
+void setupModeWebPage(AsyncWebServerRequest *request);
