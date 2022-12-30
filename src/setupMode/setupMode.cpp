@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 25.12.2022 15:16:47
+ * Last Modified: 30.12.2022 14:54:25
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -26,7 +26,7 @@ const char setupWifiSSID[25] = "nodemcu-clock setup wifi";
 
 bool setupModeEnabled = false;
 
-ESP8266WebServer webserver(80); // Init webserver on port 80
+AsyncWebServer webserver(80); // Init webserver on port 80
 
 
 // Initialize setup switch input and check state
@@ -37,6 +37,8 @@ bool setupModeEnabledCheck()
 
     // Read switch state and update setupModeEnabled
     setupModeEnabled = (digitalRead(switchPin) == LOW); // Set to true if return is LOW, aka switchPin is connected to GND, default is HIGH because of PULLUP
+
+    // TODO: Force setup mode when config is empty and display first-time welcome msg before returning
 
     return setupModeEnabled;
 }
@@ -53,7 +55,7 @@ void setupModeSetup()
     WiFi.softAP(setupWifiSSID, Config::setupWifiPW);
 
     // Start webserver
-    webserver.on("/", setupModeWebPage);
+    webserver.on("/", HTTP_GET, setupModeWebPage); // Call setupModeWebPage when user accesses root page, it handles displaying the webpage
     webserver.begin();
 
     // Update screen
@@ -72,7 +74,4 @@ void setupModeLoop()
     // Display an animation so the device does not look like being softlocked
     lcd.setCursor(0, 3);
     lcd.animationPrint(lcd.animations.bouncearrow, 10, &animFrame, 8, 3);
-
-    // Do webserver stuff
-    webserver.handleClient();
 }
