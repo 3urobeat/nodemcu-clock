@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:51:00
  * Author: 3urobeat
  * 
- * Last Modified: 24.12.2022 19:30:12
+ * Last Modified: 30.12.2022 14:44:34
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -23,8 +23,8 @@
 extern bool setupModeEnabled;
 extern ESP8266WebServer webserver;
 
-bool setupSetupMode();
-void hostSetupMode();
-void handleSetupMode();
+bool setupModeEnabledCheck();
+void setupModeSetup();
+void setupModeLoop();
 
 void setupModeWebPage();

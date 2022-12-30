@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:32
  * Author: 3urobeat
  * 
- * Last Modified: 24.12.2022 14:39:32
+ * Last Modified: 30.12.2022 14:42:23
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -37,7 +37,7 @@ void loopHandler()
 {
     // Call handleSetupMode() if setupMode is enabled
     if (setupModeEnabled) {
-        handleSetupMode();
+        setupModeLoop();
         return; // Stop further execution of "normal" mode
     }
 
