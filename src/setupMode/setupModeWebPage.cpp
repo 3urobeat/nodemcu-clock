@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 30.12.2022 23:07:31
+ * Last Modified: 31.12.2022 12:45:41
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -34,12 +34,12 @@ String processor(const String& var) // I need to use String here because the lib
     if (var == "timeformat_input") return String(Config::timeformat);
     if (var == "miniClockFormat_input") return String(Config::miniClockFormat);
 
-    if (var == "maxcol_input") return String(Config::maxcol); // TODO: Doesn't work for some reason
+    if (var == "maxcol_input") return String(Config::maxcol);
     if (var == "pageOrder_input") return String(Config::pageOrder[0]) + ", " + String(Config::pageOrder[1]) + ", " + String(Config::pageOrder[2]);
     if (var == "showuntil_input") return String(Config::showuntil[0]) + ", " + String(Config::showuntil[1]) + ", " + String(Config::showuntil[2]);
-    if (var == "alwaysShowTime_input") return Config::alwaysShowTime ? "checked" : ""; // Return checked or replace with nothing // TODO: Doesn't work for some reason
-    if (var == "clockWeekdaySwitch_input") return String(Config::clockWeekdaySwitch); // TODO: Doesn't work for some reason
-    
+    if (var == "alwaysShowTime_input") return Config::alwaysShowTime ? "checked" : ""; // Return checked or replace with nothing
+    if (var == "clockWeekdaySwitch_input") return String(Config::clockWeekdaySwitch);
+
     return String();
 }
 
