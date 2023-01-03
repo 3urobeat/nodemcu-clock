@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 30.12.2022 14:54:25
+ * Last Modified: 03.01.2023 14:08:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -29,16 +29,23 @@ bool setupModeEnabled = false;
 AsyncWebServer webserver(80); // Init webserver on port 80
 
 
-// Initialize setup switch input and check state
-bool setupModeEnabledCheck()
+/**
+ * Initialize setup switch input and check state
+ * @param forceSetupMode (Optional, default: false) Force enables setupMode, use for example when configDetectFirstStart() returned true
+ */
+bool setupModeEnabledCheck(bool forceSetupMode)
 {
     // Initialize switch pin as input
     pinMode(switchPin, INPUT_PULLUP);
 
+    // Abort if forceSetupMode is true
+    if (forceSetupMode) { // TODO: Display first-time welcome message?
+        setupModeEnabled = true;
+        return true;
+    }
+
     // Read switch state and update setupModeEnabled
     setupModeEnabled = (digitalRead(switchPin) == LOW); // Set to true if return is LOW, aka switchPin is connected to GND, default is HIGH because of PULLUP
-
-    // TODO: Force setup mode when config is empty and display first-time welcome msg before returning
 
     return setupModeEnabled;
 }

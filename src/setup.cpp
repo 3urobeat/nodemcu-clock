@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 30.12.2022 14:44:39
+ * Last Modified: 03.01.2023 13:55:37
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -48,11 +48,16 @@ void setupHandler()
     lcd.centerPrint("nodemcu-clock", 0, true);
     lcd.centerPrint(version, 1, true);
     delay(1000);
+    lcd.centerPrint("Loading...", 3, true);
 
+    // Load config values from storage
+    bool isFirstStart = configDetectFirstStart();
+
+    if (!isFirstStart) readConfigFromStorage(); // Read config in fs if not first start
 
     // Check for setup mode and continue with desired mode (or force setupMode and display welcome msg when config is empty)
-    if (setupModeEnabledCheck()) {
-        
+    if (setupModeEnabledCheck(isFirstStart)) {
+
         // Host wifi network and webserver
         setupModeSetup();
 
@@ -61,8 +66,6 @@ void setupHandler()
         // Connect to wifi
         initWifi(ssidAmount, 3);
         delay(500);
-
-        // Show loading message
         lcd.centerPrint("Loading...", 3, true);
 
         // Geolocate the used IP to get coordinates and the timeoffset
@@ -73,6 +76,5 @@ void setupHandler()
 
         // Clear display and let page manager do page manager things (aka show a page lol)
         lcd.clear();
-
     }
 }

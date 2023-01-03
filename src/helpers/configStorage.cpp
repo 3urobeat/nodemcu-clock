@@ -4,7 +4,7 @@
  * Created Date: 27.12.2022 12:28:55
  * Author: 3urobeat
  * 
- * Last Modified: 27.12.2022 19:03:10
+ * Last Modified: 03.01.2023 13:58:43
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -25,7 +25,20 @@
  */
 bool configDetectFirstStart()
 {
-    return false;
+    // Check for missing Wifi settings in fs to determine first boot
+    if (!prefs.isKey("wifiSSID")) {
+
+        // Check if user configured wifi settings at compile time and write to fs
+        if (strlen(Config::wifiSSID[0]) > 0) {
+            writeConfigToStorage(); // Write compile time config to fs
+
+            return false;
+        }
+
+        return true; // Return true if key is not present and nothing was set at compile time
+    }
+    
+    return false; // Return false if wifiSSID key is present in fs, we assume it has content
 }
 
 
