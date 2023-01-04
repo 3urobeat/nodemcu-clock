@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 31.12.2022 12:45:41
+ * Last Modified: 04.01.2023 12:43:36
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -48,4 +48,11 @@ String processor(const String& var) // I need to use String here because the lib
 void setupModeWebPage(AsyncWebServerRequest *request)
 {
     request->send_P(200, "text/html", webpage, processor); // webpage is defined in header file
+}
+
+
+// Saves webpage values to Config namespace when user clicks Save button
+void setupModeWebPageSave(AsyncWebServerRequest *request)
+{
+    Serial.println("Submit received");
 }

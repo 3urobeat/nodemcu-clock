@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:51:00
  * Author: 3urobeat
  * 
- * Last Modified: 03.01.2023 13:55:31
+ * Last Modified: 04.01.2023 12:29:24
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -28,6 +28,7 @@ void setupModeSetup();
 void setupModeLoop();
 
 void setupModeWebPage(AsyncWebServerRequest *request);
+void setupModeWebPageSave(AsyncWebServerRequest *request);
 
 
 // setupModeWebPage HTML content
@@ -42,7 +43,7 @@ const char webpage[] PROGMEM = R"rawliteral(
         <h1>nodemcu-clock Setup Page</h1>
         
         <!-- %variable% in value fields are placeholders that get replaced by processor function before sending to client -->
-        <form action="/get" target="hidden-form">
+        <form action="/post" target="hidden-form" method="post">
             <!-- Wifi Settings -->
             <h3>Wifi Settings</h3>
             <div id="wifi_networks">
