@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 03.01.2023 14:08:58
+ * Last Modified: 04.01.2023 12:25:12
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -63,6 +63,7 @@ void setupModeSetup()
 
     // Start webserver
     webserver.on("/", HTTP_GET, setupModeWebPage); // Call setupModeWebPage when user accesses root page, it handles displaying the webpage
+    webserver.on("/post", HTTP_POST, setupModeWebPageSave);
     webserver.begin();
 
     // Update screen
