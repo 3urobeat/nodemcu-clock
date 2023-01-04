@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:16:25
  * Author: 3urobeat
  * 
- * Last Modified: 25.12.2022 22:52:16
+ * Last Modified: 04.01.2023 21:10:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -23,10 +23,10 @@ namespace Config
 {
     extern uint8_t maxcol;
 
-    extern char *wifiSSID[2];
-    extern char *wifiPW[2];
+    extern char wifiSSID[3][32];
+    extern char wifiPW[3][32];
 
-    extern char *setupWifiPW;
+    extern char setupWifiPW[32];
 
     extern char lat[8];
     extern char lon[8];
@@ -38,7 +38,7 @@ namespace Config
     extern char timeformat[9];
     extern char miniClockFormat[6];
 
-    extern char    *pageOrder[3];
+    extern char     pageOrder[3][32];
     extern uint32_t showuntil[3];
     extern bool     alwaysShowTime;
     extern uint16_t clockWeekdaySwitch;

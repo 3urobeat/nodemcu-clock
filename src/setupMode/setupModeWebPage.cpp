@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 04.01.2023 12:43:36
+ * Last Modified: 04.01.2023 21:52:51
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -52,7 +52,33 @@ void setupModeWebPage(AsyncWebServerRequest *request)
 
 
 // Saves webpage values to Config namespace when user clicks Save button
-void setupModeWebPageSave(AsyncWebServerRequest *request)
+void setupModeWebPageSave(AsyncWebServerRequest *request) // TODO: Filter + from params
 {
-    Serial.println("Submit received");
+    // Update all config values (we technically don't need any hasArg() checks but let's keep them for good measure)
+    if (request->hasArg("wifiSSID_input1")) request->arg("wifiSSID_input1").toCharArray(Config::wifiSSID[0], sizeof(Config::wifiSSID[0]));
+    if (request->hasArg("wifiPW_input1")) request->arg("wifiPW_input1").toCharArray(Config::wifiPW[0], sizeof(Config::wifiPW[0]));
+    if (request->hasArg("setupWifiPW_input")) request->arg("setupWifiPW_input").toCharArray(Config::setupWifiPW, sizeof(Config::setupWifiPW));
+
+    if (request->hasArg("openweathermaptoken_input")) request->arg("openweathermaptoken_input").toCharArray(Config::openweathermaptoken, sizeof(Config::openweathermaptoken));
+    if (request->hasArg("newsapitoken_input")) request->arg("newsapitoken_input").toCharArray(Config::newsapitoken, sizeof(Config::newsapitoken));
+
+    if (request->hasArg("lat_input")) request->arg("lat_input").toCharArray(Config::lat, sizeof(Config::lat));
+    if (request->hasArg("lon_input")) request->arg("lon_input").toCharArray(Config::lon, sizeof(Config::lon));
+    if (request->hasArg("dateformat_input")) request->arg("dateformat_input").toCharArray(Config::dateformat, sizeof(Config::dateformat));
+    if (request->hasArg("timeformat_input")) request->arg("timeformat_input").toCharArray(Config::timeformat, sizeof(Config::timeformat));
+    if (request->hasArg("miniClockFormat_input")) request->arg("miniClockFormat_input").toCharArray(Config::miniClockFormat, sizeof(Config::miniClockFormat));
+
+    if (request->hasArg("maxcol_input")) Config::maxcol = (uint8_t) request->arg("maxcol_input").toInt();
+    //if (request->hasArg("pageOrder_input")) Config::pageOrder[0] = request->arg("pageOrder_input").toCharArray(); // TODO
+    //if (request->hasArg("showuntil_input")) Config::showuntil[0] = request->arg("showuntil_input").toCharArray(); // TODO
+
+    // If alwaysShowTime is unchecked it isn't included in the body so we must not check for hasArg()
+    if (request->arg("alwaysShowTime_input") == "on") Config::alwaysShowTime = true;
+        else Config::alwaysShowTime = false;
+
+    if (request->hasArg("clockWeekdaySwitch_input")) Config::clockWeekdaySwitch = (uint16_t) request->arg("clockWeekdaySwitch_input").toInt();
+
+
+    // Write config changes to fs
+    writeConfigToStorage();
 }
