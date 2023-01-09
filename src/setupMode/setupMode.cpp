@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 04.01.2023 12:25:12
+ * Last Modified: 09.01.2023 16:03:32
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -74,12 +74,20 @@ void setupModeSetup()
 }
 
 
-uint8_t animFrame = 0; // Tracking var for animation frame
+uint32_t savedTime = 0; // Gets set by setupModeWebPageSave() to a timestamp if "Saved!" should be displayed for 5 sec instead of animation
+uint8_t  animFrame = 0; // Tracking var for animation frame
 
 // Displays animation on screen while setupMode is active
 void setupModeLoop()
 {
-    // Display an animation so the device does not look like being softlocked
-    lcd.setCursor(0, 3);
-    lcd.animationPrint(lcd.animations.bouncearrow, 10, &animFrame, 8, 3);
+    if (millis() < savedTime + 5000 && savedTime != 0) {
+        lcd.centerPrint("- Settings Saved -", 3);
+    } else {
+        // Clear line if we just switched back to animation
+        if (millis() - savedTime < 5300) lcd.clearLine(3);
+
+        // Display an animation so the device does not look like being softlocked
+        lcd.setCursor(0, 3);
+        lcd.animationPrint(lcd.animations.bouncearrow, 10, &animFrame, 8, 3);
+    }
 }

@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 09.01.2023 15:28:20
+ * Last Modified: 09.01.2023 15:54:29
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -150,4 +150,7 @@ void setupModeWebPageSave(AsyncWebServerRequest *request) // TODO: Filter + from
 
     // Write config changes to fs
     writeConfigToStorage();
+
+    // Let loop display saved message on screen
+    savedTime = millis();
 }
