@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 09.01.2023 13:13:07
+ * Last Modified: 09.01.2023 15:28:20
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -69,9 +69,8 @@ void setupModeWebPageSave(AsyncWebServerRequest *request) // TODO: Filter + from
     if (request->hasArg("miniClockFormat_input")) request->arg("miniClockFormat_input").toCharArray(Config::miniClockFormat, sizeof(Config::miniClockFormat));
 
     if (request->hasArg("maxcol_input")) Config::maxcol = (uint8_t) request->arg("maxcol_input").toInt();
-    //if (request->hasArg("showuntil_input")) Config::showuntil[0] = request->arg("showuntil_input").toCharArray(); // TODO
 
-    
+
     // Parse pageOrder string to an array
     if (request->hasArg("pageOrder_input")) {
         const char *pageOrderInput = request->arg("pageOrder_input").c_str(); // Get user input
@@ -99,6 +98,45 @@ void setupModeWebPageSave(AsyncWebServerRequest *request) // TODO: Filter + from
 
             // Put char into pageOrder where it belongs
             Config::pageOrder[arrayProgress][elemProgress] = e;
+            elemProgress++;
+        }
+    }
+
+    // Parse showuntil string to an array
+    if (request->hasArg("showuntil_input")) {
+        const char *showuntilInput = request->arg("showuntil_input").c_str(); // Get user input
+
+        uint8_t elemProgress      = 0; // Track which position of the current element we are at
+        uint8_t arrayProgress     = 0;  // Track which element in the array we are working on
+        char    showuntilTemp[11] = ""; // Temp arr for constructing number before converting to int, UINT32_MAX is 10 chars long
+
+        for (uint8_t i = 0; i < strlen(showuntilInput); i++) {
+            char e = showuntilInput[i]; // Alias the char we are looking at to make using it easier
+            
+            // Progress to next element in array when comma is detected or if we reached the end of the input
+            if (e == ',' || i == strlen(showuntilInput) - 1) {
+                // Append last char in last iteration, otherwise we are missing the last digit of the last element
+                if (e != ',') showuntilTemp[elemProgress] = e;
+                
+                // Convert showuntilTemp to int and store into Config
+                Config::showuntil[arrayProgress] = atoi(showuntilTemp);
+
+                // Clear showuntilTemp
+                memset(showuntilTemp, 0, sizeof(showuntilTemp));
+
+                arrayProgress++;
+                elemProgress = 0; // Reset element progress to start at 0 of next element
+                continue;
+            }
+            
+            // Skip empty chars
+            if (e == ' ') continue;
+
+            // Ignore any following chars of the current element if we exceeded the available space
+            if (strlen(showuntilTemp) >= 10) continue;
+
+            // Append char to showuntilTemp
+            showuntilTemp[elemProgress] = e;
             elemProgress++;
         }
     }
