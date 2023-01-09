@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 03.01.2023 13:55:37
+ * Last Modified: 09.01.2023 16:44:39
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -23,8 +23,6 @@ uint16_t timeoffset; // Timezone offset in seconds
 
 char city[64];   // Yes, we can store the longest city names: https://largest.org/geography/city-names/
 char country[3]; // Two char long country codes
-
-const size_t ssidAmount = sizeof Config::wifiSSID / sizeof Config::wifiSSID[0]; // Calculate wifiSSID size to avoid -Wsizeof-array-argument warning
 
 
 /**
@@ -64,7 +62,7 @@ void setupHandler()
     } else {
 
         // Connect to wifi
-        initWifi(ssidAmount, 3);
+        initWifi(3);
         delay(500);
         lcd.centerPrint("Loading...", 3, true);
 

@@ -4,7 +4,7 @@
  * Created Date: 27.12.2022 12:28:55
  * Author: 3urobeat
  * 
- * Last Modified: 09.01.2023 15:29:52
+ * Last Modified: 09.01.2023 16:35:26
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -49,8 +49,8 @@ void readConfigFromStorage()
 {
     Config::maxcol = prefs.getUChar("maxcol");
 
-    prefs.getBytes("wifiSSID", Config::wifiSSID, 3); // TODO: Implement checks for resizing wifi arrays - ssidAmount from setup.cpp might not work anymore
-    prefs.getBytes("wifiPW", Config::wifiPW, 3);
+    prefs.getBytes("wifiSSID", Config::wifiSSID, sizeof(Config::wifiSSID));
+    prefs.getBytes("wifiPW", Config::wifiPW, sizeof(Config::wifiPW));
     prefs.getBytes("setupWifiPW", Config::setupWifiPW, sizeof(Config::setupWifiPW));
     prefs.getBytes("lat", Config::lat, sizeof(Config::lat));
     prefs.getBytes("lon", Config::lon, sizeof(Config::lon));
@@ -76,8 +76,8 @@ void writeConfigToStorage()
     // Types doc: https://docs.espressif.com/projects/arduino-esp32/en/latest/tutorials/preferences.html#id1
     prefs.putUChar("maxcol", Config::maxcol);
 
-    prefs.putBytes("wifiSSID", Config::wifiSSID, 3); // TODO: Implement checks for resizing wifi arrays - ssidAmount from setup.cpp might not work anymore
-    prefs.putBytes("wifiPW", Config::wifiPW, 3);
+    prefs.putBytes("wifiSSID", Config::wifiSSID, sizeof(Config::wifiSSID));
+    prefs.putBytes("wifiPW", Config::wifiPW, sizeof(Config::wifiPW));
     prefs.putBytes("setupWifiPW", Config::setupWifiPW, sizeof(Config::setupWifiPW));
     prefs.putBytes("lat", Config::lat, sizeof(Config::lat));
     prefs.putBytes("lon", Config::lon, sizeof(Config::lon));

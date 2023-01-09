@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:12:41
  * Author: 3urobeat
  * 
- * Last Modified: 04.01.2023 21:55:18
+ * Last Modified: 09.01.2023 16:47:40
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -20,8 +20,8 @@ namespace Config
 {
     uint8_t maxcol = 20; // Width of the display
 
-    char wifiSSID[3][32] = { "", "", "" }; // You can provide multiple networks if you wish
-    char wifiPW[3][32]   = { "", "", "" };
+    char wifiSSID[5][32] = { "", "", "", "", "" }; // You can provide up to 5 different networks
+    char wifiPW[5][32]   = { "", "", "", "", "" };
 
     char setupWifiPW[32] = "setuppassword136"; // Password used for hosted wifi network in setup mode
 
