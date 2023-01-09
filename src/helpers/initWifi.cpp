@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 11.12.2022 16:30:40
+ * Last Modified: 09.01.2023 16:44:55
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -21,7 +21,7 @@
 void(* resetFunc) (void) = 0; // create a standard reset function
 
 
-ESP8266WiFiClass initWifi(size_t ssidamount, uint8_t row) 
+ESP8266WiFiClass initWifi(uint8_t row) 
 {
     lcd.clearLine(row); //clear line just to make sure no old characters are left
 
@@ -37,7 +37,7 @@ ESP8266WiFiClass initWifi(size_t ssidamount, uint8_t row)
 
     //Try to connect by iterating for every found network over all networks in array (I tried doing this with indexOf() to avoid using a nested for loop but it had different results depending on the order in wifiSSID which was weird)
     for (uint8_t i = 0; i <= n; i++) {
-        for (uint8_t j = 0; j < ssidamount; j++) {
+        for (uint8_t j = 0; j < ssidAmount; j++) {
             WiFi.SSID(i).toCharArray(thisSSID, 64, 0);
 
             if (strcmp(thisSSID, Config::wifiSSID[j]) == 0) {

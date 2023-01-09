@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 26.12.2022 23:58:10
+ * Last Modified: 09.01.2023 16:46:06
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -37,6 +37,9 @@
 
 // Include config
 #include "../config/config.h"
+
+// Define a few kinda hardcoded values
+#define ssidAmount 5
 
 
 extern const char version[];
