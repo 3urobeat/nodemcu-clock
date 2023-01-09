@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:51:00
  * Author: 3urobeat
  * 
- * Last Modified: 04.01.2023 12:29:24
+ * Last Modified: 09.01.2023 15:53:59
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -22,6 +22,7 @@
 
 extern bool setupModeEnabled;
 extern AsyncWebServer webserver;
+extern uint32_t savedTime;
 
 bool setupModeEnabledCheck(bool forceSetupMode = false);
 void setupModeSetup();
