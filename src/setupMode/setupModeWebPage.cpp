@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 04.01.2023 21:52:51
+ * Last Modified: 09.01.2023 13:13:07
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -69,8 +69,39 @@ void setupModeWebPageSave(AsyncWebServerRequest *request) // TODO: Filter + from
     if (request->hasArg("miniClockFormat_input")) request->arg("miniClockFormat_input").toCharArray(Config::miniClockFormat, sizeof(Config::miniClockFormat));
 
     if (request->hasArg("maxcol_input")) Config::maxcol = (uint8_t) request->arg("maxcol_input").toInt();
-    //if (request->hasArg("pageOrder_input")) Config::pageOrder[0] = request->arg("pageOrder_input").toCharArray(); // TODO
     //if (request->hasArg("showuntil_input")) Config::showuntil[0] = request->arg("showuntil_input").toCharArray(); // TODO
+
+    
+    // Parse pageOrder string to an array
+    if (request->hasArg("pageOrder_input")) {
+        const char *pageOrderInput = request->arg("pageOrder_input").c_str(); // Get user input
+
+        uint8_t elemProgress  = 0; // Track which position of the current element we are at
+        uint8_t arrayProgress = 0; // Track which element in the array we are working on
+
+        memset(Config::pageOrder, 0, sizeof(Config::pageOrder)); // Clear existing array
+
+        for (uint8_t i = 0; i < strlen(pageOrderInput); i++) {
+            char e = pageOrderInput[i]; // Alias the char we are looking at to make using it easier
+            
+            // Progress to next element in array when comma is detected
+            if (e == ',') {
+                arrayProgress++;
+                elemProgress = 0; // Reset element progress to start at 0 of next element
+                continue;
+            }
+            
+            // Skip empty chars
+            if (e == ' ') continue;
+
+            // Ignore any following chars of the current element if we exceeded the available space
+            if (elemProgress >= sizeof(Config::pageOrder[arrayProgress]) - 1) continue;
+
+            // Put char into pageOrder where it belongs
+            Config::pageOrder[arrayProgress][elemProgress] = e;
+            elemProgress++;
+        }
+    }
 
     // If alwaysShowTime is unchecked it isn't included in the body so we must not check for hasArg()
     if (request->arg("alwaysShowTime_input") == "on") Config::alwaysShowTime = true;
