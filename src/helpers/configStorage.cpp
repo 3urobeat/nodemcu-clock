@@ -4,7 +4,7 @@
  * Created Date: 27.12.2022 12:28:55
  * Author: 3urobeat
  * 
- * Last Modified: 03.01.2023 13:58:43
+ * Last Modified: 09.01.2023 15:29:52
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -59,8 +59,8 @@ void readConfigFromStorage()
     prefs.getBytes("dateformat", Config::dateformat, sizeof(Config::dateformat));
     prefs.getBytes("timeformat", Config::timeformat, sizeof(Config::timeformat));
     prefs.getBytes("miniClockFormat", Config::miniClockFormat, sizeof(Config::miniClockFormat));
-    prefs.getBytes("pageOrder", Config::pageOrder, 3);
-    prefs.getBytes("showuntil", Config::showuntil, 3);
+    prefs.getBytes("pageOrder", Config::pageOrder, sizeof(Config::pageOrder));
+    prefs.getBytes("showuntil", Config::showuntil, sizeof(Config::showuntil));
 
     Config::alwaysShowTime = prefs.getBool("alwaysShowTime");
 
@@ -86,8 +86,8 @@ void writeConfigToStorage()
     prefs.putBytes("dateformat", Config::dateformat, sizeof(Config::dateformat));
     prefs.putBytes("timeformat", Config::timeformat, sizeof(Config::timeformat));
     prefs.putBytes("miniClockFormat", Config::miniClockFormat, sizeof(Config::miniClockFormat));
-    prefs.putBytes("pageOrder", Config::pageOrder, 3);
-    prefs.putBytes("showuntil", Config::showuntil, 3);
+    prefs.putBytes("pageOrder", Config::pageOrder, sizeof(Config::pageOrder));
+    prefs.putBytes("showuntil", Config::showuntil, sizeof(Config::showuntil));
 
     prefs.putBool("alwaysShowTime", Config::alwaysShowTime);
 
