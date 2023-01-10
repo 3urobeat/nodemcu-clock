@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:51:00
  * Author: 3urobeat
  * 
- * Last Modified: 10.01.2023 14:26:14
+ * Last Modified: 10.01.2023 15:01:09
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -50,8 +50,8 @@ const char webpage[] PROGMEM = R"rawliteral(
             <div id="wifi_networks">
                 <div id="wifi_network1">
                     <p>Network 1:</p>
-                    SSID: <input type="text" name="wifiSSID_input1" value="%wifiSSID_input1%"><br>
-                    Password: <input type="text" name="wifiPW_input1" value="%wifiPW_input1%"><br>
+                    SSID: <input type="text" name="wifiSSID_input1" value="%wifiSSID1%"><br>
+                    Password: <input type="text" name="wifiPW_input1" value="%wifiPW1%"><br>
                 </div>
             </div>
             <br>
