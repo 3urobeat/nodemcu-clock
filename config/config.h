@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:16:25
  * Author: 3urobeat
  * 
- * Last Modified: 04.01.2023 21:10:30
+ * Last Modified: 10.01.2023 11:39:19
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -23,8 +23,8 @@ namespace Config
 {
     extern uint8_t maxcol;
 
-    extern char wifiSSID[3][32];
-    extern char wifiPW[3][32];
+    extern char wifiSSID[5][32];
+    extern char wifiPW[5][32];
 
     extern char setupWifiPW[32];
 
