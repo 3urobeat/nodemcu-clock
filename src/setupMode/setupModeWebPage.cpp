@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 09.01.2023 15:54:29
+ * Last Modified: 10.01.2023 12:21:52
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -52,11 +52,30 @@ void setupModeWebPage(AsyncWebServerRequest *request)
 
 
 // Saves webpage values to Config namespace when user clicks Save button
-void setupModeWebPageSave(AsyncWebServerRequest *request) // TODO: Filter + from params
+void setupModeWebPageSave(AsyncWebServerRequest *request)
 {
-    // Update all config values (we technically don't need any hasArg() checks but let's keep them for good measure)
-    if (request->hasArg("wifiSSID_input1")) request->arg("wifiSSID_input1").toCharArray(Config::wifiSSID[0], sizeof(Config::wifiSSID[0]));
-    if (request->hasArg("wifiPW_input1")) request->arg("wifiPW_input1").toCharArray(Config::wifiPW[0], sizeof(Config::wifiPW[0]));
+    // Update all wifi networks included in response
+    char wifiSSID_inputTemp[16] = "wifiSSID_input0";
+    char wifiPW_inputTemp[14]   = "wifiPW_input0";
+
+    // Clear the whole array first to also remove any networks the user removed in the response
+    memset(Config::wifiSSID, 0, sizeof(Config::wifiSSID));
+    memset(Config::wifiPW, 0, sizeof(Config::wifiPW));
+
+    for (uint8_t i = 1; i <= ssidAmount; i++) { // Input names start with 1, not with 0 in this case
+        // Update both char arrs with index i for this iteration
+        wifiSSID_inputTemp[14] = '0' + i;
+        wifiPW_inputTemp[12]   = '0' + i; // Quick trick to convert int to char by incrementing ascii code of char '0'
+
+        // Update element if included in response, it otherwise stays empty
+        if (request->hasArg(wifiSSID_inputTemp) && request->hasArg(wifiPW_inputTemp)) {
+            request->arg(wifiSSID_inputTemp).toCharArray(Config::wifiSSID[i - 1], sizeof(Config::wifiSSID[0])); // Subtract 1 from i to get back to 0 based indexing of Config
+            request->arg(wifiPW_inputTemp).toCharArray(Config::wifiPW[i - 1], sizeof(Config::wifiPW[0]));
+        }
+    }
+
+
+    // Update all other config values (we technically don't need any hasArg() checks but let's keep them for good measure)
     if (request->hasArg("setupWifiPW_input")) request->arg("setupWifiPW_input").toCharArray(Config::setupWifiPW, sizeof(Config::setupWifiPW));
 
     if (request->hasArg("openweathermaptoken_input")) request->arg("openweathermaptoken_input").toCharArray(Config::openweathermaptoken, sizeof(Config::openweathermaptoken));
@@ -140,6 +159,7 @@ void setupModeWebPageSave(AsyncWebServerRequest *request) // TODO: Filter + from
             elemProgress++;
         }
     }
+
 
     // If alwaysShowTime is unchecked it isn't included in the body so we must not check for hasArg()
     if (request->arg("alwaysShowTime_input") == "on") Config::alwaysShowTime = true;
