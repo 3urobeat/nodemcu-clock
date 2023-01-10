@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:51:00
  * Author: 3urobeat
  * 
- * Last Modified: 09.01.2023 15:53:59
+ * Last Modified: 10.01.2023 14:26:14
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -48,12 +48,15 @@ const char webpage[] PROGMEM = R"rawliteral(
             <!-- Wifi Settings -->
             <h3>Wifi Settings</h3>
             <div id="wifi_networks">
-                <p>Network 1:</p>
-                SSID: <input type="text" name="wifiSSID_input1" value="%wifiSSID_input1%"><br>
-                Password: <input type="text" name="wifiPW_input1" value="%wifiPW_input1%"><br>
+                <div id="wifi_network1">
+                    <p>Network 1:</p>
+                    SSID: <input type="text" name="wifiSSID_input1" value="%wifiSSID_input1%"><br>
+                    Password: <input type="text" name="wifiPW_input1" value="%wifiPW_input1%"><br>
+                </div>
             </div>
             <br>
             <input type="button" id="addWifi_button" value="+ Add another network" onclick="addWifiNetworkToDiv()"><br> <!-- Button to add another SSID and PW field -->
+            <p id="addWifi_button_text"></p>
             <br>
             Setup-Wifi Password: <input type="text" name="setupWifiPW_input" value="%setupWifiPW_input%"><br>
             <br><br>
@@ -89,29 +92,45 @@ const char webpage[] PROGMEM = R"rawliteral(
     </body>
 
     <script>
-        // TODO: Add amount of wifi networks specified in config on page load
+        /* ------------ SETUP ------------ */
         let wifiNetworksDiv      = document.getElementById("wifi_networks");
-        let amountOfWifiNetworks = 2; // TODO
+        let wifiNetworksIncluded = [ ["%wifiSSID1%", "%wifiPW1%"], ["%wifiSSID2%", "%wifiPW2%"], ["%wifiSSID3%", "%wifiPW3%"], ["%wifiSSID4%", "%wifiPW4%"], ["%wifiSSID5%", "%wifiPW5%"] ]; // This array gets filled by processor when sending page - Needs to be expanded if config changes!
 
-        // TODO: Specify some sort of placeholder array containing placeholder variables for value fields so that processor() can replace them
+        // Fill "addWifi_button_text" with content dynamically
+        document.getElementById("addWifi_button_text").innerHTML = `You can add up to ${wifiNetworksIncluded.length} different wifi networks by clicking the button above!`;
 
-        for (let i = 2; i <= amountOfWifiNetworks; i++) {
+        // Append fields for available network slot, hidden by default if empty. This ensures that the network fields order stays correct even when network 1 and 3 are filled but not 2
+        for (let i = 2; i <= wifiNetworksIncluded.length; i++) {
+            // Add "hidden" to div if this network entry is empty
             wifiNetworksDiv.innerHTML += `
-                <p>Network ${i}:</p>
-                SSID: <input type="text" name="wifiSSID_input${i}" value=""><br>
-                Password: <input type="text" name="wifiPW_input${i}" value=""><br>
+                <div id="wifi_network${i}" ${wifiNetworksIncluded[i - 1][0] ? "" : "hidden"}>
+                    <p>Network ${i}:</p>
+                    SSID: <input type="text" name="wifiSSID_input${i}" value="${wifiNetworksIncluded[i - 1][0]}"><br>
+                    Password: <input type="text" name="wifiPW_input${i}" value="${wifiNetworksIncluded[i - 1][1]}"><br>
+                </div>
             `
+
+            // Check if all divs are visible in the last iteration as we reached the max amount of allowed wifi networks
+            if (i == wifiNetworksIncluded.length) {
+                if (Array.from(wifiNetworksDiv.children).every(e => !e.hidden)) document.getElementById("addWifi_button").disabled = true;
+            }
         }
 
-        // Function that will be called by button onclick
-        function addWifiNetworkToDiv() {
-            amountOfWifiNetworks++;
 
-            wifiNetworksDiv.innerHTML += `
-                <p>Network ${amountOfWifiNetworks}:</p>
-                SSID: <input type="text" name="wifiSSID_input${amountOfWifiNetworks}" value=""><br>
-                Password: <input type="text" name="wifiPW_input${amountOfWifiNetworks}" value=""><br>
-            `
+        /* ------------ EVENTS ------------ */
+
+        // Unhide first hidden div found inside wifi_networks div when user clicks addWifi_button
+        function addWifiNetworkToDiv() {
+            for (let i = 0; i < wifiNetworksDiv.children.length; i++) {
+                // Unhide this child if hidden and break loop
+                if (wifiNetworksDiv.children[i].hidden) {
+                    wifiNetworksDiv.children[i].hidden = false;
+                    break;
+                }
+            }
+
+            // Disable button if we reached the max amount of allowed wifi networks, aka all divs are visible
+            if (Array.from(wifiNetworksDiv.children).every(e => !e.hidden)) document.getElementById("addWifi_button").disabled = true;
         }
     </script>
 </html>
