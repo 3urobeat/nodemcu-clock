@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 10.01.2023 12:21:52
+ * Last Modified: 10.01.2023 14:57:19
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -21,8 +21,21 @@
 // Processor function to dynamically replace placeholder variables in webpage
 String processor(const String& var) // I need to use String here because the library forces me to... https://github.com/me-no-dev/ESPAsyncWebServer#send-large-webpage-from-progmem-containing-templates-and-extra-headers
 {
-    if (var == "wifiSSID_input1") return String(Config::wifiSSID[0]);
-    if (var == "wifiPW_input1") return String(Config::wifiPW[0]);
+    // Fill "wifiNetworksIncluded" array with already stored wifi networks - this is prob quite inefficient but idc too much in setupMode
+    char wifiSSIDTemp[10] = "wifiSSID0";
+    char wifiPWTemp[8]    = "wifiPW0";
+    
+    for (uint8_t i = 1; i <= ssidAmount; i++) { // Input names start with 1, not with 0 in this case
+        // Update both char arrs with index i for this iteration
+        wifiSSIDTemp[8] = '0' + i;
+        wifiPWTemp[6]   = '0' + i; // Quick trick to convert int to char by incrementing ascii code of char '0'
+
+        if (var == wifiSSIDTemp) return String(Config::wifiSSID[i - 1]);
+        if (var == wifiPWTemp)   return String(Config::wifiPW[i - 1]);
+    }
+
+
+    // Check for all other config values
     if (var == "setupWifiPW_input") return String(Config::setupWifiPW);
 
     if (var == "openweathermaptoken_input") return String(Config::openweathermaptoken);
