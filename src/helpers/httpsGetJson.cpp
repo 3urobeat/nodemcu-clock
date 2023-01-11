@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 13:18:24
+ * Last Modified: 11.01.2023 15:00:16
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -16,29 +16,6 @@
 
 
 #include "helpers.h"
-
-
-void debug(const char *url, const char *port, int httpCode, int size, DynamicJsonDocument jsondata)
-{
-    Serial.begin(9600);
-
-    Serial.print("\nPinging \'");
-    Serial.print(url);
-    Serial.print("\' on port \'");
-    Serial.print(port);
-    Serial.print("\'...\n");
-
-    Serial.print("Result (Code ");
-    Serial.print(httpCode);
-    Serial.print(") (Size: ");
-    Serial.print(size);
-    Serial.print("):\n");
-
-    char responseStr[256];
-    serializeJson(jsondata, responseStr);
-
-    Serial.println(responseStr);
-}
 
 
 void httpGetJson(const char *url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter)
@@ -73,8 +50,6 @@ void httpGetJson(const char *url, DynamicJsonDocument *doc, StaticJsonDocument<1
 
     http.end(); //Close connection
     client.stop();
-
-    //debug(url, "80", httpCode, http.getSize(), (*doc));
 }
 
 
@@ -112,7 +87,5 @@ void httpsGetJson(const char *url, DynamicJsonDocument *doc, StaticJsonDocument<
     
     http.end(); //Close connection
     client.stop();
-
-    //debug(url, "443", httpCode, http.getSize(), (*doc));
 
 }
