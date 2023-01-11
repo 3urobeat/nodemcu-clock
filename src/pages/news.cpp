@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 10.01.2023 22:15:52
+ * Last Modified: 11.01.2023 16:36:37
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -20,11 +20,14 @@
 
 const uint32_t updateInterval = 1200000; // 20 min in ms // TODO: Move to config?
 
-// Store last API call timestamp, last 
+// Store last API call timestamp & current article index
 uint32_t lastRefresh;
 uint8_t  currentArticle;
 
-// These 3 are storing the current 4 news articles
+// Store URL for API req in heap as it doesn't change at runtime
+char requestURL[128] = "https://newsapi.org/v2/top-headlines?country=";
+
+// These 3 are storing the current 4 news articles on the heap
 char sourceCache[4][32];
 char pubAtCache[4][6];
 char titleCache[4][256];
@@ -81,6 +84,17 @@ namespace newsPage
     // Helper function to refresh newsCache, called by setup function
     void refreshCache()
     {
-        
+        // Display loading message so the device doesn't look like it crashed
+        lcd.centerPrint("Loading...", 2, false);
+
+        // Check if we need to build request URL or if this has already been done by an iteration before
+        if (strlen(requestURL) <= 46) {
+            char *p = requestURL;
+
+            p = mystrcat(p, country);
+            p = mystrcat(p, "&pageSize=4&apiKey=");
+            p = mystrcat(p, Config::newsapitoken);
+            *(p) = '\0'; // Add null char to the end
+        }
     }
 }
