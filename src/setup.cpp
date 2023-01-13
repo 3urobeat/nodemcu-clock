@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 14:39:16
+ * Last Modified: 13.01.2023 15:52:48
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -42,6 +42,7 @@ void setupHandler()
         Serial.begin(9600);
         Serial.setDebugOutput(true);
         Serial.println(F("Debug Mode enabled! Starting..."));
+        debugMemory(); // Log free memory once on start
     }
 
     // Print startup screen
@@ -53,7 +54,10 @@ void setupHandler()
     // Load config values from storage
     bool isFirstStart = configDetectFirstStart();
 
-    if (!isFirstStart) readConfigFromStorage(); // Read config in fs if not first start
+    if (!isFirstStart) {
+        readConfigFromStorage(); // Read config in fs if not first start
+        debugMemory("Config was read from filesystem");
+    }
 
     // Check for setup mode and continue with desired mode (or force setupMode and display welcome msg when config is empty)
     if (setupModeEnabledCheck(isFirstStart)) {
@@ -70,11 +74,13 @@ void setupHandler()
 
         // Geolocate the used IP to get coordinates and the timeoffset
         getLocation();
+        debugMemory("getLocation() helper finished");
 
         // Start syncing time
         timeClient.begin();
 
         // Clear display and let page manager do page manager things (aka show a page lol)
         lcd.clear();
+        debugMemory("\n----\nSetup done, entering loop!");
     }
 }
