@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 11.12.2022 15:17:09
+ * Last Modified: 13.01.2023 20:16:07
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -20,7 +20,7 @@
 
 const uint32_t updateinterval = 600000; // 10 minutes in ms
 uint32_t       lastWeatherRefresh;
-char           fullStr[30]; // Store string to show
+char           weatherStr[20]; // Stores temp and weather condition
 
 
 namespace weatherPage
@@ -40,7 +40,7 @@ namespace weatherPage
         }
 
         lcd.centerPrint(city, 1, false);
-        lcd.centerPrint(fullStr, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal would result in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
+        lcd.centerPrint(weatherStr, 2, false); // (char)223 prints the degree symbol, putting it in a string like normal would result in gibberish: https://forum.arduino.cc/t/print-degree-symbol-on-lcd/19073
     }
 
 
@@ -56,36 +56,46 @@ namespace weatherPage
     // Helper function to refresh weatherCache, called by setup function
     void refreshCache()
     {
-        // Create filter so we don't get unneeded data back from the API
-        StaticJsonDocument<128> filter;
-        
-        filter["main"]["temp"] = true;
-        filter["weather"][0]["main"] = true;
+        debugMemory(F("weather page: Refreshing cache"));
         
         // Construct URL
-        char requestStr[200] = "http://api.openweathermap.org/data/2.5/weather?lat=";
-        char *p = requestStr;
+        char url[128] = "http://api.openweathermap.org/data/2.5/weather?lat=";
+        char *p = url;
 
         p = mystrcat(p, Config::lat);
         p = mystrcat(p, "&lon=");
         p = mystrcat(p, Config::lon);
         p = mystrcat(p, "&appid=");
         p = mystrcat(p, Config::openweathermaptoken);
-        *(p) = '\0'; // Add null char to the end
+        *(p) = '\0'; // Make sure there is a null char at the end
+
+        // Temp array for weather condition as it is transmitted first but we need it at 2nd pos in weatherStr
+        char weatherCond[16] = "";
+        char temp[6] = "";
+
+        // Create obj of our parser class and make request
+        WeatherJsonHandler *parser = new WeatherJsonHandler(weatherCond, 16, temp);
+
+        debugMemory(F("weather page: Constructed URL and made parser object"));
+
+        httpGetJson(url, parser);
+
+        // Clear up memory
+        delete(parser);
+
+        // Concat weatherCond & temp to weatherStr
+        memset(weatherStr, 0, sizeof(weatherStr)); // Clear previous content
+
+        char *pStr = weatherStr;
         
-        // Make the API call
-        DynamicJsonDocument weatherResult(256);
-        httpGetJson(requestStr, &weatherResult, filter);
+        pStr = mystrcat(pStr, temp);
+        pStr = mystrcat(pStr, "°C, ");
+        pStr = mystrcat(pStr, weatherCond);
+        *(pStr) = '\0'; // Make sure there is a null char at the end
 
-        // Refresh fullStr
-        itoa((int8_t) round((double) weatherResult["main"]["temp"] - 273.15), fullStr, 10); // Convert temp to string and write into fullStr
-
-        char *fSp = fullStr;
-        
-        fSp = mystrcat(fSp, "°C, ");
-        fSp = mystrcat(fSp, weatherResult["weather"][0]["main"]);
-        *(p) = '\0'; // Add null char to the end just to be sure, I think there might already be one
-
+        // Refresh timestamp so the next update will be in updateinterval ms 
         lastWeatherRefresh = millis();
+        
+        debugMemory(F("weather page: Refresh done"));
     }
 }
