@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 15:26:27
+ * Last Modified: 13.01.2023 19:54:50
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -18,6 +18,7 @@
 #pragma once
 
 #include "helpers/helpers.h" // Include helpers header which also includes main header
+#include "pagesJsonParser.h"
 
 
 namespace clockPage {
