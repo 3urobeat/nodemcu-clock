@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:32
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 16:33:28
+ * Last Modified: 13.01.2023 17:35:44
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -27,7 +27,7 @@ bool          hideMiniClock = false; // Will be set to true when clockpage is ac
 
 // Declare functions here and define it later below to reduce clutter while being accessible from loopHandler()
 void nextPage();
-void debugMemory(const char *str);
+void debugMemory(const __FlashStringHelper *str);
 
 
 /**
@@ -93,12 +93,12 @@ void nextPage()
 
 /**
  * Helper function that logs available memory if values changed since last call. Config::DEBUG must be enabled!
- * @param str Optional string that will be logged before free mem message
+ * @param str Optional flash string that will be logged before free mem message
  */
-void debugMemory(const char *str)
+void debugMemory(const __FlashStringHelper *str)
 {
-    if (!Config::DEBUG) return;               // Ignore call if DEBUG is disabled
-    if (strlen(str) > 0) Serial.println(str); // Log str param if defined
+    if (!Config::DEBUG) return;           // Ignore call if DEBUG is disabled
+    if (str != NULL) Serial.println(str); // Log str param if one was passed
 
     // Store last measurements in static vars (they keep their values between function calls)
     static uint32_t lastFreeContStack;

@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 15:52:48
+ * Last Modified: 13.01.2023 17:27:27
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -51,12 +51,14 @@ void setupHandler()
     delay(1000);
     lcd.centerPrint("Loading...", 3, true);
 
+    debugMemory(F("Finished setting up display"));
+
     // Load config values from storage
     bool isFirstStart = configDetectFirstStart();
 
     if (!isFirstStart) {
         readConfigFromStorage(); // Read config in fs if not first start
-        debugMemory("Config was read from filesystem");
+        debugMemory(F("Config was read from filesystem"));
     }
 
     // Check for setup mode and continue with desired mode (or force setupMode and display welcome msg when config is empty)
@@ -74,13 +76,13 @@ void setupHandler()
 
         // Geolocate the used IP to get coordinates and the timeoffset
         getLocation();
-        debugMemory("getLocation() helper finished");
+        debugMemory(F("getLocation() helper finished"));
 
         // Start syncing time
         timeClient.begin();
 
         // Clear display and let page manager do page manager things (aka show a page lol)
         lcd.clear();
-        debugMemory("\n----\nSetup done, entering loop!");
+        debugMemory(F("\n----\nSetup done, entering loop!"));
     }
 }

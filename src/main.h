@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 15:46:11
+ * Last Modified: 13.01.2023 17:24:38
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -65,4 +65,4 @@ extern Preferences prefs;
 
 void setupHandler();
 void loopHandler();
-void debugMemory(const char *str = ""); // Make it accessible outside to make debugging easier with optional str param
+void debugMemory(const __FlashStringHelper *str = nullptr); // Make it accessible outside to make debugging easier with optional str param
