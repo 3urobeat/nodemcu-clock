@@ -30,12 +30,6 @@ char country[3]; // Two char long country codes
  */
 void setupHandler()
 {
-    // Initiate display
-    Wire.begin();
-    lcd.begin();
-    lcd.backlight();
-    prefs.begin("nodemcu-clock");
-
     // Debug?
     if (Config::DEBUG) {
         delay(2500); // Delay so that the PlatformIO Serial console doesn't go stupid as it starts slower than the Arduino boots
@@ -44,6 +38,12 @@ void setupHandler()
         Serial.println(F("Debug Mode enabled! Starting..."));
         debugMemory(); // Log free memory once on start
     }
+
+    // Initiate display
+    Wire.begin();
+    lcd.begin();
+    lcd.backlight();
+    prefs.begin("nodemcu-clock");
 
     // Print startup screen
     lcd.centerPrint("nodemcu-clock", 0, true);

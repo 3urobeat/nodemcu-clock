@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 09.01.2023 16:03:32
+ * Last Modified: 13.01.2023 18:25:24
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -90,4 +90,6 @@ void setupModeLoop()
         lcd.setCursor(0, 3);
         lcd.animationPrint(lcd.animations.bouncearrow, 10, &animFrame, 8, 3);
     }
+
+    debugMemory();
 }
