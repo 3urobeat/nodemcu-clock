@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 09.01.2023 16:44:46
+ * Last Modified: 13.01.2023 17:59:31
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -18,6 +18,7 @@
 #pragma once
 
 #include "main.h"
+#include "helpersJsonParser.h"
 
 
 bool configDetectFirstStart();
@@ -26,8 +27,7 @@ void writeConfigToStorage();
 
 void getLocation();
 
-void httpGetJson(const char *url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter);
-void httpsGetJson(const char *url, DynamicJsonDocument *doc, StaticJsonDocument<128> filter);
+void httpGetJson(const char *url, JsonHandler* handler);
 
 ESP8266WiFiClass initWifi(uint8_t row);
 
