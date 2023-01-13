@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 09.01.2023 16:46:06
+ * Last Modified: 13.01.2023 14:54:33
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -65,3 +65,4 @@ extern Preferences prefs;
 
 void setupHandler();
 void loopHandler();
+void debugMemory(); // Make it accessible outside to make debugging easier

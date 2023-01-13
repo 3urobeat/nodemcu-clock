@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 11.01.2023 15:03:27
+ * Last Modified: 13.01.2023 14:39:16
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -38,8 +38,9 @@ void setupHandler()
 
     // Debug?
     if (Config::DEBUG) {
+        delay(2500); // Delay so that the PlatformIO Serial console doesn't go stupid as it starts slower than the Arduino boots
         Serial.begin(9600);
-        delay(1000); // Delay so that the PlatformIO Serial console doesn't go stupid as it starts slower than the Arduino boots
+        Serial.setDebugOutput(true);
         Serial.println(F("Debug Mode enabled! Starting..."));
     }
 
