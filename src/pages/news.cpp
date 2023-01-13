@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 23:52:36
+ * Last Modified: 13.01.2023 23:59:35
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -107,6 +107,9 @@ namespace newsPage
 
         // Update lastRefresh timestamp so next refresh only happens in updateInterval ms
         lastRefresh = millis();
+
+        // Clear "Loading..."
+        lcd.clearLine(2);
 
         debugMemory(F("news page: Refresh done"));
     }
