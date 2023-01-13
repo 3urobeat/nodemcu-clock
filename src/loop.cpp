@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:32
  * Author: 3urobeat
  * 
- * Last Modified: 11.01.2023 14:58:45
+ * Last Modified: 13.01.2023 15:05:09
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -94,8 +94,22 @@ void nextPage()
 // Helper function to quickly debug memory usage
 void debugMemory() 
 {
-    Serial.print(F("Free Memory - Stack: "));
-    Serial.print(ESP.getFreeContStack());
-    Serial.print(F(" | Heap: "));
-    Serial.println(ESP.getFreeHeap());
+    // Store last measurements in static vars //TODO: Move to heap with if guards if you figured out how to use them
+    static uint32_t lastFreeContStack;
+    static uint32_t lastFreeHeap;
+    
+    // Get new measurements
+    uint32_t freeContStack = ESP.getFreeContStack();
+    uint32_t freeHeap      = ESP.getFreeHeap();
+
+    // Send new measurements if they changed and update static vars
+    if (freeContStack != lastFreeContStack || freeHeap != lastFreeHeap) {
+        lastFreeContStack = freeContStack;
+        lastFreeHeap      = freeHeap;
+
+        Serial.print(F("Free Memory Change! - Stack: "));
+        Serial.print(ESP.getFreeContStack());
+        Serial.print(F(" | Heap: "));
+        Serial.println(ESP.getFreeHeap());
+    }
 }
