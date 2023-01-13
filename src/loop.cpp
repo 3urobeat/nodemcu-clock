@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:32
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 15:05:09
+ * Last Modified: 13.01.2023 16:33:28
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -27,7 +27,7 @@ bool          hideMiniClock = false; // Will be set to true when clockpage is ac
 
 // Declare functions here and define it later below to reduce clutter while being accessible from loopHandler()
 void nextPage();
-void debugMemory();
+void debugMemory(const char *str);
 
 
 /**
@@ -50,8 +50,8 @@ void loopHandler()
     // Show next page if showuntil time for this page passed (or call setup function if currentPage is -1)
     if (currentPage == -1 || pageUpdate + Config::showuntil[currentPage] <= millis()) nextPage();
 
-    // Call debugMemory function if DEBUG is enabled
-    if (Config::DEBUG) debugMemory();
+    // Log available memory if DEBUG mode is enabled
+    debugMemory();
 
     // Call update function for current page
     if (strcmp(Config::pageOrder[currentPage], "clock") == 0) {
@@ -91,10 +91,16 @@ void nextPage()
 }
 
 
-// Helper function to quickly debug memory usage
-void debugMemory() 
+/**
+ * Helper function that logs available memory if values changed since last call. Config::DEBUG must be enabled!
+ * @param str Optional string that will be logged before free mem message
+ */
+void debugMemory(const char *str)
 {
-    // Store last measurements in static vars //TODO: Move to heap with if guards if you figured out how to use them
+    if (!Config::DEBUG) return;               // Ignore call if DEBUG is disabled
+    if (strlen(str) > 0) Serial.println(str); // Log str param if defined
+
+    // Store last measurements in static vars (they keep their values between function calls)
     static uint32_t lastFreeContStack;
     static uint32_t lastFreeHeap;
     
@@ -104,12 +110,20 @@ void debugMemory()
 
     // Send new measurements if they changed and update static vars
     if (freeContStack != lastFreeContStack || freeHeap != lastFreeHeap) {
+        Serial.print(F("Memory Usage changed! - Stack: "));
+        Serial.print(ESP.getFreeContStack());
+        Serial.print(F(" bytes (Diff: "));
+        Serial.print(((int) freeContStack) - ((int) lastFreeContStack));
+        Serial.print(F(" bytes) | Heap: "));
+        Serial.print(ESP.getFreeHeap());
+        Serial.print(F(" bytes (Diff: "));
+        Serial.print(((int) freeHeap) - ((int) lastFreeHeap));
+        Serial.print(F(" bytes) | Heap Fragmentation: "));
+        Serial.print(ESP.getHeapFragmentation());
+        Serial.println(F("%"));
+
+        // Refresh values
         lastFreeContStack = freeContStack;
         lastFreeHeap      = freeHeap;
-
-        Serial.print(F("Free Memory Change! - Stack: "));
-        Serial.print(ESP.getFreeContStack());
-        Serial.print(F(" | Heap: "));
-        Serial.println(ESP.getFreeHeap());
     }
 }
