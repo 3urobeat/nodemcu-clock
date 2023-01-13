@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 11.01.2023 16:36:37
+ * Last Modified: 13.01.2023 23:52:36
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -23,9 +23,6 @@ const uint32_t updateInterval = 1200000; // 20 min in ms // TODO: Move to config
 // Store last API call timestamp & current article index
 uint32_t lastRefresh;
 uint8_t  currentArticle;
-
-// Store URL for API req in heap as it doesn't change at runtime
-char requestURL[128] = "https://newsapi.org/v2/top-headlines?country=";
 
 // These 3 are storing the current 4 news articles on the heap
 char sourceCache[4][32];
@@ -84,17 +81,33 @@ namespace newsPage
     // Helper function to refresh newsCache, called by setup function
     void refreshCache()
     {
+        debugMemory(F("news page: Refreshing cache"));
+        
         // Display loading message so the device doesn't look like it crashed
         lcd.centerPrint("Loading...", 2, false);
 
-        // Check if we need to build request URL or if this has already been done by an iteration before
-        if (strlen(requestURL) <= 46) {
-            char *p = requestURL;
+        // Construct URL (128 B in stack should be fine, we only need it every 20 min so keeping it in heap might be wasted mem)
+        char url[128] = "http://newsapi.org/v2/top-headlines?country="; // Use http instead of https as the SSL header takes like 20KB of heap, it's crazy
+        char *p = url;
 
-            p = mystrcat(p, country);
-            p = mystrcat(p, "&pageSize=4&apiKey=");
-            p = mystrcat(p, Config::newsapitoken);
-            *(p) = '\0'; // Add null char to the end
-        }
+        p = mystrcat(p, country);
+        p = mystrcat(p, "&pageSize=4&apiKey=");
+        p = mystrcat(p, Config::newsapitoken);
+        *(p) = '\0'; // Make sure there is a null char at the end
+
+        // Create obj of our parser class and make request
+        NewsJsonHandler *parser = new NewsJsonHandler(sourceCache[0], 32, pubAtCache[0], 6, titleCache[0], 256, 4);
+
+        debugMemory(F("news page: Constructed URL and made parser object"));
+
+        httpGetJson(url, parser);
+
+        // Clear up memory
+        delete(parser);
+
+        // Update lastRefresh timestamp so next refresh only happens in updateInterval ms
+        lastRefresh = millis();
+
+        debugMemory(F("news page: Refresh done"));
     }
 }
