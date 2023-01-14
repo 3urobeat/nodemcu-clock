@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:51:00
  * Author: 3urobeat
  * 
- * Last Modified: 10.01.2023 15:01:09
+ * Last Modified: 14.01.2023 15:00:07
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -20,8 +20,7 @@
 #include <ESPAsyncWebServer.h>
 #include "helpers/helpers.h" // Include helpers header which also includes main header
 
-extern bool setupModeEnabled;
-extern AsyncWebServer webserver;
+extern bool     setupModeEnabled;
 extern uint32_t savedTime;
 
 bool setupModeEnabledCheck(bool forceSetupMode = false);

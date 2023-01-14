@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 18:25:24
+ * Last Modified: 14.01.2023 15:54:18
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -17,16 +17,7 @@
 
 #include "setupMode.h"
 
-
-const uint8_t switchPin = D0;
-const IPAddress localIP(192, 168, 1, 1);
-const IPAddress gatewayIP(192, 168, 1, 1);
-const IPAddress subnet(255, 255, 255, 0);
-const char setupWifiSSID[25] = "nodemcu-clock setup wifi";
-
 bool setupModeEnabled = false;
-
-AsyncWebServer webserver(80); // Init webserver on port 80
 
 
 /**
@@ -35,6 +26,8 @@ AsyncWebServer webserver(80); // Init webserver on port 80
  */
 bool setupModeEnabledCheck(bool forceSetupMode)
 {
+    const uint8_t switchPin = D0;
+    
     // Initialize switch pin as input
     pinMode(switchPin, INPUT_PULLUP);
 
@@ -57,14 +50,23 @@ void setupModeSetup()
     lcd.centerPrint("Entering Setup...", 3);
     delay(250);
 
+    // Define IP and AP name (not at top scope so it doesn't get allocated when not in setupMode)
+    const IPAddress localIP(192, 168, 1, 1);
+    const IPAddress gatewayIP(192, 168, 1, 1);
+    const IPAddress subnet(255, 255, 255, 0);
+    
+    const char setupWifiSSID[25] = "nodemcu-clock setup wifi";
+
     // Launch Wifi AP
     WiFi.softAPConfig(localIP, gatewayIP, subnet);
     WiFi.softAP(setupWifiSSID, Config::setupWifiPW);
 
     // Start webserver
-    webserver.on("/", HTTP_GET, setupModeWebPage); // Call setupModeWebPage when user accesses root page, it handles displaying the webpage
-    webserver.on("/post", HTTP_POST, setupModeWebPageSave);
-    webserver.begin();
+    AsyncWebServer *webserver = new AsyncWebServer(80); // Init webserver on port 80 (no delete later as obj gets destroyed on reset)
+    
+    webserver->on("/", HTTP_GET, setupModeWebPage); // Call setupModeWebPage when user accesses root page, it handles displaying the webpage
+    webserver->on("/post", HTTP_POST, setupModeWebPageSave);
+    webserver->begin();
 
     // Update screen
     lcd.clear();
@@ -75,11 +77,13 @@ void setupModeSetup()
 
 
 uint32_t savedTime = 0; // Gets set by setupModeWebPageSave() to a timestamp if "Saved!" should be displayed for 5 sec instead of animation
-uint8_t  animFrame = 0; // Tracking var for animation frame
 
 // Displays animation on screen while setupMode is active
 void setupModeLoop()
 {
+    static uint8_t animFrame = 0; // Tracking var for animation frame
+
+    // Check if we are supposed to display "Settings Saved", otherwise refresh animation
     if (millis() < savedTime + 5000 && savedTime != 0) {
         lcd.centerPrint("- Settings Saved -", 3);
     } else {
