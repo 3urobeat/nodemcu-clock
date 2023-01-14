@@ -67,4 +67,3 @@ extern Preferences prefs;
 
 void setupHandler();
 void loopHandler();
-void debugMemory(const __FlashStringHelper *str = nullptr); // Make it accessible outside to make debugging easier with optional str param
