@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:12:41
  * Author: 3urobeat
  * 
- * Last Modified: 09.01.2023 16:47:40
+ * Last Modified: 14.01.2023 12:42:54
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -16,6 +16,7 @@
 
 
 // Define config variables at compile time or leave empty (default) to use setupMode
+// Note: ESP8266 Flash needs to be empty for these values to be kept, otherwise the values already in flash will be used!
 namespace Config
 {
     uint8_t maxcol = 20; // Width of the display
@@ -40,5 +41,7 @@ namespace Config
     bool     alwaysShowTime     = true; // Always show the time in the upper right corner
     uint16_t clockWeekdaySwitch = 2500; // After how much ms the clock page should switch between date and weekday. Set to 0 to disable
 
-    bool DEBUG = false;
+    // Debug settings
+    const bool DEBUG    = false; // Logs lots of information about what's currently happening to Serial (Baud 9600)
+    const bool IGNOREFS = false; // Ignores loading existing settings from filesystem and overwrites them with the settings above
 }

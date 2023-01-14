@@ -28,8 +28,8 @@ bool configDetectFirstStart()
     // Check for missing Wifi settings in fs to determine first boot
     if (!prefs.isKey("wifiSSID")) {
 
-        // Check if user configured wifi settings at compile time and write to fs
-        if (strlen(Config::wifiSSID[0]) > 0) {
+        // Check if user configured wifi settings at compile time or IGNOREFS is enabled and write to fs
+        if (strlen(Config::wifiSSID[0]) > 0 || Config::IGNOREFS) {
             writeConfigToStorage(); // Write compile time config to fs
 
             return false;
