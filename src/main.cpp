@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 10.01.2023 15:09:53
+ * Last Modified: 14.01.2023 14:38:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -21,6 +21,8 @@
 
 const char version[] = "v0.8.0";
 
+byte *stack_start; // Measure amount of stack used at start so we can track it later from debug.cpp
+
 
 /* --------- Call libs  --------- */
 lcdHelper<LiquidCrystal_PCF8574> lcd(0x27, Config::maxcol, 4);
@@ -34,6 +36,10 @@ Preferences prefs;
 /* --------- Run setup function --------- */
 void setup()
 {
+    // Write current address of the stack to stack_start
+    byte stack_now;
+    stack_start = &stack_now;
+
     setupHandler();
 }
 

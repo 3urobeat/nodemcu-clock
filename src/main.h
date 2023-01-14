@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 12:37:25
+ * Last Modified: 14.01.2023 14:39:43
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -45,6 +45,7 @@
 
 
 extern const char version[];
+extern byte *stack_start;
 
 
 // Setup
