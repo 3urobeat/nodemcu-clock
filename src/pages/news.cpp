@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 23:59:35
+ * Last Modified: 14.01.2023 13:05:27
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -72,9 +72,14 @@ namespace newsPage
      */
     void update()
     {
+        uint8_t oldMoveOffset = moveOffset; // Track offset before movingPrint() call so we can detect a moveOffset reset
+
         // Call movingPrint() to refresh article title string position
         lcd.setCursor(0, 3);
         lcd.movingPrint(titleCache[currentArticle], &moveOffset, Config::maxcol);
+
+        // Handle special case of showuntil = 0: Detect if movingPrint() just reset moveOffset as string reached the end and force-Call nextPage()
+        if (moveOffset < oldMoveOffset && Config::showuntil[currentPage] == 0) nextPage();
     }
 
 

@@ -46,8 +46,8 @@ void loopHandler()
     // Save currentPage
     oldPage = currentPage;
 
-    // Show next page if showuntil time for this page passed (or call setup function if currentPage is -1)
-    if (currentPage == -1 || pageUpdate + Config::showuntil[currentPage] <= millis()) nextPage();
+    // Show next page if showuntil time for this page passed (0 is special case where a page only self-progresses on a certain event) (or call setup function if currentPage is -1)
+    if (currentPage == -1 || (Config::showuntil[currentPage] != 0 && pageUpdate + Config::showuntil[currentPage] <= millis())) nextPage();
 
     // Log available memory if DEBUG mode is enabled
     debugMemory();
