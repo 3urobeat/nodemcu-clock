@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 13:05:27
+ * Last Modified: 14.01.2023 13:20:08
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -86,6 +86,15 @@ namespace newsPage
     // Helper function to refresh newsCache, called by setup function
     void refreshCache()
     {
+        // Check if user didn't provide an API key, display warning for 5 seconds and force-progress page
+        if (strlen(Config::newsapitoken) == 0) {
+            lcd.centerPrint("Error!", 1);
+            lcd.centerPrint("No API key provided.", 3);
+            delay(5000);
+            nextPage();
+            return;
+        }
+
         debugMemory(F("news page: Refreshing cache"));
         
         // Display loading message so the device doesn't look like it crashed

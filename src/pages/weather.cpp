@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 20:16:07
+ * Last Modified: 14.01.2023 13:20:56
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -56,6 +56,17 @@ namespace weatherPage
     // Helper function to refresh weatherCache, called by setup function
     void refreshCache()
     {
+        // Check if user didn't provide an API key, display warning for 5 seconds and force-progress page
+        if (strlen(Config::newsapitoken) == 0) {
+            lcd.setCursor(0, 0);
+            lcd.print("Weather");
+            lcd.centerPrint("Error!", 1);
+            lcd.centerPrint("No API key provided.", 3);
+            delay(5000);
+            nextPage();
+            return;
+        }
+        
         debugMemory(F("weather page: Refreshing cache"));
         
         // Construct URL
