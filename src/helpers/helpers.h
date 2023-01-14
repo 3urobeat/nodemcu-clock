@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 17:59:31
+ * Last Modified: 14.01.2023 12:37:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -24,6 +24,8 @@
 bool configDetectFirstStart();
 void readConfigFromStorage();
 void writeConfigToStorage();
+
+void debugMemory(const __FlashStringHelper *str = nullptr); // Optional str param to log additional msg
 
 void getLocation();
 
