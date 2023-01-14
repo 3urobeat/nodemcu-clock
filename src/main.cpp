@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 14:38:58
+ * Last Modified: 14.01.2023 19:36:24
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -19,7 +19,7 @@
 #include "../config/config.cpp" // I don't know why I need to include config.cpp here but it otherwise results in an undefined reference to Config::... linker error
 
 
-const char version[] = "v0.8.0";
+const char version[] = "v0.8.1";
 
 byte *stack_start; // Measure amount of stack used at start so we can track it later from debug.cpp
 
