@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:32
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 12:36:44
+ * Last Modified: 15.01.2023 16:16:14
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -78,6 +78,9 @@ void nextPage()
     pageUpdate    = millis(); // Update timestamp
 
     lcd.clear(); // Clear content of old page
+
+    // Check if pageOrder entry for this index is empty or 0 and skip page
+    if (strlen(Config::pageOrder[currentPage]) == 0 || Config::pageOrder[currentPage][0] == '0') return nextPage();
 
     // Call setup function for incoming page
     if (strcmp(Config::pageOrder[currentPage], "clock") == 0) {
