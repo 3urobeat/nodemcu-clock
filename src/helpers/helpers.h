@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 23:01:50
+ * Last Modified: 15.01.2023 23:21:25
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -24,6 +24,8 @@
 bool configDetectFirstStart();
 void readConfigFromStorage();
 void writeConfigToStorage();
+
+void createCustomChars();
 
 // Make debugMemory() available when debug mode is enabled, otherwise alias debugMemory() to nothing
 #ifdef CLOCK_DEBUG

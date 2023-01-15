@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 14:57:46
+ * Last Modified: 15.01.2023 23:26:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -39,11 +39,14 @@ void setupHandler()
         debugMemory(); // Log free memory once on start
     #endif
 
-    // Initiate display
+    // Initiate display & preferences lib
     Wire.begin();
     lcd.begin();
     lcd.backlight();
     prefs.begin("nodemcu-clock");
+
+    // Register custom lcd chars
+    createCustomChars();
 
     // Print startup screen
     lcd.centerPrint("nodemcu-clock", 0, true);
