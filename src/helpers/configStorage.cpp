@@ -4,7 +4,7 @@
  * Created Date: 27.12.2022 12:28:55
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 12:35:13
+ * Last Modified: 15.01.2023 14:55:34
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -25,18 +25,23 @@
  */
 bool configDetectFirstStart()
 {
-    // Check for missing Wifi settings in fs to determine first boot
-    if (!prefs.isKey("wifiSSID")) {
+    // Check for missing Wifi settings in fs to determine first boot (skip check and force overwrite FS if IGNOREFS is enabled)
+    #ifndef CLOCK_IGNOREFS
+        if (!prefs.isKey("wifiSSID")) {
 
-        // Check if user configured wifi settings at compile time or IGNOREFS is enabled and write to fs
-        if (strlen(Config::wifiSSID[0]) > 0 || Config::IGNOREFS) {
-            writeConfigToStorage(); // Write compile time config to fs
+            // Check if user configured wifi settings at compile time and write to FS
+            if (strlen(Config::wifiSSID[0]) > 0) {
+                writeConfigToStorage(); // Write compile time config to fs
 
-            return false;
+                return false;
+            }
+
+            return true; // Return true if key is not present and nothing was set at compile time
         }
-
-        return true; // Return true if key is not present and nothing was set at compile time
-    }
+    #else
+        debugMemory(F("IGNOREFS is enabled, overwriting FS settings with values found in config.cpp!"));
+        writeConfigToStorage();
+    #endif
     
     return false; // Return false if wifiSSID key is present in fs, we assume it has content
 }

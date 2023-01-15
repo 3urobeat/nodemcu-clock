@@ -4,7 +4,7 @@
  * Created Date: 14.01.2023 12:36:08
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 18:52:54
+ * Last Modified: 15.01.2023 14:38:16
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -14,6 +14,9 @@
  * Full license information available in the project LICENSE file.
  */
 
+
+// Include debugMemory() function if debug mode is enabled
+#ifdef CLOCK_DEBUG
 
 #include "helpers.h"
 #include "cont.h"    // Needed to access CONT_STACKSIZE definition
@@ -25,7 +28,6 @@
  */
 void debugMemory(const __FlashStringHelper *str)
 {
-    if (!Config::DEBUG) return;           // Ignore call if DEBUG is disabled
     if (str != NULL) Serial.println(str); // Log str param if one was passed
 
     // Store last measurements in static vars (they keep their values between function calls)
@@ -59,3 +61,5 @@ void debugMemory(const __FlashStringHelper *str)
         lastFreeHeap  = freeHeap;
     }
 }
+
+#endif

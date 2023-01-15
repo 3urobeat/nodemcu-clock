@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:12:41
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 13:10:38
+ * Last Modified: 15.01.2023 14:19:33
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -40,8 +40,4 @@ namespace Config
     uint32_t showuntil[3]       = { 5000, 5000, 0 }; // How long each page should be shown in ms (Special Case: Set to 0 if page should progress on event, news page would progress when headline was fully displayed)
     bool     alwaysShowTime     = true;              // Always show the time in the upper right corner
     uint16_t clockWeekdaySwitch = 2500;              // After how much ms the clock page should switch between date and weekday. Set to 0 to disable
-
-    // Debug settings
-    const bool DEBUG    = false; // Logs lots of information about what's currently happening to Serial (Baud 9600)
-    const bool IGNOREFS = false; // Ignores loading existing settings from filesystem and overwrites them with the settings above
 }
