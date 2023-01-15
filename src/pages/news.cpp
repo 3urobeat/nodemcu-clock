@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 13:20:08
+ * Last Modified: 15.01.2023 23:05:49
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -18,7 +18,7 @@
 #include "pages.h"
 
 
-const uint32_t updateInterval = 1200000; // 20 min in ms // TODO: Move to config?
+const uint32_t updateIntervalNews = 1200000; // 20 min in ms // TODO: Move to config?
 
 // Store last API call timestamp & current article index
 uint32_t lastRefresh;
@@ -47,8 +47,8 @@ namespace newsPage
         lcd.setCursor(0, 0);
         lcd.print("News");
 
-        // Check if updateInterval ms passed and update newsCache
-        if (lastRefresh == 0 || lastRefresh + updateInterval <= millis()) refreshCache();
+        // Check if updateIntervalNews ms passed and update newsCache
+        if (lastRefresh == 0 || lastRefresh + updateIntervalNews <= millis()) refreshCache();
 
         // Switch to next article and reset moveOffset so next title starts at index 0
         currentArticle++;
@@ -83,7 +83,9 @@ namespace newsPage
     }
 
 
-    // Helper function to refresh newsCache, called by setup function
+    /**
+     * Helper function to refresh newsCache every updateIntervalNews ms, called by setup function
+     */
     void refreshCache()
     {
         // Check if user didn't provide an API key, display warning for 5 seconds and force-progress page
@@ -119,7 +121,7 @@ namespace newsPage
         // Clear up memory
         delete(parser);
 
-        // Update lastRefresh timestamp so next refresh only happens in updateInterval ms
+        // Update lastRefresh timestamp so next refresh only happens in updateIntervalNews ms
         lastRefresh = millis();
 
         // Clear "Loading..."

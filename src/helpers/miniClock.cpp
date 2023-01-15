@@ -29,7 +29,7 @@ void miniClock(bool hideMiniClock)
 {
     if (!hideMiniClock)
     {
-        getTime(miniClockResult, sizeof(miniClockResult) - 1, timeClient, timeoffset, Config::miniClockFormat);
+        getTime(miniClockResult, sizeof(miniClockResult) - 1, timeClient, Config::miniClockFormat);
 
         lcd.setCursor(Config::maxcol - strlen(Config::miniClockFormat), 0); //set cursor to the very right of the first line
         lcd.print(miniClockResult);

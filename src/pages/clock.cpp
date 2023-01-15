@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 22:41:19
+ * Last Modified: 15.01.2023 23:02:51
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -43,7 +43,7 @@ namespace clockPage
     void update()
     {
         // Always print the current time
-        getTime(timeResult, sizeof(dateResult) - 1, timeClient, timeoffset, Config::timeformat);
+        getTime(timeResult, sizeof(dateResult) - 1, timeClient, Config::timeformat);
 
         lcd.centerPrint(timeResult, 1, false);
 
@@ -60,7 +60,7 @@ namespace clockPage
 
             lcd.centerPrint(dayNames[weekday(epoch) - 1], 2, false);
         } else {
-            getDate(dateResult, sizeof(dateResult) - 1, timeClient, timeoffset);
+            getDate(dateResult, sizeof(dateResult) - 1, timeClient);
 
             lcd.centerPrint(dateResult, 2, false);
         }
