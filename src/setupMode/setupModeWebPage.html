@@ -4,7 +4,7 @@ Project: nodemcu-clock
 Created Date: 24.12.2022 19:10:23
 Author: 3urobeat
 
-Last Modified: 14.01.2023 19:23:22
+Last Modified: 15.01.2023 16:24:23
 Modified By: 3urobeat
 
 Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -26,6 +26,7 @@ Full license information available in the project LICENSE file.
     
     <body>
         <h1>nodemcu-clock Setup Page</h1>
+        See README for an explanation for every setting you see here: <a href=https://github.com/HerrEurobeat/nodemcu-clock#readme target="_blank">Click here</a><br>
         
         <!-- %variable% in value fields are placeholders that get replaced by processor function before sending to client -->
         <form action="/post" target="hidden-form" method="post">
@@ -63,8 +64,8 @@ Full license information available in the project LICENSE file.
             <!-- System config -->
             <h3>System Config:</h3>
             LCD Columns: <input type="text" name="maxcol_input" value="%maxcol_input%"><br>
-            Page Order: <input type="text" name="pageOrder_input" value="%pageOrder_input%"><br>
-            Page Duration: <input type="text" name="showuntil_input" value="%showuntil_input%"><br>
+            Page Order: <input type="text" name="pageOrder_input" value="%pageOrder_input%"> Note: Put a comma between page names. Setting a page name to 0 will skip it.<br>
+            Page Duration: <input type="text" name="showuntil_input" value="%showuntil_input%"> Note: Put a comma between numbers. Setting a value to 0 will progress that page on event.<br>
             Enable Mini-Clock: <input type="checkbox" name="alwaysShowTime_input" %alwaysShowTime_input%><br>
             Clock-Weekday-Switch Delay: <input type="text" name="clockWeekdaySwitch_input" value="%clockWeekdaySwitch_input%"><br>
             <br><br>
@@ -72,7 +73,7 @@ Full license information available in the project LICENSE file.
             <!-- Save button -->
             <input type="submit" value="Save">
         </form>
-        <iframe style="display:none" name="hidden-form"></iframe>
+        <iframe style="display:none" name="hidden-form"></iframe> <!-- Needed so that Save doesn't redirect to /post -->
     </body>
 
     <script>
