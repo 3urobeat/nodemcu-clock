@@ -4,7 +4,7 @@
  * Created Date: 12.01.2023 12:40:54
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 23:46:11
+ * Last Modified: 15.01.2023 17:24:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -24,17 +24,21 @@
 class WeatherJsonHandler final : public JsonHandler
 {
     private:
-        char   *_cond;
-        uint8_t _condSize;
-        char   *_temp;
+        char     *_cond;
+        uint8_t   _condSize;
+        char     *_temp;
+        uint32_t *_sunrise;
+        uint32_t *_sunset;
     
     public:
         // Constructor that takes pointers to char arrays where the result should go to
-        WeatherJsonHandler(char *cond, uint8_t condSize, char *temp)
+        WeatherJsonHandler(char *cond, uint8_t condSize, char *temp, uint32_t *sunrise, uint32_t *sunset)
         {
             _cond     = cond;
             _condSize = condSize;
             _temp     = temp;
+            _sunrise  = sunrise;
+            _sunset   = sunset;
         }
 
         // Handles retrieving data from json stream
@@ -45,7 +49,9 @@ class WeatherJsonHandler final : public JsonHandler
 
             // Check which key we are dealing with and copy value into correct variable
             if (strcmp(key, "main") == 0) strncpy(_cond, value.getString(), _condSize - 1);
-                else if (strcmp(key, "temp") == 0) itoa((int8_t) round(value.getFloat() - 273.15), _temp, 10); // Kelvin -> Celsius, round, cast to int and convert to char arr
+            else if (strcmp(key, "temp") == 0) itoa((int8_t) round(value.getFloat() - 273.15), _temp, 10); // Kelvin -> Celsius, round, cast to int and convert to char arr
+            else if (strcmp(key, "sunrise") == 0) *_sunrise = value.getInt();
+            else if (strcmp(key, "sunset") == 0) *_sunset = value.getInt();
         }
 
         virtual ~WeatherJsonHandler() = default; // To fix warning delete-non-virtual-dtor
