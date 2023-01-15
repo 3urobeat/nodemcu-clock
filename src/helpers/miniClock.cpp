@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 18:45:33
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 13:18:34
+ * Last Modified: 15.01.2023 22:40:55
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -29,7 +29,7 @@ void miniClock(bool hideMiniClock)
 {
     if (!hideMiniClock)
     {
-        getTime(miniClockResult, timeClient, timeoffset, Config::miniClockFormat);
+        getTime(miniClockResult, sizeof(miniClockResult) - 1, timeClient, timeoffset, Config::miniClockFormat);
 
         lcd.setCursor(Config::maxcol - strlen(Config::miniClockFormat), 0); //set cursor to the very right of the first line
         lcd.print(miniClockResult);

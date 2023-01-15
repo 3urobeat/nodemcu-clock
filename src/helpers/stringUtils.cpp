@@ -4,7 +4,7 @@
  * Created Date: 23.12.2021 15:58:05
  * Author: 3urobeat
  * 
- * Last Modified: 15.11.2022 13:19:08
+ * Last Modified: 15.01.2023 22:46:23
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -21,10 +21,10 @@
 /**
  * Replace function for char arrays
  */
-void strrpl(char *src, const char *oldchars, const char *newchars) //Credit: https://forum.arduino.cc/t/replace-and-remove-char-arrays/485806/4
+void strrpl(char *src, const char *oldchars, const char *newchars, uint16_t maxlen) //Credit: https://forum.arduino.cc/t/replace-and-remove-char-arrays/485806/4
 {
     char *p = strstr(src, oldchars);
-    char buf[501];
+    char buf[maxlen + 1];
     
     do {
         if (p) {
