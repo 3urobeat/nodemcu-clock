@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 22:44:07
+ * Last Modified: 15.01.2023 23:06:15
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -18,7 +18,7 @@
 #include "pages.h"
 
 
-const uint32_t updateinterval = 1200000; // 20 minutes in ms
+const uint32_t updateIntervalWeather = 1200000; // 20 minutes in ms
 uint32_t       lastWeatherRefresh;
 
 char           tempCondStr[20];   // Stores temp and weather condition
@@ -40,7 +40,7 @@ namespace weatherPage
     void setup()
     {
         // Check if it's time to update weather cache
-        if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateinterval <= millis()) {
+        if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateIntervalWeather <= millis()) {
             refreshCache();
         }
 
@@ -153,7 +153,7 @@ namespace weatherPage
         strrpl(sunRiseSetStr, "mm", lcd.toFixedLengthNumber(buf, minute(sunset), 2), sizeof(sunRiseSetStr) - 1);
         *(sunP) = '\0';                                 // Make sure there is a null char at the end
 
-        // Refresh timestamp so the next update will be in updateinterval ms 
+        // Refresh timestamp so the next update will be in updateIntervalWeather ms 
         lastWeatherRefresh = millis();
         
         // Clear "Weather" and "Loading..."

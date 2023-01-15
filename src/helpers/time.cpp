@@ -18,7 +18,7 @@
 #include "helpers.h"
 
 
-void getDate(char *dest, uint16_t destLen, NTPClient timeClient, uint16_t timeoffset)
+void getDate(char *dest, uint16_t destLen, NTPClient timeClient)
 {
     unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
@@ -34,7 +34,7 @@ void getDate(char *dest, uint16_t destLen, NTPClient timeClient, uint16_t timeof
 
 
 // Provide function to help construct time string
-void getTime(char *dest, uint16_t destLen, NTPClient timeClient, uint16_t timeoffset, const char *format)
+void getTime(char *dest, uint16_t destLen, NTPClient timeClient, const char *format)
 {
     unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
