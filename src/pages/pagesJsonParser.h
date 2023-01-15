@@ -4,7 +4,7 @@
  * Created Date: 12.01.2023 12:40:54
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 17:24:58
+ * Last Modified: 15.01.2023 22:43:16
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -130,8 +130,8 @@ class NewsJsonHandler final : public JsonHandler
                 strncpy(_pubAtCache + (_pubAtCacheSize * _currentIndex), Config::miniClockFormat, _pubAtCacheSize - 1);
                 
                 // Replace format chars that are now in _titleCache
-                strrpl(_pubAtCache + (_pubAtCacheSize * _currentIndex), "hh", lcd.toFixedLengthNumber(buf, hour(inLocalSeconds), 2));
-                strrpl(_pubAtCache + (_pubAtCacheSize * _currentIndex), "mm", lcd.toFixedLengthNumber(buf, minute(inLocalSeconds), 2));
+                strrpl(_pubAtCache + (_pubAtCacheSize * _currentIndex), "hh", lcd.toFixedLengthNumber(buf, hour(inLocalSeconds)  , 2), _pubAtCacheSize - 1);
+                strrpl(_pubAtCache + (_pubAtCacheSize * _currentIndex), "mm", lcd.toFixedLengthNumber(buf, minute(inLocalSeconds), 2), _pubAtCacheSize - 1);
                 
             } else if (strcmp(key, "content") == 0) {
                 _currentIndex++; // content is the last transmitted key of an article, so lets increment our index
