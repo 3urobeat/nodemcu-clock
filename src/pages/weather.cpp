@@ -69,7 +69,9 @@ namespace weatherPage
     }
 
 
-    // Helper function to refresh weatherCache, called by setup function
+    /**
+     * Helper function to refresh newsCache every updateIntervalNews ms, called by setup function
+     */
     void refreshCache()
     {
         // Check if user didn't provide an API key, display warning for 5 seconds and force-progress page
