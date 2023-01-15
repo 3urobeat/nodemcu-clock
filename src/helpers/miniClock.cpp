@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 18:45:33
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 22:40:55
+ * Last Modified: 15.01.2023 23:03:13
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -22,8 +22,9 @@ char miniClockResult[6];
 
 
 /**
- * Displays a mini clock in the top right when hideMiniClock is false.
- * Call this function on every
+ * Displays a mini clock in the top right formatted using Config::miniClockFormat when hideMiniClock is false
+ * Call this function on every loop() iteration
+ * @param hideMiniClock Ignores call if true, some pages (for example clock) don't need another clock in the corner
  */
 void miniClock(bool hideMiniClock)
 {

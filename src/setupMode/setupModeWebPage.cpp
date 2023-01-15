@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 16:47:36
+ * Last Modified: 15.01.2023 23:07:32
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -18,7 +18,9 @@
 #include "setupMode.h"
 
 
-// Processor function to dynamically replace placeholder variables in webpage
+/**
+ * Processor function to dynamically replace placeholder variables in webpage
+ */
 String processor(const String& var) // I need to use String here because the library forces me to... https://github.com/me-no-dev/ESPAsyncWebServer#send-large-webpage-from-progmem-containing-templates-and-extra-headers
 {
     // Fill "wifiNetworksIncluded" array with already stored wifi networks - this is prob quite inefficient but idc too much in setupMode
@@ -57,14 +59,18 @@ String processor(const String& var) // I need to use String here because the lib
 }
 
 
-// Serves the page when user visits webserver
+/**
+ * Serves the page when user visits webserver
+ */
 void setupModeWebPage(AsyncWebServerRequest *request)
 {
     request->send_P(200, "text/html", webpage, processor); // webpage is defined in header file
 }
 
 
-// Saves webpage values to Config namespace when user clicks Save button
+/**
+ * Saves webpage values to Config namespace when user clicks Save button
+ */
 void setupModeWebPageSave(AsyncWebServerRequest *request)
 {
     // Update all wifi networks included in response

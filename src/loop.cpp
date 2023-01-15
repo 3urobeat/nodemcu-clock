@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:32
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 16:16:14
+ * Last Modified: 15.01.2023 23:07:50
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -66,7 +66,9 @@ void loopHandler()
 }
 
 
-// Helper function that switches to next page and calls setup function
+/**
+ * Helper function that switches to next page and calls setup function
+ */
 void nextPage()
 {
     currentPage++;

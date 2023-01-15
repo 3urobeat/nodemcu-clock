@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 15:54:18
+ * Last Modified: 15.01.2023 23:07:00
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -44,7 +44,9 @@ bool setupModeEnabledCheck(bool forceSetupMode)
 }
 
 
-// Host wifi network and webserver for setupMode, is called from setup
+/**
+ * Host wifi network and webserver for setupMode, is called from setup
+ */
 void setupModeSetup()
 {
     lcd.centerPrint("Entering Setup...", 3);
@@ -78,7 +80,9 @@ void setupModeSetup()
 
 uint32_t savedTime = 0; // Gets set by setupModeWebPageSave() to a timestamp if "Saved!" should be displayed for 5 sec instead of animation
 
-// Displays animation on screen while setupMode is active
+/**
+ * Displays animation on screen while setupMode is active
+ */
 void setupModeLoop()
 {
     static uint8_t animFrame = 0; // Tracking var for animation frame

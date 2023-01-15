@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 14:16:00
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 16:43:29
+ * Last Modified: 15.01.2023 22:52:35
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -18,6 +18,9 @@
 #include "helpers.h"
 
 
+/**
+ * Geolocates device using IP (if not set in config) and retreives city name & contry code
+ */
 void getLocation()
 {
     // If the user didn't provide a lat & lon value in Config then get values from geocoding API
