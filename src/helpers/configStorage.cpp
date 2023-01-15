@@ -4,7 +4,7 @@
  * Created Date: 27.12.2022 12:28:55
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 14:55:34
+ * Last Modified: 15.01.2023 16:46:48
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -69,7 +69,7 @@ void readConfigFromStorage()
 
     Config::alwaysShowTime = prefs.getBool("alwaysShowTime");
 
-    Config::clockWeekdaySwitch = prefs.getUShort("clockWeekdaySwitch");
+    Config::pageElementSwitch = prefs.getUShort("pageElementSwitch");
 
     debugMemory(F("Config was read from filesystem"));
 }
@@ -98,7 +98,7 @@ void writeConfigToStorage()
 
     prefs.putBool("alwaysShowTime", Config::alwaysShowTime);
 
-    prefs.putUShort("clockWeekdaySwitch", Config::clockWeekdaySwitch);
+    prefs.putUShort("pageElementSwitch", Config::pageElementSwitch);
 
     debugMemory(F("Config was written to filesystem!"));
 }

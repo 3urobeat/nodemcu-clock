@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:16:25
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 14:20:47
+ * Last Modified: 15.01.2023 16:46:48
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -41,5 +41,5 @@ namespace Config
     extern char     pageOrder[3][32];
     extern uint32_t showuntil[3];
     extern bool     alwaysShowTime;
-    extern uint16_t clockWeekdaySwitch;
+    extern uint16_t pageElementSwitch;
 }

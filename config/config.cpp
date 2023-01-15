@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:12:41
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 14:19:33
+ * Last Modified: 15.01.2023 16:48:28
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -36,8 +36,8 @@ namespace Config
     char timeformat[9]       = "hh:mm:ss";
     char miniClockFormat[6]  = "hh:mm";
 
-    char     pageOrder[3][32]   = { "clock", "weather", "news" };
+    char     pageOrder[3][32]   = { "clock", "weather", "news" }; //Set an element to "0" to skip that page
     uint32_t showuntil[3]       = { 5000, 5000, 0 }; // How long each page should be shown in ms (Special Case: Set to 0 if page should progress on event, news page would progress when headline was fully displayed)
     bool     alwaysShowTime     = true;              // Always show the time in the upper right corner
-    uint16_t clockWeekdaySwitch = 2500;              // After how much ms the clock page should switch between date and weekday. Set to 0 to disable
+    uint16_t pageElementSwitch  = 2500;              // After how much ms a page should switch between elements (for example date & weekday on clock page, temp & sunrise on weather page). Set to 0 to disable
 }

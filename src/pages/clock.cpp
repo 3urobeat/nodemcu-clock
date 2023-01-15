@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 11.12.2022 15:17:26
+ * Last Modified: 15.01.2023 16:46:48
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -47,8 +47,8 @@ namespace clockPage
 
         lcd.centerPrint(timeResult, 1, false);
 
-        // Switch between date and weekday when clockWeekdaySwitch ms passed since last mod switch
-        if (Config::clockWeekdaySwitch > 0 && millis() >= lastPageMod + Config::clockWeekdaySwitch) {
+        // Switch between date and weekday when pageElementSwitch ms passed since last mod switch
+        if (Config::pageElementSwitch > 0 && millis() >= lastPageMod + Config::pageElementSwitch) {
             currentmod = !currentmod;
             lastPageMod = millis();
             lcd.clearLine(2); // Clear date/weekday line
