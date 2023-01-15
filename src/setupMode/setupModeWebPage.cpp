@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 10.01.2023 14:57:19
+ * Last Modified: 15.01.2023 16:06:31
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -117,6 +117,7 @@ void setupModeWebPageSave(AsyncWebServerRequest *request)
             
             // Progress to next element in array when comma is detected
             if (e == ',') {
+                Config::pageOrder[arrayProgress][elemProgress] = '\0'; // Make sure null byte exists at the end of our element
                 arrayProgress++;
                 elemProgress = 0; // Reset element progress to start at 0 of next element
                 continue;
