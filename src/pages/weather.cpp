@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 23:06:15
+ * Last Modified: 15.01.2023 23:27:40
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -65,6 +65,13 @@ namespace weatherPage
             lcd.centerPrint(tempCondStr, 2, false);
         } else {
             lcd.centerPrint(sunRiseSetStr, 2, false);
+
+            // Display arrow up and down arrows at the correct locations, there are currently just placeholders
+            lcd.setCursor(3, 2);
+            lcd.write((byte) 0);
+
+            lcd.setCursor(10, 2);
+            lcd.write((byte) 1);
         }
     }
 
@@ -145,11 +152,11 @@ namespace weatherPage
         char *sunP = sunRiseSetStr; // Pointer to sunRiseSetStr for mystrcat
         char buf[3] = "";           // Temp arr for itoa()
 
-        sunP = mystrcat(sunP, "^");
+        sunP = mystrcat(sunP, "x");                     // Placeholder for custom arrow up char, will be displayed in update()
         sunP = mystrcat(sunP, Config::miniClockFormat); // Concat miniClockFormat to replace hour and minutes in a sec
         strrpl(sunRiseSetStr, "hh", lcd.toFixedLengthNumber(buf, hour(sunrise), 2), sizeof(sunRiseSetStr) - 1);
         strrpl(sunRiseSetStr, "mm", lcd.toFixedLengthNumber(buf, minute(sunrise), 2), sizeof(sunRiseSetStr) - 1);
-        sunP = mystrcat(sunP, " v");                    // We can keep using our pointer as the length didn't change because of lcd.toFixedLengthNumber
+        sunP = mystrcat(sunP, " x");                    // We can keep using our pointer as the length didn't change because of lcd.toFixedLengthNumber (and placeholder for arrow again)
         sunP = mystrcat(sunP, Config::miniClockFormat); // Concat miniClockFormat again for sunset
         strrpl(sunRiseSetStr, "hh", lcd.toFixedLengthNumber(buf, hour(sunset), 2), sizeof(sunRiseSetStr) - 1);
         strrpl(sunRiseSetStr, "mm", lcd.toFixedLengthNumber(buf, minute(sunset), 2), sizeof(sunRiseSetStr) - 1);
