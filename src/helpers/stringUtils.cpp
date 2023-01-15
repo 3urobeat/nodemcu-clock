@@ -4,7 +4,7 @@
  * Created Date: 23.12.2021 15:58:05
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 22:46:23
+ * Last Modified: 15.01.2023 22:48:01
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -20,11 +20,15 @@
 
 /**
  * Replace function for char arrays
+ * @param src Pointer to source char array
+ * @param oldchars Old chars to find and replace with newchars
+ * @param newchars News chars that should replace oldchars
+ * @param maxlen The maxmimum length an excerpt from src might have, is used for allocating buffer
  */
 void strrpl(char *src, const char *oldchars, const char *newchars, uint16_t maxlen) //Credit: https://forum.arduino.cc/t/replace-and-remove-char-arrays/485806/4
 {
     char *p = strstr(src, oldchars);
-    char buf[maxlen + 1];
+    char buf[maxlen + 1] = "";       // Init with empty char arr to clear any gibberish
     
     do {
         if (p) {
@@ -47,9 +51,12 @@ void strrpl(char *src, const char *oldchars, const char *newchars, uint16_t maxl
 
 
 /**
- * Better concat function
+ * Better concat function which is faster than strcat for repeated concats to the same char arr
+ * @param dest Pointer to destination char array
+ * @param src Char array to concatenate to dest
+ * @returns New pointer to the end of dest, pass this one to the next mystrcat call as dest
  */
-char *mystrcat(char *dest, const char *src) //Credit: https://stackoverflow.com/a/21881314
+char *mystrcat(char *dest, const char *src) // Credit: https://stackoverflow.com/a/21881314
 {
     while (*dest) dest++;
     while ((*dest++ = *src++));
