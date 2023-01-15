@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 12:37:58
+ * Last Modified: 15.01.2023 14:41:39
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -25,7 +25,12 @@ bool configDetectFirstStart();
 void readConfigFromStorage();
 void writeConfigToStorage();
 
-void debugMemory(const __FlashStringHelper *str = nullptr); // Optional str param to log additional msg
+// Make debugMemory() available when debug mode is enabled, otherwise alias debugMemory() to nothing
+#ifdef CLOCK_DEBUG
+    void debugMemory(const __FlashStringHelper *str = nullptr); // Optional str param to log additional msg
+#else
+    #define debugMemory(x) 
+#endif
 
 void getLocation();
 

@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 12:35:23
+ * Last Modified: 15.01.2023 14:57:46
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -30,14 +30,14 @@ char country[3]; // Two char long country codes
  */
 void setupHandler()
 {
-    // Debug?
-    if (Config::DEBUG) {
+    // Print some more information if debug mode is enabled
+    #ifdef CLOCK_DEBUG
         delay(2500); // Delay so that the PlatformIO Serial console doesn't go stupid as it starts slower than the Arduino boots
         Serial.begin(9600);
         Serial.setDebugOutput(true);
         Serial.println(F("Debug Mode enabled! Starting..."));
         debugMemory(); // Log free memory once on start
-    }
+    #endif
 
     // Initiate display
     Wire.begin();
@@ -56,7 +56,9 @@ void setupHandler()
     // Load config values from storage
     bool isFirstStart = configDetectFirstStart();
 
-    if (!isFirstStart && !Config::IGNOREFS) readConfigFromStorage(); // Read config in fs if not first start
+    #ifndef CLOCK_IGNOREFS // Skip reading settings if IGNOREFS is enabled
+        if (!isFirstStart) readConfigFromStorage(); // Read config in fs if not first start
+    #endif
 
     // Check for setup mode and continue with desired mode (or force setupMode and display welcome msg when config is empty)
     if (setupModeEnabledCheck(isFirstStart)) {
