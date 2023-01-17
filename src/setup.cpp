@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 23:26:30
+ * Last Modified: 17.01.2023 21:44:22
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -18,6 +18,8 @@
 #include "helpers/helpers.h"
 #include "setupMode/setupMode.h"
 
+
+ESP8266WiFiClass WiFi;
 
 uint16_t timeoffset; // Timezone offset in seconds
 
@@ -72,7 +74,7 @@ void setupHandler()
     } else {
 
         // Connect to wifi
-        initWifi(3);
+        WiFi = initWifi(3);
         delay(500);
         lcd.centerPrint("Loading...", 3, true);
 

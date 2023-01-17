@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 14.01.2023 14:39:43
+ * Last Modified: 17.01.2023 21:43:57
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -25,12 +25,12 @@
 
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include <ESPAsyncWebServer.h>
 #include <WiFiUdp.h>
 
 #include <TimeLib.h>
 #include <NTPClient.h>
 
-#include <iostream>
 #include <Preferences.h>
 
 #include <ArduinoStreamParser.h>
@@ -49,9 +49,10 @@ extern byte *stack_start;
 
 
 // Setup
+extern ESP8266WiFiClass WiFi;
+extern uint16_t timeoffset;
 extern char     city[64];
 extern char     country[3];
-extern uint16_t timeoffset;
 
 
 // Loop
