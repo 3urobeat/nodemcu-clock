@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 21:22:26
+ * Last Modified: 17.01.2023 23:18:18
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -19,13 +19,15 @@
 
 
 // Spotify Application ID & Secret
-const char clientID[] = "";
-const char clientSecret[] = "";
+const char spotifyClientID[] = "";
+const char spotifyClientSecret[] = "";
 
 
 // Filled by requestAuth() & refreshAccessToken()
-char accessToken[128] = "";
-char refreshToken[256] = "";
+char spotifyAccessToken[128] = "";
+char spotifyRefreshToken[256] = "";
+
+bool spotifyRequestAuthWaiting = false;
 
 
 namespace spotifyPage
@@ -42,6 +44,9 @@ namespace spotifyPage
      */
     void setup()
     {
+        // Show page title
+        lcd.setCursor(0, 0);
+        lcd.print("Spotify");
         // Skip page if user has playback paused
     }
 
