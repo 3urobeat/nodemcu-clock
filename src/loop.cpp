@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:32
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 23:06:58
+ * Last Modified: 17.01.2023 23:41:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -50,7 +50,7 @@ void loopHandler()
     if (currentPage == -1 || (Config::showuntil[currentPage] != 0 && pageUpdate + Config::showuntil[currentPage] <= millis())) nextPage();
 
     // Log available memory if DEBUG mode is enabled
-    debugMemory();
+    debug();
 
     // Call update function for current page
     if (strcmp(Config::pageOrder[currentPage], "clock") == 0) {

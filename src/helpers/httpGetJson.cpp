@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 14:45:48
+ * Last Modified: 17.01.2023 23:41:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -30,7 +30,7 @@ void httpGetJson(const char *url, JsonHandler* handler)
         Serial.print("httpGetJson(): Sending GET request to: ");
         Serial.println(url);
 
-        debugMemory(F("httpGetJson(): Creating new lib objects..."));
+        debug(F("httpGetJson(): Creating new lib objects..."));
     #endif
 
     // Create lib obj and set handler // TODO: Maybe move http and client to top scope and let them live forever if they should cause heap fragmentation later on
@@ -46,12 +46,12 @@ void httpGetJson(const char *url, JsonHandler* handler)
 
     // Start connection and send HTTP header
     int httpCode = http->GET();
-    debugMemory(F("httpGetJson(): HTTP GET request made, streaming response to parserLib..."));
+    debug(F("httpGetJson(): HTTP GET request made, streaming response to parserLib..."));
 
     // Pass Stream to our parser if request was successful
     if (httpCode == HTTP_CODE_OK) http->writeToStream(parserLib);
 
-    debugMemory(F("httpGetJson(): Finished streaming response"));
+    debug(F("httpGetJson(): Finished streaming response"));
     
     // End request
     http->end();
@@ -59,5 +59,5 @@ void httpGetJson(const char *url, JsonHandler* handler)
     delete(parserLib);
     delete(http);
     delete(client);
-    debugMemory(F("httpGetJson(): Finished clearing up"));
+    debug(F("httpGetJson(): Finished clearing up"));
 }

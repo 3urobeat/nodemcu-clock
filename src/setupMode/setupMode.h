@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:51:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 16:53:58
+ * Last Modified: 17.01.2023 21:32:23
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include <ESPAsyncWebServer.h>
 #include "helpers/helpers.h" // Include helpers header which also includes main header
 
 extern bool     setupModeEnabled;

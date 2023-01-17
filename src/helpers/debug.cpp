@@ -4,7 +4,7 @@
  * Created Date: 14.01.2023 12:36:08
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 14:38:16
+ * Last Modified: 17.01.2023 23:41:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -15,7 +15,7 @@
  */
 
 
-// Include debugMemory() function if debug mode is enabled
+// Include debug() function if debug mode is enabled
 #ifdef CLOCK_DEBUG
 
 #include "helpers.h"
@@ -26,7 +26,7 @@
  * Helper function that logs available memory if values changed since last call. Config::DEBUG must be enabled!
  * @param str Optional flash string that will be logged before free mem message
  */
-void debugMemory(const __FlashStringHelper *str)
+void debug(const __FlashStringHelper *str)
 {
     if (str != NULL) Serial.println(str); // Log str param if one was passed
 

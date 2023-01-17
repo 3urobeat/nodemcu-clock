@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 23:26:09
+ * Last Modified: 17.01.2023 23:42:42
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -108,7 +108,7 @@ namespace spotifyPage
         spotifyAuthWebserver->on("/callback", HTTP_GET, spotifyAuthCallback); // Retrieves the code callback from Spotify
         spotifyAuthWebserver->begin();
 
-        debugMemory(F("spotify page: Webserver up, page switch blocked, waiting for callback"));
+        debug(F("spotify page: Webserver up, page switch blocked, waiting for request"));
     }
 
     // "Subfunction" of requestAuth(): Construct URL and redirect user 

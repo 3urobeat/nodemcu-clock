@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 23:21:25
+ * Last Modified: 17.01.2023 23:41:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -27,11 +27,11 @@ void writeConfigToStorage();
 
 void createCustomChars();
 
-// Make debugMemory() available when debug mode is enabled, otherwise alias debugMemory() to nothing
+// Make debug() available when debug mode is enabled, otherwise alias debug() to nothing
 #ifdef CLOCK_DEBUG
-    void debugMemory(const __FlashStringHelper *str = nullptr); // Optional str param to log additional msg
+    void debug(const __FlashStringHelper *str = nullptr); // Optional str param to log additional msg
 #else
-    #define debugMemory(x) 
+    #define debug(x) 
 #endif
 
 void getLocation();
