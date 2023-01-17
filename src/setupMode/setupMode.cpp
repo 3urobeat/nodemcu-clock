@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 23:07:00
+ * Last Modified: 17.01.2023 23:41:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -95,9 +95,8 @@ void setupModeLoop()
         if (millis() - savedTime < 5300) lcd.clearLine(3);
 
         // Display an animation so the device does not look like being softlocked
-        lcd.setCursor(0, 3);
         lcd.animationPrint(lcd.animations.bouncearrow, 10, &animFrame, 8, 3);
     }
 
-    debugMemory();
+    debug();
 }

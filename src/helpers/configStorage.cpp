@@ -4,7 +4,7 @@
  * Created Date: 27.12.2022 12:28:55
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 16:46:48
+ * Last Modified: 17.01.2023 23:41:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -39,7 +39,7 @@ bool configDetectFirstStart()
             return true; // Return true if key is not present and nothing was set at compile time
         }
     #else
-        debugMemory(F("IGNOREFS is enabled, overwriting FS settings with values found in config.cpp!"));
+        debug(F("IGNOREFS is enabled, overwriting FS settings with values found in config.cpp!"));
         writeConfigToStorage();
     #endif
     
@@ -71,7 +71,7 @@ void readConfigFromStorage()
 
     Config::pageElementSwitch = prefs.getUShort("pageElementSwitch");
 
-    debugMemory(F("Config was read from filesystem"));
+    debug(F("Config was read from filesystem"));
 }
 
 
@@ -100,5 +100,5 @@ void writeConfigToStorage()
 
     prefs.putUShort("pageElementSwitch", Config::pageElementSwitch);
 
-    debugMemory(F("Config was written to filesystem!"));
+    debug(F("Config was written to filesystem!"));
 }

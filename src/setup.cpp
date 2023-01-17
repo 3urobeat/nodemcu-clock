@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 21:44:22
+ * Last Modified: 17.01.2023 23:41:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -38,7 +38,7 @@ void setupHandler()
         Serial.begin(9600);
         Serial.setDebugOutput(true);
         Serial.println(F("Debug Mode enabled! Starting..."));
-        debugMemory(); // Log free memory once on start
+        debug(); // Log free memory once on start
     #endif
 
     // Initiate display & preferences lib
@@ -56,7 +56,7 @@ void setupHandler()
     delay(1000);
     lcd.centerPrint("Loading...", 3, true);
 
-    debugMemory(F("Finished setting up display"));
+    debug(F("Finished setting up display"));
 
     // Load config values from storage
     bool isFirstStart = configDetectFirstStart();
@@ -80,13 +80,13 @@ void setupHandler()
 
         // Geolocate the used IP to get coordinates and the timeoffset
         getLocation();
-        debugMemory(F("getLocation() helper finished"));
+        debug(F("getLocation() helper finished"));
 
         // Start syncing time
         timeClient.begin();
 
         // Clear display and let page manager do page manager things (aka show a page lol)
         lcd.clear();
-        debugMemory(F("\n----\nSetup done, entering loop!"));
+        debug(F("\n----\nSetup done, entering loop!"));
     }
 }

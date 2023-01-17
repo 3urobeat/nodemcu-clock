@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 23:05:49
+ * Last Modified: 17.01.2023 23:41:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -97,7 +97,7 @@ namespace newsPage
             return;
         }
 
-        debugMemory(F("news page: Refreshing cache"));
+        debug(F("news page: Refreshing cache"));
         
         // Display loading message so the device doesn't look like it crashed
         lcd.centerPrint("Loading...", 2, false);
@@ -114,7 +114,7 @@ namespace newsPage
         // Create obj of our parser class and make request
         NewsJsonHandler *parser = new NewsJsonHandler(sourceCache[0], 32, pubAtCache[0], 6, titleCache[0], 256, 4);
 
-        debugMemory(F("news page: Constructed URL and made parser object"));
+        debug(F("news page: Constructed URL and made parser object"));
 
         httpGetJson(url, parser);
 
@@ -127,6 +127,6 @@ namespace newsPage
         // Clear "Loading..."
         lcd.clearLine(2);
 
-        debugMemory(F("news page: Refresh done"));
+        debug(F("news page: Refresh done"));
     }
 }

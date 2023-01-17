@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 23:27:40
+ * Last Modified: 17.01.2023 23:41:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -92,7 +92,7 @@ namespace weatherPage
             return;
         }
         
-        debugMemory(F("weather page: Refreshing cache"));
+        debug(F("weather page: Refreshing cache"));
 
         // Display page name and loading message so the device doesn't look like it crashed
         lcd.setCursor(0, 0);
@@ -124,7 +124,7 @@ namespace weatherPage
         // Create obj of our parser class and make request
         WeatherJsonHandler *parser = new WeatherJsonHandler(weatherCond, 16, temp, &sunrise, &sunset);
 
-        debugMemory(F("weather page: Constructed URL and made parser object"));
+        debug(F("weather page: Constructed URL and made parser object"));
 
         httpGetJson(url, parser);
 
@@ -170,6 +170,6 @@ namespace weatherPage
         lcd.print("       ");
         lcd.clearLine(2);
 
-        debugMemory(F("weather page: Refresh done"));
+        debug(F("weather page: Refresh done"));
     }
 }
