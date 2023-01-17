@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:32
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 23:07:50
+ * Last Modified: 17.01.2023 22:33:26
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -20,10 +20,10 @@
 #include "pages/pages.h"
 
 
-int8_t        currentPage = -1;      // Current page index in pageOrder array (init with  -1 to not skip page 0 on startup)
-int8_t        oldPage;               // Save previous page to determine if we need to call lcd.clear() (useful if user only set one page in pageOrder to avoid blinking every showuntil seconds)
-unsigned long pageUpdate;            // Save timestamp when page was updated in order to keep track of showuntil without blocking thread with delay()
-bool          hideMiniClock = false; // Will be set to true when clockpage is active
+int8_t   currentPage = -1;      // Current page index in pageOrder array (init with  -1 to not skip page 0 on startup)
+int8_t   oldPage;               // Save previous page to determine if we need to call lcd.clear() (useful if user only set one page in pageOrder to avoid blinking every showuntil seconds)
+uint32_t pageUpdate;            // Save timestamp when page was updated in order to keep track of showuntil without blocking thread with delay()
+bool     hideMiniClock = false; // Will be set to true when clockpage is active
 
 // Declare functions here and define it later below to reduce clutter while being accessible from loopHandler()
 void nextPage();
