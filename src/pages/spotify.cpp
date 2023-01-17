@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 23:42:42
+ * Last Modified: 18.01.2023 00:39:52
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -18,9 +18,10 @@
 #include "pages.h"
 
 
-// Spotify Application ID & Secret
+// Spotify Application ID, secret and redirect URI
 const char spotifyClientID[] = "";
 const char spotifyClientSecret[] = "";
+const char spotifyRedirectUri[] = "http://192.168.55.112/callback";
 
 
 // Filled by requestAuth() & refreshAccessToken()
@@ -37,7 +38,7 @@ namespace spotifyPage
     void refreshCurrentPlayback();
     
     void requestAuth();
-    void fetchAccessToken();
+    void fetchAccessToken(const char *code);
     void refreshAccessToken();
 
     /**
@@ -95,7 +96,7 @@ namespace spotifyPage
 
         // Display instructions, goofy formatting to indicate which msg is on which line while saving space
         lcd.setCursor(0, 1); lcd.print("OneTime Auth! Visit:");
-        lcd.setCursor(0, 2); lcd.print(WiFi.localIP());
+        lcd.setCursor(0, 2); lcd.print(WiFi.localIP()); // Get our IP
         lcd.centerPrint("Waiting   ", 3);
 
         // Block page switch by setting a large pageUpdate
@@ -114,8 +115,19 @@ namespace spotifyPage
     // "Subfunction" of requestAuth(): Construct URL and redirect user 
     void requestAuthRedirect(AsyncWebServerRequest *request)
     {
+        // Construct redirect URL and redirect user
+        char url[256] = "https://accounts.spotify.com/authorize/?client_id=";
+        char *p = url;
+
+        p = mystrcat(p, spotifyClientID);
+        p = mystrcat(p, "&response_type=code&redirect_uri=");
+        p = mystrcat(p, spotifyRedirectUri);
+        p = mystrcat(p, "&scope=user-read-currently-playing");
+
+        debug(F("spotify page: URL constructed, redirecting user, waiting for callback"));
+
         // Redirect user to Spotify Auth page
-        request->send(200, "text", "Hello");
+        request->redirect(url);
     }
 
     // "Subfunction" of requestAuth(): Catch code returned by Spotify and clean up
@@ -123,21 +135,38 @@ namespace spotifyPage
     {
         spotifyRequestAuthWaiting = false;
 
+        // Respond to user
+        if (request->hasArg("code")) request->send_P(200, "text/plain", "Authentication successful! You may close this page.");
+            else request->send_P(500, "text/plain", "Oops - An error occurred! Please try again later.");
+
         // Clean up
+        spotifyAuthWebserver->end();
         delete(spotifyAuthWebserver);
 
-        // Allow page switching in 10 seconds again
-        pageUpdate = millis() + 10000;
+        debug(F("spotify page: Callback processed, page switch unblocked, clean up done"));
+
+        // Pass code to fetchAccessToken() to get an accessToken & refreshToken to make requests with
+        fetchAccessToken(request->arg("code").c_str());
     }
 
 
     /**
      * Uses the auth code from requestAuth() to exchange it for a refresh token
+     * @param code Authentication Code from requestAuth() callback
      */
-    void fetchAccessToken()
+    void fetchAccessToken(const char *code)
     {
-        
+        // Display loading message as it could take a bit longer
+        lcd.clearLine(1);
+        lcd.clearLine(3);
+        lcd.centerPrint("Fetching token...", 2, true);
+
+        debug(F("spotify page: Fetching access token with authentication code"));
+
+        // Allow page switching again
+        pageUpdate = millis();
     }
+
 
     /**
      * Keeps the accessToken up-to-date by using the refreshToken to get a new accessToken
