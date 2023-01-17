@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 21:43:57
+ * Last Modified: 17.01.2023 22:33:44
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -56,8 +56,9 @@ extern char     country[3];
 
 
 // Loop
-extern int8_t currentPage;
-extern bool   hideMiniClock;
+extern int8_t   currentPage;
+extern uint32_t pageUpdate;
+extern bool     hideMiniClock;
 
 
 // Main
