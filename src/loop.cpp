@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:32
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 22:33:26
+ * Last Modified: 17.01.2023 23:06:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -59,6 +59,8 @@ void loopHandler()
         weatherPage::update();
     } else if (strcmp(Config::pageOrder[currentPage], "news") == 0) {
         newsPage::update();
+    } else if (strcmp(Config::pageOrder[currentPage], "spotify") == 0) {
+        spotifyPage::update();
     }
 
     // Update miniClock if enabled
@@ -91,5 +93,7 @@ void nextPage()
         weatherPage::setup();
     } else if (strcmp(Config::pageOrder[currentPage], "news") == 0) {
         newsPage::setup();
+    } else if (strcmp(Config::pageOrder[currentPage], "spotify") == 0) {
+        spotifyPage::setup();
     }
 }
