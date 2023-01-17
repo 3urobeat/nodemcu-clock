@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 13.01.2023 19:54:50
+ * Last Modified: 17.01.2023 21:23:01
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -32,6 +32,11 @@ namespace weatherPage {
 }
 
 namespace newsPage {
+    void setup();
+    void update();
+}
+
+namespace spotifyPage {
     void setup();
     void update();
 }
