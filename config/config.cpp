@@ -36,8 +36,8 @@ namespace Config
     char timeformat[9]       = "hh:mm:ss";
     char miniClockFormat[6]  = "hh:mm";
 
-    char     pageOrder[3][32]   = { "clock", "weather", "news" }; //Set an element to "0" to skip that page
-    uint32_t showuntil[3]       = { 5000, 5000, 0 }; // How long each page should be shown in ms (Special Case: Set to 0 if page should progress on event, news page would progress when headline was fully displayed)
+    char     pageOrder[4][32]   = { "clock", "weather", "news", "spotify" }; //Set an element to "0" to skip that page
+    uint32_t showuntil[4]       = { 5000, 5000, 0, 5000 }; // How long each page should be shown in ms (Special Case: Set to 0 if page should progress on event, news page would progress when headline was fully displayed)
     bool     alwaysShowTime     = true;              // Always show the time in the upper right corner
     uint16_t pageElementSwitch  = 2500;              // After how much ms a page should switch between elements (for example date & weekday on clock page, temp & sunrise on weather page). Set to 0 to disable
 }
