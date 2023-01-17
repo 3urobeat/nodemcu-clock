@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 22:56:24
+ * Last Modified: 17.01.2023 21:51:07
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -64,6 +64,9 @@ ESP8266WiFiClass initWifi(uint8_t row)
             resetFunc();
         }
     }
+
+    // Set hostname
+    WiFi.hostname("nodemcu-clock");
 
     // Block futher execution until connection is established and show message with waiting animation
     uint8_t animationFrame = 1; // Skip first frame which is empty anyway
