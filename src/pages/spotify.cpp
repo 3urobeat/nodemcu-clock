@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 18.01.2023 22:53:12
+ * Last Modified: 18.01.2023 23:07:50
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -26,9 +26,9 @@ const char spotifyClientSecret[] = "";
 const char spotifyRedirectUri[] = "http://192.168.55.112/callback";
 
 
-// Filled by requestAuth() & refreshAccessToken() // TODO: Write into FS
-char     spotifyAccessToken[150] = "";
-char     spotifyRefreshToken[150] = "";
+// Filled by requestAuth() & refreshAccessToken() // TODO: Write into FS, except for expires in timestamp!
+char     spotifyAccessToken[256] = ""; // This can get really long
+char     spotifyRefreshToken[256] = "";
 uint32_t spotifyAccessTokenExpiresTimestamp; // 10/10 var name, very short
 
 bool spotifyRequestAuthWaiting = false;
@@ -53,6 +53,7 @@ namespace spotifyPage
         // Show page title
         lcd.setCursor(0, 0);
         lcd.print("Spotify");
+
         // Skip page if user has playback paused
     }
 
@@ -80,8 +81,13 @@ namespace spotifyPage
                 fetchAccessToken(authCode, "authorization_code");
                 delete[] authCode; // Delete authCode when fetchAccessToken() is done
             }
-        } else {
 
+        } else { // Normal operation
+
+            // Check if accessToken is about to expire
+            if (millis() + 5000 >= spotifyAccessTokenExpiresTimestamp) {
+                fetchAccessToken(spotifyRefreshToken, "refresh_token");
+            }
         }
     }
 
@@ -162,8 +168,8 @@ namespace spotifyPage
 
     /**
      * Uses the auth code from requestAuth() to exchange it for a refresh token or refreshes an expired accessToken
-     * @param code Authentication Code from requestAuth() callback or refreshToken
-     * @param grantType "authorization_code" if authCode should be exchanged for an accessToken (by spotifyAuthCallback()), "refresh_token"
+     * @param code Authentication Code from requestAuth() callback or refreshToken if accessToken should be refreshed
+     * @param grantType "authorization_code" if authCode should be exchanged for an accessToken (by spotifyAuthCallback()), "refresh_token" if accessToken should be refreshed
      */
     void fetchAccessToken(const char *code, const char *grantType)
     {
@@ -260,6 +266,7 @@ namespace spotifyPage
         delete(client);
         delete(parserLib);
         delete(parser);
+        lcd.clearLine(2);
         debug(F("spotify page: Finished cleaning up"));
 
         // Allow page switching again
