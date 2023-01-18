@@ -4,7 +4,7 @@
  * Created Date: 12.01.2023 12:40:54
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 22:43:16
+ * Last Modified: 18.01.2023 22:44:54
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -139,6 +139,52 @@ class NewsJsonHandler final : public JsonHandler
         }
 
         virtual ~NewsJsonHandler() = default; // To fix warning delete-non-virtual-dtor
+
+        // Functions we don't care about (sadly can't be removed)
+        void endDocument() { }
+        void startDocument() { }
+        void startObject(ElementPath path) { }
+        void endObject(ElementPath path) { }
+        void startArray(ElementPath path) {}
+        void endArray(ElementPath path) {}
+        void whitespace(char c) {}
+};
+
+
+// Json parser class for spotify page accessToken request
+class SpotifyAccessTokenJsonHandler final : public JsonHandler
+{
+    private:
+        char     *_accessToken;
+        uint16_t  _accessTokenSize;
+        char     *_refreshToken;
+        uint32_t  _refreshTokenSize;
+        uint32_t *_expiresTimestamp;
+    
+    public:
+        // Constructor that takes pointers to char arrays where the result should go to
+        SpotifyAccessTokenJsonHandler(char *accessToken, uint16_t accessTokenSize, char *refreshToken, uint32_t refreshTokenSize, uint32_t *expiresTimestamp)
+        {
+            _accessToken      = accessToken;
+            _accessTokenSize  = accessTokenSize;
+            _refreshToken     = refreshToken;
+            _refreshTokenSize = refreshTokenSize;
+            _expiresTimestamp = expiresTimestamp;
+        }
+
+        // Handles retrieving data from json stream
+        void value(ElementPath path, ElementValue value)
+        {
+            // Get the current key
+            const char *key = path.getKey();
+
+            // Check which key we are dealing with and copy value into correct variable
+            if (strcmp(key, "access_token") == 0) strncpy(_accessToken, value.getString(), _accessTokenSize - 1);
+            else if (strcmp(key, "expires_in") == 0) *_expiresTimestamp += value.getInt() * 1000; // add expires_in from sec to ms to millis() already in timestamp var
+            else if (strcmp(key, "refresh_token") == 0) strncpy(_refreshToken, value.getString(), _refreshTokenSize - 1);
+        }
+
+        virtual ~SpotifyAccessTokenJsonHandler() = default; // To fix warning delete-non-virtual-dtor
 
         // Functions we don't care about (sadly can't be removed)
         void endDocument() { }

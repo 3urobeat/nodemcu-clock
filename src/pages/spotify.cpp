@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 18.01.2023 21:17:33
+ * Last Modified: 18.01.2023 22:53:12
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -15,6 +15,8 @@
  */
 
 
+#include "base64.h"
+
 #include "pages.h"
 
 
@@ -24,9 +26,9 @@ const char spotifyClientSecret[] = "";
 const char spotifyRedirectUri[] = "http://192.168.55.112/callback";
 
 
-// Filled by requestAuth() & refreshAccessToken()
-char     spotifyAccessToken[128] = "";
-char     spotifyRefreshToken[256] = "";
+// Filled by requestAuth() & refreshAccessToken() // TODO: Write into FS
+char     spotifyAccessToken[150] = "";
+char     spotifyRefreshToken[150] = "";
 uint32_t spotifyAccessTokenExpiresTimestamp; // 10/10 var name, very short
 
 bool spotifyRequestAuthWaiting = false;
@@ -41,8 +43,7 @@ namespace spotifyPage
     char *authCode;
     
     void requestAuth();
-    void fetchAccessToken(const char *code);
-    void refreshAccessToken();
+    void fetchAccessToken(const char *code, const char *grantType);
 
     /**
      * Setup the spotify page
@@ -66,7 +67,7 @@ namespace spotifyPage
             
             lcd.animationPrint(lcd.animations.waiting, 5, &animFrame, 12, 3);
 
-            // Check for requestAuth() in a non blocking way if callback was recieved, clean up and call fetchAccessToken()
+            // Check for requestAuth() in a non blocking way if callback was received, clean up and call fetchAccessToken()
             if (authCode[0] != '\0') {
                 // Clean up
                 spotifyAuthWebserver->reset();
@@ -85,7 +86,7 @@ namespace spotifyPage
     }
 
     /**
-     * Uses the refreshToken to get the current playback
+     * Uses the accessToken to get the current playback
      */
     void refreshCurrentPlayback()
     {
@@ -160,28 +161,108 @@ namespace spotifyPage
 
 
     /**
-     * Uses the auth code from requestAuth() to exchange it for a refresh token
-     * @param code Authentication Code from requestAuth() callback
+     * Uses the auth code from requestAuth() to exchange it for a refresh token or refreshes an expired accessToken
+     * @param code Authentication Code from requestAuth() callback or refreshToken
+     * @param grantType "authorization_code" if authCode should be exchanged for an accessToken (by spotifyAuthCallback()), "refresh_token"
      */
-    void fetchAccessToken(const char *code)
+    void fetchAccessToken(const char *code, const char *grantType)
     {
         // Display loading message as it could take a bit longer
         lcd.clearLine(1);
         lcd.clearLine(3);
-        lcd.centerPrint("Fetching token...", 2, true);
+        lcd.centerPrint("Refreshing token...", 2, true);
 
-        debug(F("spotify page: Fetching access token with authentication code"));
+
+        // Create objects and send post request with code
+        WiFiClientSecure *client = new WiFiClientSecure(); // Using WiFiClientSecure costs 10% flash which sucks ass but the request won't work otherwise
+        ArudinoStreamParser *parserLib = new ArudinoStreamParser();
+        
+        SpotifyAccessTokenJsonHandler *parser = new SpotifyAccessTokenJsonHandler(spotifyAccessToken, sizeof(spotifyAccessToken), spotifyRefreshToken, sizeof(spotifyRefreshToken), &spotifyAccessTokenExpiresTimestamp);
+
+        parserLib->setHandler(parser); // Set our parser as JSON data handler in the lib
+
+
+        /* --------- Construct post request data --------- */
+        char postData[312] = "grant_type="; // Length was 292 in testing for grantType authorization_code
+        char *postP = postData;
+        
+        postP = mystrcat(postP, grantType);
+
+        // Depending on if we are requesting an accessToken or just refreshing it we need different parameters
+        if (strcmp(grantType, "authorization_code") == 0) postP = mystrcat(postP, "&code=");
+            else postP = mystrcat(postP, "&refresh_token=");
+
+        postP = mystrcat(postP, code);
+
+        // Redirect URI is only needed for authorization_code
+        if (strcmp(grantType, "authorization_code") == 0) {
+            postP = mystrcat(postP, "&redirect_uri=");
+            postP = mystrcat(postP, spotifyRedirectUri);
+        }
+
+        *(postP) = '\0'; // Make sure there is a null char at the end
+
+        // Get length of our finished postData str so we can include it later in our request
+        char postDataLength[6] = "";
+        
+        itoa(strlen(postData), postDataLength, 10);
+
+
+        /* --------- Construct authorization header --------- */
+        char authStr[128]  = "";
+
+        strcpy(authStr, spotifyClientID);
+        strcat(authStr, ":");
+        strcat(authStr, spotifyClientSecret);
+
+        strncpy(authStr, base64::encode(authStr, false).c_str(), sizeof(authStr) - 1); // Encode authStr as needed and overwrite authStr to save some memory
+
+        debug(F("spotify page: POST content constructed and objects made"));
+        
+
+        /* --------- Construct POST request headers --------- */
+        // Construct POST request manually as using HTTPClient always failed (Inspired by: https://github.com/ThingPulse/esp8266-spotify-remote/blob/b1d8c18ed893b6a5a45b26c74c9b73c6625deae8/SpotifyClient.cpp#L221)
+        char request[512] = "POST /api/token HTTP/1.1\r\nHost: accounts.spotify.com\r\nAuthorization: Basic ";
+        char *reqP = request;
+
+        reqP = mystrcat(reqP, authStr);
+        reqP = mystrcat(reqP, "\r\nContent-Length: ");
+        reqP = mystrcat(reqP, postDataLength);
+        reqP = mystrcat(reqP, "\r\nContent-Type: application/x-www-form-urlencoded\r\nConnection: close\r\n\r\n");
+        reqP = mystrcat(reqP, postData);
+
+        debug(F("spotify page: POST request constructed, connecting..."));
+
+
+        /* --------- Send POST request --------- */
+        client->setInsecure();
+        client->setNoDelay(false);
+        
+        if (client->connect("accounts.spotify.com", 443)) { // Only proceed if connection succeeded
+            client->print(request); // Send our POST req data over
+
+            // Prepare spotifyAccessTokenExpiresTimestamp, parser will do +=
+            spotifyAccessTokenExpiresTimestamp = millis();
+
+            // Send each char we are receiving over to our parser while the connection is alive
+            while (client->connected() || client->available()) {
+                parserLib->parse((char) client->read());
+            }
+        } else {
+            lcd.centerPrint("Request failed!", 2, true);
+        }
+
+        debug(F("spotify page: Connection closed, cleaning up..."));
+
+
+        /* --------- Clean Up --------- */
+        client->stop();
+        delete(client);
+        delete(parserLib);
+        delete(parser);
+        debug(F("spotify page: Finished cleaning up"));
 
         // Allow page switching again
         pageUpdate = millis();
-    }
-
-
-    /**
-     * Keeps the accessToken up-to-date by using the refreshToken to get a new accessToken
-     */
-    void refreshAccessToken()
-    {
-
     }
 }
