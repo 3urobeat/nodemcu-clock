@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 18.01.2023 00:39:52
+ * Last Modified: 18.01.2023 21:17:33
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -36,6 +36,9 @@ namespace spotifyPage
 {
     // Declare function here and define it later below to reduce clutter while being accessible from setup()
     void refreshCurrentPlayback();
+
+    AsyncWebServer *spotifyAuthWebserver;
+    char *authCode;
     
     void requestAuth();
     void fetchAccessToken(const char *code);
@@ -62,6 +65,20 @@ namespace spotifyPage
             static uint8_t animFrame = 0; // Tracking var for animation frame
             
             lcd.animationPrint(lcd.animations.waiting, 5, &animFrame, 12, 3);
+
+            // Check for requestAuth() in a non blocking way if callback was recieved, clean up and call fetchAccessToken()
+            if (authCode[0] != '\0') {
+                // Clean up
+                spotifyAuthWebserver->reset();
+                delete(spotifyAuthWebserver);
+                spotifyRequestAuthWaiting = false;
+
+                debug(F("spotify page: Callback processed, clean up done, passing authCode to fetchAccessToken()"));
+
+                // Pass code to fetchAccessToken() to get an accessToken & refreshToken to make requests with
+                fetchAccessToken(authCode, "authorization_code");
+                delete[] authCode; // Delete authCode when fetchAccessToken() is done
+            }
         } else {
 
         }
@@ -78,14 +95,9 @@ namespace spotifyPage
 
 
     /* --------- Handle Spotify API oAuth --------- */
+    // Docs: https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
 
-    // Store pointer here so that spotifyAuthCallback() can destroy obj
-    AsyncWebServer *spotifyAuthWebserver;
 
-    // Declare requestAuth() subfunctions here to make the code flow more readable
-    void requestAuthRedirect(AsyncWebServerRequest *request);
-    void spotifyAuthCallback(AsyncWebServerRequest *request);
-    
     /**
      * Hosts a webserver to request auth confirmation from the user, which gets us an auth code.
      * This user interaction is only required once.
@@ -101,52 +113,49 @@ namespace spotifyPage
 
         // Block page switch by setting a large pageUpdate
         pageUpdate += 999999;
+        
+        authCode = new char[256]; // Provide char arr for callback function to copy into, code was in testing 212 chars long
+        authCode[0] = '\0'; // Clear at least the first char so that our check in update() works, memsetting the whole thing is not really necessary here
 
-        // Start a webserver
-        spotifyAuthWebserver = new AsyncWebServer(80); // Init webserver on port 80
-    
-        spotifyAuthWebserver->on("/", HTTP_GET, requestAuthRedirect);         // Serves webpage that redirects the user to Spotify
-        spotifyAuthWebserver->on("/callback", HTTP_GET, spotifyAuthCallback); // Retrieves the code callback from Spotify
+
+        // Start a webserver on port 80
+        spotifyAuthWebserver = new AsyncWebServer(80); // I'm only using the async one as it is already required for setupMode
+
+        // Serves webpage that redirects the user to Spotify
+        spotifyAuthWebserver->on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+            // Construct redirect URL and redirect user
+            char url[256] = "https://accounts.spotify.com/authorize/?client_id=";
+            char *p = url;
+
+            p = mystrcat(p, spotifyClientID);
+            p = mystrcat(p, "&response_type=code&redirect_uri=");
+            p = mystrcat(p, spotifyRedirectUri);
+            p = mystrcat(p, "&scope=user-read-currently-playing");
+
+            debug(F("spotify page: URL constructed, redirecting user, waiting for callback"));
+
+            // Redirect user to Spotify Auth page
+            request->redirect(url);
+        });
+
+        // Retrieves the code callback from Spotify
+        spotifyAuthWebserver->on("/callback", HTTP_GET, [](AsyncWebServerRequest *request) {
+            // Respond to user
+            if (request->hasArg("code")) {
+                request->send_P(200, "text/plain", "Authentication successful! You may close this page.");
+
+                strncpy(authCode, request->arg("code").c_str(), 256);
+            } else {
+                request->send_P(500, "text/plain", "Oops - An error occurred! Please try again later.");
+            }
+        });
+
         spotifyAuthWebserver->begin();
 
         debug(F("spotify page: Webserver up, page switch blocked, waiting for request"));
-    }
 
-    // "Subfunction" of requestAuth(): Construct URL and redirect user 
-    void requestAuthRedirect(AsyncWebServerRequest *request)
-    {
-        // Construct redirect URL and redirect user
-        char url[256] = "https://accounts.spotify.com/authorize/?client_id=";
-        char *p = url;
 
-        p = mystrcat(p, spotifyClientID);
-        p = mystrcat(p, "&response_type=code&redirect_uri=");
-        p = mystrcat(p, spotifyRedirectUri);
-        p = mystrcat(p, "&scope=user-read-currently-playing");
-
-        debug(F("spotify page: URL constructed, redirecting user, waiting for callback"));
-
-        // Redirect user to Spotify Auth page
-        request->redirect(url);
-    }
-
-    // "Subfunction" of requestAuth(): Catch code returned by Spotify and clean up
-    void spotifyAuthCallback(AsyncWebServerRequest *request)
-    {
-        spotifyRequestAuthWaiting = false;
-
-        // Respond to user
-        if (request->hasArg("code")) request->send_P(200, "text/plain", "Authentication successful! You may close this page.");
-            else request->send_P(500, "text/plain", "Oops - An error occurred! Please try again later.");
-
-        // Clean up
-        spotifyAuthWebserver->end();
-        delete(spotifyAuthWebserver);
-
-        debug(F("spotify page: Callback processed, page switch unblocked, clean up done"));
-
-        // Pass code to fetchAccessToken() to get an accessToken & refreshToken to make requests with
-        fetchAccessToken(request->arg("code").c_str());
+        // update() will constantly check if authCode is populated and clean up
     }
 
 
