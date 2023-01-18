@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 18.01.2023 23:07:50
+ * Last Modified: 19.01.2023 00:02:17
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -37,13 +37,21 @@ bool spotifyRequestAuthWaiting = false;
 namespace spotifyPage
 {
     // Declare function here and define it later below to reduce clutter while being accessible from setup()
+    
+    // Functions & Pointers needed for "normal" execution
+    spotifyCurrentPlaybackData dataStruct;
+    ArudinoStreamParser parserLib;
+
     void refreshCurrentPlayback();
 
+    // Functions & Pointers needed for token API interactions
     AsyncWebServer *spotifyAuthWebserver;
     char *authCode;
     
     void requestAuth();
+    void requestAuthLoop();
     void fetchAccessToken(const char *code, const char *grantType);
+
 
     /**
      * Setup the spotify page
@@ -54,7 +62,8 @@ namespace spotifyPage
         lcd.setCursor(0, 0);
         lcd.print("Spotify");
 
-        // Skip page if user has playback paused
+        // Check if user did not auth before and run first time setup
+        if (strlen(spotifyRefreshToken) == 0) requestAuth();
     }
 
     /**
@@ -62,32 +71,15 @@ namespace spotifyPage
      */
     void update()
     {
-        // Check if requestAuth is active and display waiting animation, otherwise get current data from Spotify and display it
+        // Check if requestAuth is active and call requestAuthLoop()
         if (spotifyRequestAuthWaiting) {
-            static uint8_t animFrame = 0; // Tracking var for animation frame
-            
-            lcd.animationPrint(lcd.animations.waiting, 5, &animFrame, 12, 3);
-
-            // Check for requestAuth() in a non blocking way if callback was received, clean up and call fetchAccessToken()
-            if (authCode[0] != '\0') {
-                // Clean up
-                spotifyAuthWebserver->reset();
-                delete(spotifyAuthWebserver);
-                spotifyRequestAuthWaiting = false;
-
-                debug(F("spotify page: Callback processed, clean up done, passing authCode to fetchAccessToken()"));
-
-                // Pass code to fetchAccessToken() to get an accessToken & refreshToken to make requests with
-                fetchAccessToken(authCode, "authorization_code");
-                delete[] authCode; // Delete authCode when fetchAccessToken() is done
-            }
+            requestAuthLoop();
 
         } else { // Normal operation
 
-            // Check if accessToken is about to expire
-            if (millis() + 5000 >= spotifyAccessTokenExpiresTimestamp) {
-                fetchAccessToken(spotifyRefreshToken, "refresh_token");
-            }
+            // Check if accessToken is about to expire (do this here instead of in setup so long showuntils don't fail)
+            if (millis() + 5000 >= spotifyAccessTokenExpiresTimestamp) fetchAccessToken(spotifyRefreshToken, "refresh_token");
+
         }
     }
 
@@ -162,7 +154,32 @@ namespace spotifyPage
         debug(F("spotify page: Webserver up, page switch blocked, waiting for request"));
 
 
-        // update() will constantly check if authCode is populated and clean up
+        // requestAuthLoop(), called by update(), will constantly check if authCode is populated and clean up
+    }
+
+
+    /**
+     * Handles checking if requestAuth() is done in a non-blocking way, calls fetchAccessToken and cleans up
+     */
+    void requestAuthLoop()
+    {
+        static uint8_t animFrame = 0; // Tracking var for animation frame
+            
+        lcd.animationPrint(lcd.animations.waiting, 5, &animFrame, 12, 3);
+
+        // Check for requestAuth() in a non blocking way if callback was received, clean up and call fetchAccessToken()
+        if (authCode[0] != '\0') {
+            // Clean up
+            spotifyAuthWebserver->reset();
+            delete(spotifyAuthWebserver);
+            spotifyRequestAuthWaiting = false;
+
+            debug(F("spotify page: Callback processed, clean up done, passing authCode to fetchAccessToken()"));
+
+            // Pass code to fetchAccessToken() to get an accessToken & refreshToken to make requests with
+            fetchAccessToken(authCode, "authorization_code");
+            delete[] authCode; // Delete authCode when fetchAccessToken() is done
+        }
     }
 
 
@@ -178,14 +195,15 @@ namespace spotifyPage
         lcd.clearLine(3);
         lcd.centerPrint("Refreshing token...", 2, true);
 
+        debug(F("spotify page: fetchAcessToken() called, accessToken probably expired unless requestAuth just ran"));
+
 
         // Create objects and send post request with code
         WiFiClientSecure *client = new WiFiClientSecure(); // Using WiFiClientSecure costs 10% flash which sucks ass but the request won't work otherwise
-        ArudinoStreamParser *parserLib = new ArudinoStreamParser();
         
-        SpotifyAccessTokenJsonHandler *parser = new SpotifyAccessTokenJsonHandler(spotifyAccessToken, sizeof(spotifyAccessToken), spotifyRefreshToken, sizeof(spotifyRefreshToken), &spotifyAccessTokenExpiresTimestamp);
+        SpotifyAccessTokenJsonHandler *tokenParser = new SpotifyAccessTokenJsonHandler(spotifyAccessToken, sizeof(spotifyAccessToken), spotifyRefreshToken, sizeof(spotifyRefreshToken), &spotifyAccessTokenExpiresTimestamp);
 
-        parserLib->setHandler(parser); // Set our parser as JSON data handler in the lib
+        parserLib.setHandler(tokenParser); // Set our parser as JSON data handler in the lib
 
 
         /* --------- Construct post request data --------- */
@@ -252,7 +270,7 @@ namespace spotifyPage
 
             // Send each char we are receiving over to our parser while the connection is alive
             while (client->connected() || client->available()) {
-                parserLib->parse((char) client->read());
+                parserLib.parse((char) client->read());
             }
         } else {
             lcd.centerPrint("Request failed!", 2, true);
@@ -264,8 +282,7 @@ namespace spotifyPage
         /* --------- Clean Up --------- */
         client->stop();
         delete(client);
-        delete(parserLib);
-        delete(parser);
+        delete(tokenParser);
         lcd.clearLine(2);
         debug(F("spotify page: Finished cleaning up"));
 
