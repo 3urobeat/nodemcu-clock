@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 22:33:44
+ * Last Modified: 19.01.2023 19:53:06
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -24,7 +24,6 @@
 #include <lcdHelper.h>
 
 #include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
 #include <ESPAsyncWebServer.h>
 #include <WiFiUdp.h>
 

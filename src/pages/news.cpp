@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 23:41:58
+ * Last Modified: 19.01.2023 18:48:08
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -103,8 +103,8 @@ namespace newsPage
         lcd.centerPrint("Loading...", 2, false);
 
         // Construct URL (128 B in stack should be fine, we only need it every 20 min so keeping it in heap might be wasted mem)
-        char url[128] = "http://newsapi.org/v2/top-headlines?country="; // Use http instead of https as the SSL header takes like 20KB of heap, it's crazy
-        char *p = url;
+        char path[128] = "/v2/top-headlines?country="; // Use http instead of https as the SSL header takes like 20KB of heap, it's crazy
+        char *p = path;
 
         p = mystrcat(p, country);
         p = mystrcat(p, "&pageSize=4&apiKey=");
@@ -116,7 +116,7 @@ namespace newsPage
 
         debug(F("news page: Constructed URL and made parser object"));
 
-        httpGetJson(url, parser);
+        httpGetJson("newsapi.org", path, 80, parser);
 
         // Clear up memory
         delete(parser);

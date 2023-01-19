@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 23:41:58
+ * Last Modified: 19.01.2023 19:49:44
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -19,45 +19,87 @@
 
 
 /**
- * Sends HTTP GET request to an URL and parses JSON data via streaming from it
- * @param url The URL to request data from
+ * Sends HTTP or HTTPS GET request to an URL and parses JSON data via streaming from it
+ * @param host The host to request data from (without http://)
+ * @param path The path to request data from (everything after the domain, starting with a /)
+ * @param port The port to use (80 for http, 443 for https)
  * @param handler Reference to JsonHandler object of class you set up for this request which parses the data you are interested in
+ * @param extraHeaders Optional: Char array containing extra headers for the GET request, separated with "\r\n" (max ~400 chars please)
  */
-void httpGetJson(const char *url, JsonHandler* handler)
+void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler* handler, char *extraHeaders)
 {
     // Log request if DEBUG mode is enabled
     #ifdef CLOCK_DEBUG
         Serial.print("httpGetJson(): Sending GET request to: ");
-        Serial.println(url);
+        Serial.print(host);
+        Serial.println(path);
 
         debug(F("httpGetJson(): Creating new lib objects..."));
     #endif
 
-    // Create lib obj and set handler // TODO: Maybe move http and client to top scope and let them live forever if they should cause heap fragmentation later on
-    HTTPClient *http = new HTTPClient();
-    WiFiClient *client = new WiFiClient();
+    // Create lib objects and set handler
+    void *client;
+
+    if (port == 80) client = new WiFiClient();
+        else client = new WiFiClientSecure(); // ...Secure can't do http reqs with setInsecure() smh
+
     ArudinoStreamParser *parserLib = new ArudinoStreamParser(); // Specifically create and delete obj manually below again to prevent memory leak (and yes, the lib dev spelled Arduino wrong)
 
     parserLib->setHandler(handler); // Set our parser as JSON data handler in the lib
+
+
+    /* --------- Construct GET request headers --------- */
+    char request[512] = "GET ";
+    char *reqP = request;
+
+    reqP = mystrcat(reqP, path);
+    reqP = mystrcat(reqP, " HTTP/1.1\r\nHost: ");
+    reqP = mystrcat(reqP, host);
+    reqP = mystrcat(reqP, "\r\n");
+
+    // Add headers if headersArr is not empty
+    if (extraHeaders != NULL) reqP = mystrcat(reqP, extraHeaders);
+
+    reqP = mystrcat(reqP, "Connection: close\r\n\r\n");
+
+    debug(F("httpGetJson(): GET request constructed, connecting..."));
     
-    // Begin request
-    http->setReuse(false);
-    http->begin(*client, url);
 
-    // Start connection and send HTTP header
-    int httpCode = http->GET();
-    debug(F("httpGetJson(): HTTP GET request made, streaming response to parserLib..."));
+    /* --------- Send POST request with correct class type --------- */
+    if (port == 80) {
+        if (((WiFiClient*) client)->connect(host, port)) { // Only proceed if connection succeeded
+            ((WiFiClient*) client)->print(request); // Send our GET req data over
 
-    // Pass Stream to our parser if request was successful
-    if (httpCode == HTTP_CODE_OK) http->writeToStream(parserLib);
+            // Send each char we are receiving over to our parser while the connection is alive
+            while (((WiFiClient*) client)->connected() || ((WiFiClient*) client)->available()) {
+                parserLib->parse((char) ((WiFiClient*) client)->read());
+            }
+        } else {
+            debug(F("httpGetJson(): HTTP Request failed!"));
+        }
+    } else {
+        ((WiFiClientSecure*) client)->setInsecure();
 
-    debug(F("httpGetJson(): Finished streaming response"));
+        if (((WiFiClientSecure*) client)->connect(host, port)) { // Only proceed if connection succeeded
+            ((WiFiClientSecure*) client)->print(request); // Send our GET req data over
+
+            // Send each char we are receiving over to our parser while the connection is alive
+            while (((WiFiClientSecure*) client)->connected() || ((WiFiClientSecure*) client)->available()) {
+                parserLib->parse((char) ((WiFiClientSecure*) client)->read());
+            }
+        } else {
+            debug(F("httpGetJson(): HTTPS Request failed!"));
+        }
+    }
     
-    // End request
-    http->end();
-    client->stop();
+    debug(F("httpGetJson(): Connection closed, cleaning up..."));
+    
+
+    /* --------- Clean Up --------- */
+    if (port == 80) ((WiFiClient*) client)->stop();
+        else ((WiFiClientSecure*) client)->stop();
+
     delete(parserLib);
-    delete(http);
     delete(client);
-    debug(F("httpGetJson(): Finished clearing up"));
+    debug(F("httpGetJson(): Finished cleaning up"));
 }

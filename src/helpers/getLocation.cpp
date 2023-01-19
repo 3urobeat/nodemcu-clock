@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 14:16:00
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 22:52:35
+ * Last Modified: 19.01.2023 19:50:43
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -29,7 +29,7 @@ void getLocation()
         // Create obj of our parser class and make request
         GetLocationJsonHandler1 *parser = new GetLocationJsonHandler1();
 
-        httpGetJson("http://ip-api.com/json?fields=lat,lon,offset,city,countryCode", parser);
+        httpGetJson("ip-api.com", "/json?fields=lat,lon,offset,city,countryCode", 80, parser);
 
         // Clear up memory
         delete(parser);
@@ -37,8 +37,8 @@ void getLocation()
     } else { // ...otherwise ping openweathermap once with the coords to get the city name and timeoffset
     
         // Construct URL
-        char url[128] = "http://api.openweathermap.org/data/2.5/weather?lat=";
-        char *p = url;
+        char path[128] = "/data/2.5/weather?lat=";
+        char *p = path;
 
         p = mystrcat(p, Config::lat);
         p = mystrcat(p, "&lon=");
@@ -50,7 +50,7 @@ void getLocation()
         // Create obj of our parser class and make request
         GetLocationJsonHandler2 *parser = new GetLocationJsonHandler2();
 
-        httpGetJson(url, parser);
+        httpGetJson("api.openweathermap.org", path, 80, parser);
 
         // Clear up memory
         delete(parser);

@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 23:41:58
+ * Last Modified: 19.01.2023 18:48:48
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -101,8 +101,8 @@ namespace weatherPage
         
 
         // Construct URL
-        char url[128] = "http://api.openweathermap.org/data/2.5/weather?lat=";
-        char *p = url;
+        char path[128] = "/data/2.5/weather?lat=";
+        char *p = path;
 
         p = mystrcat(p, Config::lat);
         p = mystrcat(p, "&lon=");
@@ -126,7 +126,7 @@ namespace weatherPage
 
         debug(F("weather page: Constructed URL and made parser object"));
 
-        httpGetJson(url, parser);
+        httpGetJson("api.openweathermap.org", path, 80, parser);
 
         // Clear up memory
         delete(parser);
