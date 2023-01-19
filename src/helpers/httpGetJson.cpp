@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 19.01.2023 19:49:44
+ * Last Modified: 19.01.2023 19:56:42
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -96,10 +96,14 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler*
     
 
     /* --------- Clean Up --------- */
-    if (port == 80) ((WiFiClient*) client)->stop();
-        else ((WiFiClientSecure*) client)->stop();
+    if (port == 80) {
+        ((WiFiClient*) client)->stop();
+        delete((WiFiClient*) client);
+    } else {
+        ((WiFiClientSecure*) client)->stop();
+        delete((WiFiClientSecure*) client);
+    }
 
     delete(parserLib);
-    delete(client);
     debug(F("httpGetJson(): Finished cleaning up"));
 }
