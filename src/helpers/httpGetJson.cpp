@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 19.01.2023 19:56:42
+ * Last Modified: 19.01.2023 20:53:04
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -25,8 +25,9 @@
  * @param port The port to use (80 for http, 443 for https)
  * @param handler Reference to JsonHandler object of class you set up for this request which parses the data you are interested in
  * @param extraHeaders Optional: Char array containing extra headers for the GET request, separated with "\r\n" (max ~400 chars please)
+ * @param parserLib Optional: Pass existing parserLib object reference if you are making frequent requests with the same obj
  */
-void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler* handler, char *extraHeaders)
+void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler *handler, const char *extraHeaders, ArudinoStreamParser *parserLib)
 {
     // Log request if DEBUG mode is enabled
     #ifdef CLOCK_DEBUG
@@ -37,15 +38,22 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler*
         debug(F("httpGetJson(): Creating new lib objects..."));
     #endif
 
-    // Create lib objects and set handler
+    // Create correct lib objects and set handler
     void *client;
 
     if (port == 80) client = new WiFiClient();
         else client = new WiFiClientSecure(); // ...Secure can't do http reqs with setInsecure() smh
+    
+    bool parserLibMade = false; // Track if we need to delete here
 
-    ArudinoStreamParser *parserLib = new ArudinoStreamParser(); // Specifically create and delete obj manually below again to prevent memory leak (and yes, the lib dev spelled Arduino wrong)
+    if (parserLib == NULL) { // Create new handler obj if caller didn't pass one
+        debug(F("httpGetJson(): User didn't pass an parserLib obj, creating one..."));
 
-    parserLib->setHandler(handler); // Set our parser as JSON data handler in the lib
+        parserLib = new ArudinoStreamParser(); // Specifically create and delete obj manually below again to prevent memory leak (and yes, the lib dev spelled Arduino wrong)
+        parserLibMade = true;
+
+        parserLib->setHandler(handler); // Set our parser as JSON data handler in the lib
+    }
 
 
     /* --------- Construct GET request headers --------- */
@@ -104,6 +112,6 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler*
         delete((WiFiClientSecure*) client);
     }
 
-    delete(parserLib);
+    if (parserLibMade) delete(parserLib);
     debug(F("httpGetJson(): Finished cleaning up"));
 }
