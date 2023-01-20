@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 20.01.2023 21:47:30
+ * Last Modified: 20.01.2023 21:54:20
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -39,10 +39,13 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler 
     #endif
 
     // Create correct lib objects and set handler
-    WiFiClient *wifiClient = new WiFiClient();
+    WiFiClient       *wifiClient;
+    WiFiClientSecure *wifiSecureClient;
+
+    if (port == 80) wifiClient = new WiFiClient();
 
     #ifndef CLOCK_NOHTTPS // User can reduce size of image by ~10% if build flag NOHTTPS is enabled
-        WiFiClientSecure *wifiSecureClient = new WiFiClientSecure();
+        if (port != 80) wifiSecureClient = new WiFiClientSecure();
     #endif
 
     
@@ -110,6 +113,10 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler 
     
 
     /* --------- Clean Up --------- */
+    if (port == 80) delete(wifiClient);
+    #ifndef CLOCK_NOHTTPS
+        if (port != 80) delete(wifiSecureClient);
+    #endif
     if (parserLibMade) delete(parserLib);
     debug(F("httpGetJson(): Finished cleaning up"));
 }
