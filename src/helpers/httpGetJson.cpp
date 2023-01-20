@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 20.01.2023 16:50:27
+ * Last Modified: 20.01.2023 21:47:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -39,10 +39,12 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler 
     #endif
 
     // Create correct lib objects and set handler
-    void *client;
+    WiFiClient *wifiClient = new WiFiClient();
 
-    if (port == 80) client = new WiFiClient();
-        else client = new WiFiClientSecure(); // ...Secure can't do http reqs with setInsecure() smh
+    #ifndef CLOCK_NOHTTPS // User can reduce size of image by ~10% if build flag NOHTTPS is enabled
+        WiFiClientSecure *wifiSecureClient = new WiFiClientSecure();
+    #endif
+
     
     bool parserLibMade = false; // Track if we need to delete here
 
@@ -76,43 +78,38 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler 
 
     /* --------- Send POST request with correct class type --------- */
     if (port == 80) {
-        if (((WiFiClient*) client)->connect(host, port)) { // Only proceed if connection succeeded
-            ((WiFiClient*) client)->print(request); // Send our GET req data over
+        if (wifiClient->connect(host, port)) { // Only proceed if connection succeeded
+            wifiClient->print(request); // Send our GET req data over
 
             // Send each char we are receiving over to our parser while the connection is alive
-            while (((WiFiClient*) client)->connected() || ((WiFiClient*) client)->available()) {
-                parserLib->parse((char) ((WiFiClient*) client)->read());
+            while (wifiClient->connected() || wifiClient->available()) {
+                parserLib->parse((char) wifiClient->read());
             }
         } else {
             debug(F("httpGetJson(): HTTP Request failed!"));
         }
-    } else {
-        ((WiFiClientSecure*) client)->setInsecure();
 
-        if (((WiFiClientSecure*) client)->connect(host, port)) { // Only proceed if connection succeeded
-            ((WiFiClientSecure*) client)->print(request); // Send our GET req data over
+    #ifndef CLOCK_NOHTTPS
+    } else {
+        wifiSecureClient->setInsecure();
+
+        if (wifiSecureClient->connect(host, port)) { // Only proceed if connection succeeded
+            wifiSecureClient->print(request); // Send our GET req data over
 
             // Send each char we are receiving over to our parser while the connection is alive
-            while (((WiFiClientSecure*) client)->connected() || ((WiFiClientSecure*) client)->available()) {
-                parserLib->parse((char) ((WiFiClientSecure*) client)->read());
+            while (wifiSecureClient->connected() || wifiSecureClient->available()) {
+                parserLib->parse((char) wifiSecureClient->read());
             }
         } else {
             debug(F("httpGetJson(): HTTPS Request failed!"));
         }
+    #endif
     }
     
     debug(F("httpGetJson(): Connection closed, cleaning up..."));
     
 
     /* --------- Clean Up --------- */
-    if (port == 80) {
-        ((WiFiClient*) client)->stop();
-        delete((WiFiClient*) client);
-    } else {
-        ((WiFiClientSecure*) client)->stop();
-        delete((WiFiClientSecure*) client);
-    }
-
     if (parserLibMade) delete(parserLib);
     debug(F("httpGetJson(): Finished cleaning up"));
 }

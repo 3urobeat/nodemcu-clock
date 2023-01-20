@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 20.01.2023 20:26:32
+ * Last Modified: 20.01.2023 21:50:38
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -15,15 +15,18 @@
  */
 
 
-#include "base64.h"
-
 #include "pages.h"
 
 
+// This page needs HTTPS to function so if the user turns it off we must include an empty namespace to avoid crashes
+#ifndef CLOCK_NOHTTPS
+
+#include "base64.h"
+
 // Spotify Application ID, secret and redirect URI
-const char spotifyClientID[] = "";
-const char spotifyClientSecret[] = "";
-const char spotifyRedirectUri[] = "http://192.168.55.112/callback";
+const char spotifyClientID[33] = "";
+const char spotifyClientSecret[33] = "";
+const char spotifyRedirectUri[33] = "http://192.168.55.112/callback";
 
 
 // Filled by requestAuth() & refreshAccessToken() // TODO: Write into FS, except for expires in timestamp!
@@ -378,3 +381,23 @@ namespace spotifyPage
         pageUpdate = millis();
     }
 }
+
+#else
+
+namespace spotifyPage
+{
+    void setup()
+    {
+        lcd.setCursor(0, 0);
+        lcd.print("Spotify");
+        lcd.centerPrint("Page disabled!", 2);
+        lcd.centerPrint("NOHTTPS flag is set", 3);
+    }
+
+    void update()
+    {
+        
+    }
+}
+
+#endif
