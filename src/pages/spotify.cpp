@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 20.01.2023 20:18:44
+ * Last Modified: 20.01.2023 20:26:32
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -97,8 +97,8 @@ namespace spotifyPage
             // Check if accessToken is about to expire (do this here instead of in setup so long showuntils don't fail)
             if (millis() + 5000 >= spotifyAccessTokenExpiresTimestamp) fetchAccessToken(spotifyRefreshToken, "refresh_token");
 
-            // Get current data each 2.5 seconds
-            if (millis() + 5000 >= spotifyLastPlaybackUpdate) refreshCurrentPlayback(); // TODO: Change to 2500
+            // Get current data each 5 seconds
+            if (millis() >= spotifyLastPlaybackUpdate + 5000) refreshCurrentPlayback();
 
             // Skip page if user has playback paused
             if (!spotifyData.currentlyPlaying) nextPage();
@@ -156,6 +156,10 @@ namespace spotifyPage
         // Make sure the correct parser is set should fetchAccessToken() have changed it
         parserLib.setHandler(&parser);
 
+        // Include country in url path to shorten response drastically which improves performance
+        char path[43] = "/v1/me/player/currently-playing?market=";
+        strcat(path, country);
+
         // TODO: Create quite long header once and reuse? Might be kinda tricky when key changes
         char header[340] = "Accept: application/json\r\nContent-Type: application/json\r\nAuthorization: Bearer ";
         char *p = header;
@@ -166,7 +170,7 @@ namespace spotifyPage
 
         // TODO: Return httpCode from httpGetJson as one http code means that user paused playback and no content will be returned
         // Send GET request to spotify with our existing parserLib obj and let parser update our vars
-        httpGetJson("api.spotify.com", "/v1/me/player/currently-playing", 443, &parser, header, &parserLib);
+        httpGetJson("api.spotify.com", path, 443, &parser, header, &parserLib);
 
         // Update last update var
         spotifyLastPlaybackUpdate = millis();
