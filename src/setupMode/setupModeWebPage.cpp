@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 23:07:32
+ * Last Modified: 20.01.2023 23:12:25
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -42,6 +42,8 @@ String processor(const String& var) // I need to use String here because the lib
 
     if (var == "openweathermaptoken_input") return String(Config::openweathermaptoken);
     if (var == "newsapitoken_input") return String(Config::newsapitoken);
+    if (var == "spotifyClientID_input") return String(Config::spotifyClientID);
+    if (var == "spotifyClientSecret_input") return String(Config::spotifyClientSecret);
 
     if (var == "lat_input") return String(Config::lat);
     if (var == "lon_input") return String(Config::lon);
@@ -99,6 +101,8 @@ void setupModeWebPageSave(AsyncWebServerRequest *request)
 
     if (request->hasArg("openweathermaptoken_input")) request->arg("openweathermaptoken_input").toCharArray(Config::openweathermaptoken, sizeof(Config::openweathermaptoken));
     if (request->hasArg("newsapitoken_input")) request->arg("newsapitoken_input").toCharArray(Config::newsapitoken, sizeof(Config::newsapitoken));
+    if (request->hasArg("spotifyClientID_input")) request->arg("spotifyClientID_input").toCharArray(Config::spotifyClientID, sizeof(Config::spotifyClientID));
+    if (request->hasArg("spotifyClientSecret_input")) request->arg("spotifyClientSecret_input").toCharArray(Config::spotifyClientSecret, sizeof(Config::spotifyClientSecret));
 
     if (request->hasArg("lat_input")) request->arg("lat_input").toCharArray(Config::lat, sizeof(Config::lat));
     if (request->hasArg("lon_input")) request->arg("lon_input").toCharArray(Config::lon, sizeof(Config::lon));

@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:16:25
  * Author: 3urobeat
  * 
- * Last Modified: 17.01.2023 23:07:46
+ * Last Modified: 20.01.2023 23:06:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -33,6 +33,9 @@ namespace Config
 
     extern char openweathermaptoken[33];
     extern char newsapitoken[33];
+
+    extern char spotifyClientID[33];
+    extern char spotifyClientSecret[33];
 
     extern char dateformat[11];
     extern char timeformat[9];
