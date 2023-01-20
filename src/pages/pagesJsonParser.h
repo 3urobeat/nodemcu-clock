@@ -4,7 +4,7 @@
  * Created Date: 12.01.2023 12:40:54
  * Author: 3urobeat
  * 
- * Last Modified: 20.01.2023 17:03:28
+ * Last Modified: 20.01.2023 18:37:03
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -183,11 +183,35 @@ class SpotifyRefreshPlaybackJsonHandler final : public JsonHandler
             char _fullPath[128 + 32] = ""; // I like the power of 2, thank you Fabi for helping me to not write 160
             path.toString(_fullPath);
 
-            if (strcmp(_fullPath, "progress_ms") == 0) *_progressTimestamp = value.getInt();
-            else if (strcmp(_fullPath, "item.artists[0].name") == 0) strncpy(_artist, value.getString(), _artistSize - 1); // There could be more artists, let's ignore that for now
-            else if (strcmp(_fullPath, "item.duration_ms") == 0) *_songLength = value.getInt();
-            else if (strcmp(_fullPath, "item.name") == 0) strncpy(_title, value.getString(), _titleSize - 1);
-            else if (strcmp(_fullPath, "is_playing") == 0) *_currentlyPlaying = value.getBool();
+            if (strcmp(_fullPath, "progress_ms") == 0) {
+                *_progressTimestamp = value.getInt();
+
+            } else if (strcmp(_fullPath, "item.artists[0].name") == 0) {
+                uint8_t len = strlen(value.getString());
+
+                // Add two spaces to the front and back if >maxcol to make movingPrint() reset not as abrupt
+                if (len > Config::maxcol) {
+                    strcpy(_artist, "  ");
+                    strncat(_artist, value.getString(), _artistSize - 5);
+                    strcat(_artist, "  ");
+                } else {
+                    strncpy(_artist, value.getString(), _artistSize - 1); // There could be more artists, let's ignore that for now
+                }
+            } else if (strcmp(_fullPath, "item.duration_ms") == 0) {
+                *_songLength = value.getInt();
+                
+            } else if (strcmp(_fullPath, "item.name") == 0) {
+                uint8_t len = strlen(value.getString());
+
+                // Add two spaces to the front and back if >maxcol to make movingPrint() reset not as abrupt
+                if (len > Config::maxcol) {
+                    strcpy(_title, "  ");
+                    strncat(_title, value.getString(), _titleSize - 5);
+                    strcat(_title, "  ");
+                } else {
+                    strncpy(_title, value.getString(), _titleSize - 1);
+                }
+            } else if (strcmp(_fullPath, "is_playing") == 0) *_currentlyPlaying = value.getBool();
         }
 
         virtual ~SpotifyRefreshPlaybackJsonHandler() = default; // To fix warning delete-non-virtual-dtor
