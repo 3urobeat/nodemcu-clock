@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 19.01.2023 20:53:04
+ * Last Modified: 20.01.2023 16:50:27
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -64,6 +64,7 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler 
     reqP = mystrcat(reqP, " HTTP/1.1\r\nHost: ");
     reqP = mystrcat(reqP, host);
     reqP = mystrcat(reqP, "\r\n");
+    *(reqP) = '\0'; // Make sure there is a null char at the end
 
     // Add headers if headersArr is not empty
     if (extraHeaders != NULL) reqP = mystrcat(reqP, extraHeaders);
