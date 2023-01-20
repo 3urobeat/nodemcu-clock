@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 20.01.2023 21:50:38
+ * Last Modified: 20.01.2023 23:24:22
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -23,21 +23,17 @@
 
 #include "base64.h"
 
-// Spotify Application ID, secret and redirect URI
-const char spotifyClientID[33] = "";
-const char spotifyClientSecret[33] = "";
-const char spotifyRedirectUri[33] = "http://192.168.55.112/callback";
 
-
-// Filled by requestAuth() & refreshAccessToken() // TODO: Write into FS, except for expires in timestamp!
-char     spotifyAccessToken[256] = ""; // This can get really long
-char     spotifyRefreshToken[256] = "";
-uint32_t spotifyAccessTokenExpiresTimestamp; // 10/10 var name, very short
+const uint32_t updateIntervalSpotify = 5000;
 
 
 // Runtime data
+char     spotifyRedirectUri[33] = "http://"; // IP will be concatenated once in setup
+char     spotifyAccessToken[256]; // This can get really long
+uint32_t spotifyAccessTokenExpiresTimestamp; // 10/10 var name, very short
 bool     spotifyRequestAuthWaiting;
 uint32_t spotifyLastPlaybackUpdate;
+uint32_t spotifyLastSongLength; // Save last song length to be able to detect song changes to clear display
 
 struct {
     char     title[64];
@@ -51,7 +47,6 @@ struct {
 // moveOffsets for movingPrint() calls
 uint8_t  spotifyArtistOffset;
 uint8_t  spotifyTitleOffset;
-uint32_t spotifyLastSongLength; // Save last song length to be able to detect song changes to clear display
 
 
 namespace spotifyPage
@@ -82,7 +77,17 @@ namespace spotifyPage
         lcd.setCursor(0, 0);
         lcd.print("Spotify");
 
+        // Concatenate IP if not done by a previous iteration
+        if (strlen(spotifyRedirectUri) < 10) {
+            debug(F("spotify page: Constructing redirect URI for the first time"));
+            strcat(spotifyRedirectUri, WiFi.localIP().toString().c_str());
+            strcat(spotifyRedirectUri, "/callback");
+        }
+
         // Check if user did not auth before and run first time setup
+        char spotifyRefreshToken[256] = "";
+        prefs.getBytes("spotifyRefreshToken", spotifyRefreshToken, sizeof(spotifyRefreshToken));
+
         if (strlen(spotifyRefreshToken) == 0) requestAuth();
     }
 
@@ -98,10 +103,15 @@ namespace spotifyPage
         } else { // Normal operation
 
             // Check if accessToken is about to expire (do this here instead of in setup so long showuntils don't fail)
-            if (millis() + 5000 >= spotifyAccessTokenExpiresTimestamp) fetchAccessToken(spotifyRefreshToken, "refresh_token");
+            if (millis() + 5000 >= spotifyAccessTokenExpiresTimestamp) {
+                char spotifyRefreshToken[256] = "";
+                prefs.getBytes("spotifyRefreshToken", spotifyRefreshToken, sizeof(spotifyRefreshToken));
 
-            // Get current data each 5 seconds
-            if (millis() >= spotifyLastPlaybackUpdate + 5000) refreshCurrentPlayback();
+                fetchAccessToken(spotifyRefreshToken, "refresh_token");
+            }
+
+            // Get current data each updateIntervalSpotify ms
+            if (millis() >= spotifyLastPlaybackUpdate + updateIntervalSpotify) refreshCurrentPlayback();
 
             // Skip page if user has playback paused
             if (!spotifyData.currentlyPlaying) nextPage();
@@ -125,6 +135,8 @@ namespace spotifyPage
             // Calculate progress with current timestamp and last update timestamp
             char buf[4] = "";
             uint32_t currentProgress = (millis() - spotifyLastPlaybackUpdate) + spotifyData.progressTimestamp - 1000; // Subtract last API update timestamp from now, add the difference to progressTimestamp and subtract some tolerance
+
+            if (currentProgress > spotifyData.songLength) return; // Don't bother with code below if song ended and we need to wait for the next data refresh
 
             char progressStr[12] = "";
             char *p = progressStr;
@@ -214,7 +226,7 @@ namespace spotifyPage
             char url[256] = "https://accounts.spotify.com/authorize/?client_id=";
             char *p = url;
 
-            p = mystrcat(p, spotifyClientID);
+            p = mystrcat(p, Config::spotifyClientID);
             p = mystrcat(p, "&response_type=code&redirect_uri=");
             p = mystrcat(p, spotifyRedirectUri);
             p = mystrcat(p, "&scope=user-read-currently-playing");
@@ -290,7 +302,7 @@ namespace spotifyPage
         // Create objects and send post request with code
         WiFiClientSecure *client = new WiFiClientSecure(); // Using WiFiClientSecure costs 10% flash which sucks ass but the request won't work otherwise
         
-        SpotifyAccessTokenJsonHandler *tokenParser = new SpotifyAccessTokenJsonHandler(spotifyAccessToken, sizeof(spotifyAccessToken), spotifyRefreshToken, sizeof(spotifyRefreshToken), &spotifyAccessTokenExpiresTimestamp);
+        SpotifyAccessTokenJsonHandler *tokenParser = new SpotifyAccessTokenJsonHandler(spotifyAccessToken, sizeof(spotifyAccessToken), &spotifyAccessTokenExpiresTimestamp);
 
         parserLib.setHandler(tokenParser); // Set our parser as JSON data handler in the lib
 
@@ -324,9 +336,9 @@ namespace spotifyPage
         /* --------- Construct authorization header --------- */
         char authStr[128]  = "";
 
-        strcpy(authStr, spotifyClientID);
+        strcpy(authStr, Config::spotifyClientID);
         strcat(authStr, ":");
-        strcat(authStr, spotifyClientSecret);
+        strcat(authStr, Config::spotifyClientSecret);
 
         strncpy(authStr, base64::encode(authStr, false).c_str(), sizeof(authStr) - 1); // Encode authStr as needed and overwrite authStr to save some memory
 

@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:12:41
  * Author: 3urobeat
  * 
- * Last Modified: 15.01.2023 16:48:28
+ * Last Modified: 20.01.2023 23:19:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -32,12 +32,15 @@ namespace Config
     char openweathermaptoken[33] = "";
     char newsapitoken[33]        = "";
 
+    char spotifyClientID[33]     = "";
+    char spotifyClientSecret[33] = "";
+
     char dateformat[11]      = "dd.mm.yyyy";
     char timeformat[9]       = "hh:mm:ss";
     char miniClockFormat[6]  = "hh:mm";
 
-    char     pageOrder[4][32]   = { "clock", "weather", "news", "spotify" }; //Set an element to "0" to skip that page
-    uint32_t showuntil[4]       = { 5000, 5000, 0, 5000 }; // How long each page should be shown in ms (Special Case: Set to 0 if page should progress on event, news page would progress when headline was fully displayed)
+    char     pageOrder[4][32]   = { "clock", "weather", "0", "spotify" }; //Set an element to "0" to skip that page
+    uint32_t showuntil[4]       = { 5000, 5000, 0, 10000 }; // How long each page should be shown in ms (Special Case: Set to 0 if page should progress on event, news page would progress when headline was fully displayed)
     bool     alwaysShowTime     = true;              // Always show the time in the upper right corner
     uint16_t pageElementSwitch  = 2500;              // After how much ms a page should switch between elements (for example date & weekday on clock page, temp & sunrise on weather page). Set to 0 to disable
 }

@@ -4,7 +4,7 @@
  * Created Date: 12.01.2023 12:40:54
  * Author: 3urobeat
  * 
- * Last Modified: 20.01.2023 18:37:03
+ * Last Modified: 20.01.2023 22:43:58
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -233,18 +233,14 @@ class SpotifyAccessTokenJsonHandler final : public JsonHandler
     private:
         char     *_accessToken;
         uint16_t  _accessTokenSize;
-        char     *_refreshToken;
-        uint32_t  _refreshTokenSize;
         uint32_t *_expiresTimestamp;
     
     public:
         // Constructor that takes pointers to char arrays where the result should go to
-        SpotifyAccessTokenJsonHandler(char *accessToken, uint16_t accessTokenSize, char *refreshToken, uint32_t refreshTokenSize, uint32_t *expiresTimestamp)
+        SpotifyAccessTokenJsonHandler(char *accessToken, uint16_t accessTokenSize, uint32_t *expiresTimestamp)
         {
             _accessToken      = accessToken;
             _accessTokenSize  = accessTokenSize;
-            _refreshToken     = refreshToken;
-            _refreshTokenSize = refreshTokenSize;
             _expiresTimestamp = expiresTimestamp;
         }
 
@@ -257,7 +253,7 @@ class SpotifyAccessTokenJsonHandler final : public JsonHandler
             // Check which key we are dealing with and copy value into correct variable
             if (strcmp(key, "access_token") == 0) strncpy(_accessToken, value.getString(), _accessTokenSize - 1);
             else if (strcmp(key, "expires_in") == 0) *_expiresTimestamp += value.getInt() * 1000; // add expires_in from sec to ms to millis() already in timestamp var
-            else if (strcmp(key, "refresh_token") == 0) strncpy(_refreshToken, value.getString(), _refreshTokenSize - 1);
+            else if (strcmp(key, "refresh_token") == 0) prefs.putBytes("spotifyRefreshToken", value.getString(), 256); // Put it directly into flash as we only need it every hour
         }
 
         virtual ~SpotifyAccessTokenJsonHandler() = default; // To fix warning delete-non-virtual-dtor
