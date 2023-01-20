@@ -4,7 +4,7 @@
  * Created Date: 12.01.2023 12:40:54
  * Author: 3urobeat
  * 
- * Last Modified: 18.01.2023 22:44:54
+ * Last Modified: 20.01.2023 17:03:28
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -139,6 +139,58 @@ class NewsJsonHandler final : public JsonHandler
         }
 
         virtual ~NewsJsonHandler() = default; // To fix warning delete-non-virtual-dtor
+
+        // Functions we don't care about (sadly can't be removed)
+        void endDocument() { }
+        void startDocument() { }
+        void startObject(ElementPath path) { }
+        void endObject(ElementPath path) { }
+        void startArray(ElementPath path) {}
+        void endArray(ElementPath path) {}
+        void whitespace(char c) {}
+};
+
+
+// Json parser class for spotify page refreshCurrentPlayback request
+class SpotifyRefreshPlaybackJsonHandler final : public JsonHandler
+{
+    private:
+        char     *_title;
+        uint8_t   _titleSize;
+        char     *_artist;
+        uint8_t   _artistSize;
+        uint32_t *_progressTimestamp;
+        uint32_t *_songLength;
+        bool     *_currentlyPlaying;
+
+    public:
+        // Constructor that takes pointers to char arrays where the result should go to
+        SpotifyRefreshPlaybackJsonHandler(char *title, uint8_t titleSize, char *artist, uint8_t artistSize, uint32_t *progressTimestamp, uint32_t *songLength, bool *currentlyPlaying)
+        {
+            _title             = title;
+            _titleSize         = titleSize;
+            _artist            = artist;
+            _artistSize        = artistSize;
+            _progressTimestamp = progressTimestamp;
+            _songLength        = songLength;
+            _currentlyPlaying  = currentlyPlaying;
+        }
+
+        // Handles retrieving data from json stream
+        void value(ElementPath path, ElementValue value)
+        {
+            // Get the current path (there are duplicate keys so we need the full path here)
+            char _fullPath[128 + 32] = ""; // I like the power of 2, thank you Fabi for helping me to not write 160
+            path.toString(_fullPath);
+
+            if (strcmp(_fullPath, "progress_ms") == 0) *_progressTimestamp = value.getInt();
+            else if (strcmp(_fullPath, "item.artists[0].name") == 0) strncpy(_artist, value.getString(), _artistSize - 1); // There could be more artists, let's ignore that for now
+            else if (strcmp(_fullPath, "item.duration_ms") == 0) *_songLength = value.getInt();
+            else if (strcmp(_fullPath, "item.name") == 0) strncpy(_title, value.getString(), _titleSize - 1);
+            else if (strcmp(_fullPath, "is_playing") == 0) *_currentlyPlaying = value.getBool();
+        }
+
+        virtual ~SpotifyRefreshPlaybackJsonHandler() = default; // To fix warning delete-non-virtual-dtor
 
         // Functions we don't care about (sadly can't be removed)
         void endDocument() { }

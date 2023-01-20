@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 19.01.2023 00:02:17
+ * Last Modified: 20.01.2023 16:51:01
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -31,7 +31,18 @@ char     spotifyAccessToken[256] = ""; // This can get really long
 char     spotifyRefreshToken[256] = "";
 uint32_t spotifyAccessTokenExpiresTimestamp; // 10/10 var name, very short
 
-bool spotifyRequestAuthWaiting = false;
+
+// Runtime data
+bool     spotifyRequestAuthWaiting;
+uint32_t spotifyLastPlaybackUpdate;
+
+struct {
+    char     title[64];
+    char     artist[32];
+    uint32_t progressTimestamp;
+    uint32_t songLength;
+    bool     currentlyPlaying;
+} spotifyData;
 
 
 namespace spotifyPage
@@ -39,8 +50,8 @@ namespace spotifyPage
     // Declare function here and define it later below to reduce clutter while being accessible from setup()
     
     // Functions & Pointers needed for "normal" execution
-    spotifyCurrentPlaybackData dataStruct;
     ArudinoStreamParser parserLib;
+    SpotifyRefreshPlaybackJsonHandler parser(spotifyData.title, sizeof(spotifyData.title), spotifyData.artist, sizeof(spotifyData.artist), &spotifyData.progressTimestamp, &spotifyData.songLength, &spotifyData.currentlyPlaying);
 
     void refreshCurrentPlayback();
 
@@ -80,6 +91,13 @@ namespace spotifyPage
             // Check if accessToken is about to expire (do this here instead of in setup so long showuntils don't fail)
             if (millis() + 5000 >= spotifyAccessTokenExpiresTimestamp) fetchAccessToken(spotifyRefreshToken, "refresh_token");
 
+            // Get current data each 2.5 seconds
+            if (millis() + 5000 >= spotifyLastPlaybackUpdate) refreshCurrentPlayback(); // TODO: Change to 2500
+
+            // Skip page if user has playback paused
+            if (!spotifyData.currentlyPlaying) nextPage();
+
+            // Print data to screen
         }
     }
 
@@ -88,7 +106,23 @@ namespace spotifyPage
      */
     void refreshCurrentPlayback()
     {
-        
+        // Make sure the correct parser is set should fetchAccessToken() have changed it
+        parserLib.setHandler(&parser);
+
+        // TODO: Create quite long header once and reuse? Might be kinda tricky when key changes
+        char header[340] = "Accept: application/json\r\nContent-Type: application/json\r\nAuthorization: Bearer ";
+        char *p = header;
+
+        p = mystrcat(p, spotifyAccessToken);
+        p = mystrcat(p, "\r\n");
+        *(p) = '\0'; // Make sure there is a null char at the end
+
+        // TODO: Return httpCode from httpGetJson as one http code means that user paused playback and no content will be returned
+        // Send GET request to spotify with our existing parserLib obj and let parser update our vars
+        httpGetJson("api.spotify.com", "/v1/me/player/currently-playing", 443, &parser, header, &parserLib);
+
+        // Update last update var
+        spotifyLastPlaybackUpdate = millis();
     }
 
 
@@ -130,6 +164,7 @@ namespace spotifyPage
             p = mystrcat(p, "&response_type=code&redirect_uri=");
             p = mystrcat(p, spotifyRedirectUri);
             p = mystrcat(p, "&scope=user-read-currently-playing");
+            *(p) = '\0'; // Make sure there is a null char at the end
 
             debug(F("spotify page: URL constructed, redirecting user, waiting for callback"));
 
@@ -254,6 +289,7 @@ namespace spotifyPage
         reqP = mystrcat(reqP, postDataLength);
         reqP = mystrcat(reqP, "\r\nContent-Type: application/x-www-form-urlencoded\r\nConnection: close\r\n\r\n");
         reqP = mystrcat(reqP, postData);
+        *(reqP) = '\0'; // Make sure there is a null char at the end
 
         debug(F("spotify page: POST request constructed, connecting..."));
 
@@ -280,6 +316,7 @@ namespace spotifyPage
 
 
         /* --------- Clean Up --------- */
+        parserLib.reset();
         client->stop();
         delete(client);
         delete(tokenParser);
