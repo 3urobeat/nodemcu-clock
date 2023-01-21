@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 21.01.2023 11:49:39
+ * Last Modified: 21.01.2023 12:43:17
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -120,13 +120,16 @@ namespace spotifyPage
 
             // Clear old page content, update displayed content and reset offsets if song just changed
             if (spotifyData.songLength != spotifyLastSongLength) {
-                displayCurrentData();
                 spotifyTitleOffset  = 0;
                 spotifyArtistOffset = 0;
+                spotifyLastSongLength = spotifyData.songLength;
+
+                // Don't clear/write anything if user just paused playback
+                if (!spotifyData.currentlyPlaying) return; // Next update() iteration will immediately run and skip page
+                displayCurrentData();
                 lcd.clearLine(1);
                 lcd.clearLine(2);
                 lcd.clearLine(3);
-                spotifyLastSongLength = spotifyData.songLength;
             }            
         }
     }
