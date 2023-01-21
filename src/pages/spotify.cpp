@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 20.01.2023 23:24:22
+ * Last Modified: 21.01.2023 11:49:39
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -57,6 +57,7 @@ namespace spotifyPage
     ArudinoStreamParser parserLib;
     SpotifyRefreshPlaybackJsonHandler parser(spotifyData.title, sizeof(spotifyData.title), spotifyData.artist, sizeof(spotifyData.artist), &spotifyData.progressTimestamp, &spotifyData.songLength, &spotifyData.currentlyPlaying);
 
+    void displayCurrentData();
     void refreshCurrentPlayback();
 
     // Functions & Pointers needed for token API interactions
@@ -110,57 +111,65 @@ namespace spotifyPage
                 fetchAccessToken(spotifyRefreshToken, "refresh_token");
             }
 
+            // Skip page if user has playback paused (but still refresh playback so next time the page will show should the user have just resumed playback)
+            if (spotifyData.currentlyPlaying) displayCurrentData(); // Do this before updating so there is no akward empty page shown until API response was processed (which takes ~1.5 secs)
+                else nextPage();
+
             // Get current data each updateIntervalSpotify ms
             if (millis() >= spotifyLastPlaybackUpdate + updateIntervalSpotify) refreshCurrentPlayback();
 
-            // Skip page if user has playback paused
-            if (!spotifyData.currentlyPlaying) nextPage();
-
-            // Clear old page content and reset offsets if song just changed
+            // Clear old page content, update displayed content and reset offsets if song just changed
             if (spotifyData.songLength != spotifyLastSongLength) {
+                displayCurrentData();
                 spotifyTitleOffset  = 0;
                 spotifyArtistOffset = 0;
                 lcd.clearLine(1);
                 lcd.clearLine(2);
                 lcd.clearLine(3);
                 spotifyLastSongLength = spotifyData.songLength;
-            }
-
-            // Print current data to screen
-            lcd.setCursor(0, 1);
-            lcd.movingPrint(spotifyData.artist, &spotifyArtistOffset, Config::maxcol);
-            lcd.setCursor(0, 2);
-            lcd.movingPrint(spotifyData.title, &spotifyTitleOffset, Config::maxcol);
-
-            // Calculate progress with current timestamp and last update timestamp
-            char buf[4] = "";
-            uint32_t currentProgress = (millis() - spotifyLastPlaybackUpdate) + spotifyData.progressTimestamp - 1000; // Subtract last API update timestamp from now, add the difference to progressTimestamp and subtract some tolerance
-
-            if (currentProgress > spotifyData.songLength) return; // Don't bother with code below if song ended and we need to wait for the next data refresh
-
-            char progressStr[12] = "";
-            char *p = progressStr;
-
-            p = mystrcat(p, itoa(minute(currentProgress / 1000), buf, 10));
-            p = mystrcat(p, ":");
-            p = mystrcat(p, lcd.toFixedLengthNumber(buf, second(currentProgress / 1000), 2)); // Fixed length for secs, we don't care about this for minutes
-            p = mystrcat(p, "/");
-            p = mystrcat(p, itoa(minute(spotifyData.songLength / 1000), buf, 10));
-            p = mystrcat(p, ":");
-            p = mystrcat(p, lcd.toFixedLengthNumber(buf, second(spotifyData.songLength / 1000), 2));
-            *(p) = '\0'; // Make sure there is a null char at the end
-
-            uint8_t spaceLeft = Config::maxcol - strlen(progressStr); // Calculate space left for setting cursor and calculating progress bar
-            
-            lcd.setCursor(spaceLeft, 3);
-            lcd.print(progressStr);
-
-            // Display progress bar based on currentProgress
-            uint8_t amountOfHashtags = (spaceLeft - 1) * ((float) currentProgress / (float) spotifyData.songLength); // Calculate amount of hashtags by calculating percentage and stuff lol
-
-            lcd.setCursor(0, 3);
-            for (uint8_t i = 0; i < amountOfHashtags && i < spaceLeft - 1; i++) lcd.print('>'); // Print progress bar, limit to spaceLeft to avoid overflow
+            }            
         }
+    }
+
+    /**
+     * Writes the current data from struct to display
+     */
+    void displayCurrentData()
+    {
+        lcd.setCursor(0, 1);
+        lcd.movingPrint(spotifyData.artist, &spotifyArtistOffset, Config::maxcol);
+        lcd.setCursor(0, 2);
+        lcd.movingPrint(spotifyData.title, &spotifyTitleOffset, Config::maxcol);
+
+        // Calculate progress with current timestamp and last update timestamp
+        char buf[4] = "";
+        uint32_t currentProgress = (millis() - spotifyLastPlaybackUpdate) + spotifyData.progressTimestamp - 1000; // Subtract last API update timestamp from now, add the difference to progressTimestamp and subtract some tolerance
+
+        // Set max if song ended and we need to wait for the next data refresh
+        if (currentProgress > spotifyData.songLength) currentProgress = spotifyData.songLength;
+
+        char progressStr[12] = "";
+        char *p = progressStr;
+
+        p = mystrcat(p, itoa(minute(currentProgress / 1000), buf, 10));
+        p = mystrcat(p, ":");
+        p = mystrcat(p, lcd.toFixedLengthNumber(buf, second(currentProgress / 1000), 2)); // Fixed length for secs, we don't care about this for minutes
+        p = mystrcat(p, "/");
+        p = mystrcat(p, itoa(minute(spotifyData.songLength / 1000), buf, 10));
+        p = mystrcat(p, ":");
+        p = mystrcat(p, lcd.toFixedLengthNumber(buf, second(spotifyData.songLength / 1000), 2));
+        *(p) = '\0'; // Make sure there is a null char at the end
+
+        uint8_t spaceLeft = Config::maxcol - strlen(progressStr); // Calculate space left for setting cursor and calculating progress bar
+        
+        lcd.setCursor(spaceLeft, 3);
+        lcd.print(progressStr);
+
+        // Display progress bar based on currentProgress
+        uint8_t amountOfHashtags = (spaceLeft - 1) * ((float) currentProgress / (float) spotifyData.songLength); // Calculate amount of hashtags by calculating percentage and stuff lol
+
+        lcd.setCursor(0, 3);
+        for (uint8_t i = 0; i < amountOfHashtags && i < spaceLeft - 1; i++) lcd.print('>'); // Print progress bar, limit to spaceLeft to avoid overflow
     }
 
     /**
