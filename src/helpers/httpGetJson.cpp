@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 20.01.2023 21:54:20
+ * Last Modified: 21.01.2023 12:02:40
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -68,7 +68,7 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler 
     reqP = mystrcat(reqP, path);
     reqP = mystrcat(reqP, " HTTP/1.1\r\nHost: ");
     reqP = mystrcat(reqP, host);
-    reqP = mystrcat(reqP, "\r\n");
+    reqP = mystrcat(reqP, "\r\nUser-Agent: ESP8266HTTPClient\r\n");
     *(reqP) = '\0'; // Make sure there is a null char at the end
 
     // Add headers if headersArr is not empty
