@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 22:37:00
  * Author: 3urobeat
  * 
- * Last Modified: 21.01.2023 12:02:40
+ * Last Modified: 21.01.2023 13:42:34
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -26,8 +26,9 @@
  * @param handler Reference to JsonHandler object of class you set up for this request which parses the data you are interested in
  * @param extraHeaders Optional: Char array containing extra headers for the GET request, separated with "\r\n" (max ~400 chars please)
  * @param parserLib Optional: Pass existing parserLib object reference if you are making frequent requests with the same obj
+ * @returns HTTP Code
  */
-void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler *handler, const char *extraHeaders, ArudinoStreamParser *parserLib)
+int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler *handler, const char *extraHeaders, ArudinoStreamParser *parserLib)
 {
     // Log request if DEBUG mode is enabled
     #ifdef CLOCK_DEBUG
@@ -80,13 +81,22 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler 
     
 
     /* --------- Send POST request with correct class type --------- */
+    char buf[4] = "";
+    int16_t httpCode = 0;
+
     if (port == 80) {
         if (wifiClient->connect(host, port)) { // Only proceed if connection succeeded
             wifiClient->print(request); // Send our GET req data over
 
-            // Send each char we are receiving over to our parser while the connection is alive
-            while (wifiClient->connected() || wifiClient->available()) {
-                parserLib->parse((char) wifiClient->read());
+            // Get HTTP Code
+            strncpy(buf, wifiClient->readStringUntil('\r').c_str() + 9, 3); // Substring HTTP Code from "HTTP/1.1 200 OK"
+            httpCode = atoi(buf);
+
+            // Send each char we are receiving over to our parser while the connection is alive (unless code 204 No Content was received)
+            if (httpCode != 204) {
+                while (wifiClient->connected() || wifiClient->available()) {
+                    parserLib->parse((char) wifiClient->read());
+                }
             }
         } else {
             debug(F("httpGetJson(): HTTP Request failed!"));
@@ -99,9 +109,15 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler 
         if (wifiSecureClient->connect(host, port)) { // Only proceed if connection succeeded
             wifiSecureClient->print(request); // Send our GET req data over
 
-            // Send each char we are receiving over to our parser while the connection is alive
-            while (wifiSecureClient->connected() || wifiSecureClient->available()) {
-                parserLib->parse((char) wifiSecureClient->read());
+            // Get HTTP Code
+            strncpy(buf, wifiSecureClient->readStringUntil('\r').c_str() + 9, 3); // Substring HTTP Code from "HTTP/1.1 200 OK" to "200"
+            httpCode = atoi(buf);
+
+            // Send each char we are receiving over to our parser while the connection is alive (unless code 204 No Content was received)
+            if (httpCode != 204) {
+                while (wifiSecureClient->connected() || wifiSecureClient->available()) {
+                    parserLib->parse((char) wifiSecureClient->read());
+                }
             }
         } else {
             debug(F("httpGetJson(): HTTPS Request failed!"));
@@ -119,4 +135,6 @@ void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler 
     #endif
     if (parserLibMade) delete(parserLib);
     debug(F("httpGetJson(): Finished cleaning up"));
+
+    return httpCode;
 }

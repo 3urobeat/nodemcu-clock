@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 19.01.2023 20:53:01
+ * Last Modified: 21.01.2023 13:15:07
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -36,7 +36,7 @@ void createCustomChars();
 
 void getLocation();
 
-void httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler* handler, const char *extraHeaders = nullptr, ArudinoStreamParser *parserLib = nullptr);
+int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler* handler, const char *extraHeaders = nullptr, ArudinoStreamParser *parserLib = nullptr);
 
 ESP8266WiFiClass initWifi(uint8_t row);
 
