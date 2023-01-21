@@ -4,7 +4,7 @@
  * Created Date: 12.12.2021 21:27:54
  * Author: 3urobeat
  * 
- * Last Modified: 19.01.2023 18:48:08
+ * Last Modified: 20.01.2023 23:13:34
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -18,7 +18,7 @@
 #include "pages.h"
 
 
-const uint32_t updateIntervalNews = 1200000; // 20 min in ms // TODO: Move to config?
+const uint32_t updateIntervalNews = 1200000; // 20 min in ms
 
 // Store last API call timestamp & current article index
 uint32_t lastRefresh;
