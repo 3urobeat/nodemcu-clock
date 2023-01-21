@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 21.01.2023 12:43:17
+ * Last Modified: 21.01.2023 13:27:47
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -195,9 +195,8 @@ namespace spotifyPage
         p = mystrcat(p, "\r\n");
         *(p) = '\0'; // Make sure there is a null char at the end
 
-        // TODO: Return httpCode from httpGetJson as one http code means that user paused playback and no content will be returned
         // Send GET request to spotify with our existing parserLib obj and let parser update our vars
-        httpGetJson("api.spotify.com", path, 443, &parser, header, &parserLib);
+        if (httpGetJson("api.spotify.com", path, 443, &parser, header, &parserLib) == 204) spotifyData.currentlyPlaying = false; // No Content (204) means playback paused
 
         // Update last update var
         spotifyLastPlaybackUpdate = millis();
