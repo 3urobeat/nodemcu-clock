@@ -4,7 +4,7 @@
  * Created Date: 30.11.2021 17:25:23
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:20
+ * Last Modified: 22.01.2023 17:05:33
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -23,7 +23,15 @@
 #include <NoiascaHW/lcd_PCF8574.h>
 #include <lcdHelper.h>
 
+#ifdef ESP8266
 #include <ESP8266WiFi.h>
+#elif ESP32
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+#else
+#error Platform not supported
+#endif
+
 #include <ESPAsyncWebServer.h>
 #include <WiFiUdp.h>
 
@@ -48,7 +56,11 @@ extern byte *stack_start;
 
 
 // Setup
-extern ESP8266WiFiClass WiFi;
+#ifdef ESP8266
+extern ESP8266WiFiClass WiFiLib;
+#elif ESP32
+extern WiFiClass WiFiLib;
+#endif
 extern uint16_t timeoffset;
 extern char     city[64];
 extern char     country[3];

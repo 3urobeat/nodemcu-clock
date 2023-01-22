@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 16:44:40
+ * Last Modified: 22.01.2023 17:05:37
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -19,7 +19,11 @@
 #include "setupMode/setupMode.h"
 
 
-ESP8266WiFiClass WiFi;
+#ifdef ESP8266
+ESP8266WiFiClass WiFiLib;
+#elif ESP32
+WiFiClass WiFiLib;
+#endif
 
 uint16_t timeoffset; // Timezone offset in seconds
 
