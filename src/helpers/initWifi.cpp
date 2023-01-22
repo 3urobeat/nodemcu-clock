@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 16:44:56
+ * Last Modified: 22.01.2023 17:05:51
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -35,7 +35,7 @@ void initWifi(uint8_t row)
     delay(500);
 
     //Search for wifi networks in range
-    uint8_t n = WiFi.scanNetworks();
+    uint8_t n = WiFiLib.scanNetworks();
     bool found = false;
 
     char thisSSID[64]; //wifi SSIDs should have a max length of 32 characters
@@ -43,11 +43,11 @@ void initWifi(uint8_t row)
     //Try to connect by iterating for every found network over all networks in array (I tried doing this with indexOf() to avoid using a nested for loop but it had different results depending on the order in wifiSSID which was weird)
     for (uint8_t i = 0; i <= n; i++) {
         for (uint8_t j = 0; j < ssidAmount; j++) {
-            WiFi.SSID(i).toCharArray(thisSSID, 64, 0);
+            WiFiLib.SSID(i).toCharArray(thisSSID, 64, 0);
 
             if (strcmp(thisSSID, Config::wifiSSID[j]) == 0) {
 
-                WiFi.begin(Config::wifiSSID[j], Config::wifiPW[j]);
+                WiFiLib.begin(Config::wifiSSID[j], Config::wifiPW[j]);
 
                 found = true; //stop parent loop
                 break; //stop this loop
@@ -65,12 +65,12 @@ void initWifi(uint8_t row)
     }
 
     // Set hostname
-    WiFi.hostname("nodemcu-clock");
+    WiFiLib.hostname("nodemcu-clock");
 
     // Block futher execution until connection is established and show message with waiting animation
     uint8_t animationFrame = 1; // Skip first frame which is empty anyway
 
-    while (WiFi.status() != WL_CONNECTED)
+    while (WiFiLib.status() != WL_CONNECTED)
     {
         lcd.animationPrint(lcd.animations.waiting, 5, &animationFrame, 13, row); // Use lcdHelper's animationPrint and default waiting animation
 

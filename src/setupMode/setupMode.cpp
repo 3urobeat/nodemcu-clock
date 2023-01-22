@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:20
+ * Last Modified: 22.01.2023 17:06:00
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -25,8 +25,13 @@ bool setupModeEnabled = false;
  * @param forceSetupMode (Optional, default: false) Force enables setupMode, use for example when configDetectFirstStart() returned true
  */
 bool setupModeEnabledCheck(bool forceSetupMode)
-{
-    const uint8_t switchPin = D0;
+{   
+    #ifdef ESP8266
+        const uint8_t switchPin = D0;
+    #elif ESP32
+        const uint8_t switchPin = 12;
+    #endif
+    
     
     // Initialize switch pin as input
     pinMode(switchPin, INPUT_PULLUP);
@@ -60,8 +65,8 @@ void setupModeSetup()
     const char setupWifiSSID[25] = "nodemcu-clock setup wifi";
 
     // Launch Wifi AP
-    WiFi.softAPConfig(localIP, gatewayIP, subnet);
-    WiFi.softAP(setupWifiSSID, Config::setupWifiPW);
+    WiFiLib.softAPConfig(localIP, gatewayIP, subnet);
+    WiFiLib.softAP(setupWifiSSID, Config::setupWifiPW);
 
     // Start webserver
     AsyncWebServer *webserver = new AsyncWebServer(80); // Init webserver on port 80 (no delete later as obj gets destroyed on reset)

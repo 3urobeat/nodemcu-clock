@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:07
+ * Last Modified: 22.01.2023 17:05:56
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -81,7 +81,7 @@ namespace spotifyPage
         // Concatenate IP if not done by a previous iteration
         if (strlen(spotifyRedirectUri) < 10) {
             debug(F("spotify page: Constructing redirect URI for the first time"));
-            strcat(spotifyRedirectUri, WiFi.localIP().toString().c_str());
+            strcat(spotifyRedirectUri, WiFiLib.localIP().toString().c_str());
             strcat(spotifyRedirectUri, "/callback");
         }
 
@@ -218,7 +218,7 @@ namespace spotifyPage
 
         // Display instructions, goofy formatting to indicate which msg is on which line while saving space
         lcd.setCursor(0, 1); lcd.print("OneTime Auth! Visit:");
-        lcd.setCursor(0, 2); lcd.print(WiFi.localIP()); // Get our IP
+        lcd.setCursor(0, 2); lcd.print(WiFiLib.localIP()); // Get our IP
         lcd.centerPrint("Waiting   ", 3);
 
         // Block page switch by setting a large pageUpdate
@@ -351,7 +351,7 @@ namespace spotifyPage
         strcat(authStr, ":");
         strcat(authStr, Config::spotifyClientSecret);
 
-        strncpy(authStr, base64::encode(authStr, false).c_str(), sizeof(authStr) - 1); // Encode authStr as needed and overwrite authStr to save some memory
+        strncpy(authStr, base64::encode(authStr).c_str(), sizeof(authStr) - 1); // Encode authStr as needed and overwrite authStr to save some memory
 
         debug(F("spotify page: POST content constructed and objects made"));
         
