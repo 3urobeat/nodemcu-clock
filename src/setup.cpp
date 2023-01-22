@@ -4,7 +4,7 @@
  * Created Date: 30.10.2022 19:01:26
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:20
+ * Last Modified: 22.01.2023 16:44:40
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -74,7 +74,7 @@ void setupHandler()
     } else {
 
         // Connect to wifi
-        WiFi = initWifi(3);
+        initWifi(3);
         delay(500);
         lcd.centerPrint("Loading...", 3, true);
 

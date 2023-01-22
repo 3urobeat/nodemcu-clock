@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 15:42:00
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:07
+ * Last Modified: 22.01.2023 16:44:56
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -25,9 +25,8 @@ void(* resetFunc) (void) = 0; // create a standard reset function
  * Attempts to establish WiFi connection by checking all wifi networks set in config.  
  * If no network provided in config could be found then the device will reset after 10 seconds.
  * @param row LCD display row to print connection related messages at (counted from 0)
- * @returns ESP8266WiFiClass WiFi object
  */
-ESP8266WiFiClass initWifi(uint8_t row) 
+void initWifi(uint8_t row)
 {
     lcd.clearLine(row); //clear line just to make sure no old characters are left
 
@@ -80,6 +79,4 @@ ESP8266WiFiClass initWifi(uint8_t row)
 
     //Connection established
     lcd.centerPrint("Connected!", row, true);
-
-    return WiFi;
 }

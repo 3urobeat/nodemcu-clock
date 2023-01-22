@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:07
+ * Last Modified: 22.01.2023 16:45:04
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -38,7 +38,7 @@ void getLocation();
 
 int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandler* handler, const char *extraHeaders = nullptr, ArudinoStreamParser *parserLib = nullptr);
 
-ESP8266WiFiClass initWifi(uint8_t row);
+void initWifi(uint8_t row);
 
 void miniClock(bool hideMiniClock);
 
