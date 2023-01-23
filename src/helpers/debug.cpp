@@ -4,7 +4,7 @@
  * Created Date: 14.01.2023 12:36:08
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:20
+ * Last Modified: 23.01.2023 10:17:13
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -19,7 +19,13 @@
 #ifdef CLOCK_DEBUG
 
 #include "helpers.h"
-#include "cont.h"    // Needed to access CONT_STACKSIZE definition
+
+#ifdef ESP8266
+    #include "cont.h"    // Needed to access CONT_STACKSIZE definition
+#elif ESP32
+    #include "sdkconfig.h"
+    #define CONT_STACKSIZE CONFIG_MAIN_TASK_STACK_SIZE // Alias
+#endif
 
 
 /**
@@ -42,19 +48,33 @@ void debug(const __FlashStringHelper *str)
 
     // Send new measurements if they changed and update static vars
     if (freeStack != lastFreeStack || freeHeap != lastFreeHeap) {
-        Serial.print(F("Free Memory changed! - Stack: "));
-        Serial.print(freeStack);
-        Serial.print(F(" bytes (Diff: "));
-        Serial.print(((int) freeStack) - ((int) lastFreeStack));
-        Serial.print(F(" bytes, Min: "));
-        Serial.print(ESP.getFreeContStack());
-        Serial.print(F(" bytes) | Heap: "));
-        Serial.print(freeHeap);
-        Serial.print(F(" bytes (Diff: "));
-        Serial.print(((int) freeHeap) - ((int) lastFreeHeap));
-        Serial.print(F(" bytes) | Heap Fragm.: "));
-        Serial.print(ESP.getHeapFragmentation());
-        Serial.println(F("%"));
+        #ifdef ESP8266
+            Serial.print(F("Free Memory changed! - Stack: "));
+            Serial.print(freeStack);
+            Serial.print(F(" bytes (Diff: "));
+            Serial.print(((int) freeStack) - ((int) lastFreeStack));
+            Serial.print(F(" bytes, Min: "));
+            Serial.print(ESP.getFreeContStack());
+            Serial.print(F(" bytes) | Heap: "));
+            Serial.print(freeHeap);
+            Serial.print(F(" bytes (Diff: "));
+            Serial.print(((int) freeHeap) - ((int) lastFreeHeap));
+            Serial.print(F(" bytes) | Heap Fragm.: "));
+            Serial.print(ESP.getHeapFragmentation());
+            Serial.println(F("%"));
+        #elif ESP32
+            Serial.print(F("Free Memory changed! - Stack: "));
+            Serial.print(freeStack);
+            Serial.print(F(" bytes (Diff: "));
+            Serial.print(((int) freeStack) - ((int) lastFreeStack));
+            Serial.print(F(" bytes, Min: "));
+            Serial.print(heap_caps_get_minimum_free_size(MALLOC_CAP_DEFAULT));
+            Serial.print(F(" bytes) | Heap: "));
+            Serial.print(freeHeap);
+            Serial.print(F(" bytes (Diff: "));
+            Serial.print(((int) freeHeap) - ((int) lastFreeHeap));
+            Serial.println(F(" bytes)"));
+        #endif
 
         // Refresh values
         lastFreeStack = freeStack;
