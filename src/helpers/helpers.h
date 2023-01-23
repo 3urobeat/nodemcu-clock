@@ -4,7 +4,7 @@
  * Created Date: 30.08.2021 11:19:00
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 16:45:04
+ * Last Modified: 23.01.2023 10:34:38
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -45,5 +45,5 @@ void miniClock(bool hideMiniClock);
 void strrpl(char *src, const char *oldchars, const char *newchars, uint16_t maxlen);
 char *mystrcat(char* dest, const char* src);
 
-void getDate(char *dest, uint16_t destLen, NTPClient timeClient);
-void getTime(char *dest, uint16_t destLen, NTPClient timeClient, const char *format);
+void getDate(char *dest, uint16_t destLen);
+void getTime(char *dest, uint16_t destLen, const char *format);
