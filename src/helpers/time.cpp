@@ -4,7 +4,7 @@
  * Created Date: 03.09.2021 10:06:00
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:07
+ * Last Modified: 23.01.2023 10:37:50
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -21,10 +21,9 @@
 /**
  * Gets the current date, formats it using Config::dateformat and writes it to dest
  * @param dest Destination char array
- * @param destLen Length of dest char array (excluding null byte)
- * @param timeClient NTPClient object created in main.cpp
+ * @param destLen Length of dest char array
  */
-void getDate(char *dest, uint16_t destLen, NTPClient timeClient)
+void getDate(char *dest, uint16_t destLen)
 {
     unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
@@ -42,11 +41,10 @@ void getDate(char *dest, uint16_t destLen, NTPClient timeClient)
 /**
  * Gets the current time, formats it using format and writes it to dest
  * @param dest Destination char array
- * @param destLen Length of dest char array (excluding null byte)
- * @param timeClient NTPClient object created in main.cpp
+ * @param destLen Length of dest char array
  * @param format Pointer to char array containing format
  */
-void getTime(char *dest, uint16_t destLen, NTPClient timeClient, const char *format)
+void getTime(char *dest, uint16_t destLen, const char *format)
 {
     unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
