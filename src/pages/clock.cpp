@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 23.01.2023 12:41:30
+ * Last Modified: 23.01.2023 13:00:40
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -60,7 +60,7 @@ namespace clockPage
 
             lcd.centerPrint(dayNames[weekday(epoch) - 1], 2, false);
         } else {
-            getDate(dateResult, sizeof(dateResult) - 1);
+            getDate(dateResult, sizeof(dateResult));
 
             lcd.centerPrint(dateResult, 2, false);
         }
