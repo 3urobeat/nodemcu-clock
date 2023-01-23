@@ -4,7 +4,7 @@
  * Created Date: 27.12.2022 12:28:55
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:20
+ * Last Modified: 23.01.2023 12:36:46
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -59,7 +59,7 @@ void readConfigFromStorage()
     prefs.getBytes("setupWifiPW", Config::setupWifiPW, sizeof(Config::setupWifiPW));
     prefs.getBytes("lat", Config::lat, sizeof(Config::lat));
     prefs.getBytes("lon", Config::lon, sizeof(Config::lon));
-    prefs.getBytes("openweathermaptoken", Config::openweathermaptoken, sizeof(Config::openweathermaptoken));
+    prefs.getBytes("weatherapitoken", Config::weatherapitoken, sizeof(Config::weatherapitoken));
     prefs.getBytes("newsapitoken", Config::newsapitoken, sizeof(Config::newsapitoken));
     prefs.getBytes("dateformat", Config::dateformat, sizeof(Config::dateformat));
     prefs.getBytes("timeformat", Config::timeformat, sizeof(Config::timeformat));
@@ -88,7 +88,7 @@ void writeConfigToStorage()
     prefs.putBytes("setupWifiPW", Config::setupWifiPW, sizeof(Config::setupWifiPW));
     prefs.putBytes("lat", Config::lat, sizeof(Config::lat));
     prefs.putBytes("lon", Config::lon, sizeof(Config::lon));
-    prefs.putBytes("openweathermaptoken", Config::openweathermaptoken, sizeof(Config::openweathermaptoken));
+    prefs.putBytes("weatherapitoken", Config::weatherapitoken, sizeof(Config::weatherapitoken));
     prefs.putBytes("newsapitoken", Config::newsapitoken, sizeof(Config::newsapitoken));
     prefs.putBytes("dateformat", Config::dateformat, sizeof(Config::dateformat));
     prefs.putBytes("timeformat", Config::timeformat, sizeof(Config::timeformat));

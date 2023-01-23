@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:07
+ * Last Modified: 23.01.2023 12:36:46
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -108,7 +108,7 @@ namespace weatherPage
         p = mystrcat(p, "&lon=");
         p = mystrcat(p, Config::lon);
         p = mystrcat(p, "&appid=");
-        p = mystrcat(p, Config::openweathermaptoken);
+        p = mystrcat(p, Config::weatherapitoken);
         *(p) = '\0'; // Make sure there is a null char at the end
 
 

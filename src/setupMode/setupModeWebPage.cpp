@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:20
+ * Last Modified: 23.01.2023 12:36:46
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -40,7 +40,7 @@ String processor(const String& var) // I need to use String here because the lib
     // Check for all other config values
     if (var == "setupWifiPW_input") return String(Config::setupWifiPW);
 
-    if (var == "openweathermaptoken_input") return String(Config::openweathermaptoken);
+    if (var == "weatherapitoken_input") return String(Config::weatherapitoken);
     if (var == "newsapitoken_input") return String(Config::newsapitoken);
     if (var == "spotifyClientID_input") return String(Config::spotifyClientID);
     if (var == "spotifyClientSecret_input") return String(Config::spotifyClientSecret);
@@ -99,7 +99,7 @@ void setupModeWebPageSave(AsyncWebServerRequest *request)
     // Update all other config values (we technically don't need any hasArg() checks but let's keep them for good measure)
     if (request->hasArg("setupWifiPW_input")) request->arg("setupWifiPW_input").toCharArray(Config::setupWifiPW, sizeof(Config::setupWifiPW));
 
-    if (request->hasArg("openweathermaptoken_input")) request->arg("openweathermaptoken_input").toCharArray(Config::openweathermaptoken, sizeof(Config::openweathermaptoken));
+    if (request->hasArg("weatherapitoken_input")) request->arg("weatherapitoken_input").toCharArray(Config::weatherapitoken, sizeof(Config::weatherapitoken));
     if (request->hasArg("newsapitoken_input")) request->arg("newsapitoken_input").toCharArray(Config::newsapitoken, sizeof(Config::newsapitoken));
     if (request->hasArg("spotifyClientID_input")) request->arg("spotifyClientID_input").toCharArray(Config::spotifyClientID, sizeof(Config::spotifyClientID));
     if (request->hasArg("spotifyClientSecret_input")) request->arg("spotifyClientSecret_input").toCharArray(Config::spotifyClientSecret, sizeof(Config::spotifyClientSecret));
