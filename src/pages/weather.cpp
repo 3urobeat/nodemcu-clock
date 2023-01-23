@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 23.01.2023 12:41:30
+ * Last Modified: 23.01.2023 13:09:59
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -39,11 +39,6 @@ namespace weatherPage
      */
     void setup()
     {
-        // Check if it's time to update weather cache
-        if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateIntervalWeather <= millis()) {
-            refreshCache();
-        }
-
         lcd.centerPrint(city, 1, false);
     }
 
@@ -53,6 +48,18 @@ namespace weatherPage
      */
     void update()
     {
+        // Check if user didn't provide an API key and display warning until page switches
+        if (strlen(Config::weatherapitoken) == 0) {
+            lcd.setCursor(0, 0);
+            lcd.print("Weather");
+            lcd.centerPrint("Error!", 1);
+            lcd.centerPrint("No API key provided.", 3);
+            return;
+        }
+
+        // Check if it's time to update weather cache (do this here instead of in setup so long showuntils don't fail)
+        if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateIntervalWeather <= millis()) refreshCache();
+        
         // Switch between temp & cond and sunrise & sunset when pageElemSwitch ms passed since last mod switch
         if (Config::pageElemSwitch > 0 && millis() >= lastPageModWeather + Config::pageElemSwitch) {
             currentModWeather  = !currentModWeather;
@@ -81,17 +88,6 @@ namespace weatherPage
      */
     void refreshCache()
     {
-        // Check if user didn't provide an API key, display warning for 5 seconds and force-progress page
-        if (strlen(Config::newsapitoken) == 0) {
-            lcd.setCursor(0, 0);
-            lcd.print("Weather");
-            lcd.centerPrint("Error!", 1);
-            lcd.centerPrint("No API key provided.", 3);
-            delay(5000);
-            nextPage();
-            return;
-        }
-        
         debug(F("weather page: Refreshing cache"));
 
         // Display page name and loading message so the device doesn't look like it crashed
