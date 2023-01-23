@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:12:41
  * Author: 3urobeat
  * 
- * Last Modified: 23.01.2023 12:39:27
+ * Last Modified: 23.01.2023 12:41:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -42,5 +42,5 @@ namespace Config
     char     pageOrder[4][32]   = { "clock", "weather", "0", "spotify" }; //Set an element to "0" to skip that page
     uint32_t showuntil[4]       = { 5000, 5000, 0, 10000 }; // How long each page should be shown in ms (Special Case: Set to 0 if page should progress on event, news page would progress when headline was fully displayed)
     bool     alwaysShowTime     = true;              // Always show the time in the upper right corner
-    uint16_t pageElementSwitch  = 2500;              // After how much ms a page should switch between elements (for example date & weekday on clock page, temp & sunrise on weather page). Set to 0 to disable
+    uint16_t pageElemSwitch  = 2500;              // After how much ms a page should switch between elements (for example date & weekday on clock page, temp & sunrise on weather page). Set to 0 to disable
 }

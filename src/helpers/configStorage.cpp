@@ -4,7 +4,7 @@
  * Created Date: 27.12.2022 12:28:55
  * Author: 3urobeat
  * 
- * Last Modified: 23.01.2023 12:36:46
+ * Last Modified: 23.01.2023 12:41:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -69,7 +69,7 @@ void readConfigFromStorage()
 
     Config::alwaysShowTime = prefs.getBool("alwaysShowTime");
 
-    Config::pageElementSwitch = prefs.getUShort("pageElementSwitch");
+    Config::pageElemSwitch = prefs.getUShort("pageElemSwitch");
 
     debug(F("Config was read from filesystem"));
 }
@@ -98,7 +98,7 @@ void writeConfigToStorage()
 
     prefs.putBool("alwaysShowTime", Config::alwaysShowTime);
 
-    prefs.putUShort("pageElementSwitch", Config::pageElementSwitch);
+    prefs.putUShort("pageElemSwitch", Config::pageElemSwitch);
 
     debug(F("Config was written to filesystem!"));
 }
