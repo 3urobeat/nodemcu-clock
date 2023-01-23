@@ -4,7 +4,7 @@
  * Created Date: 14.11.2022 19:12:41
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:20
+ * Last Modified: 23.01.2023 12:39:27
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -29,8 +29,8 @@ namespace Config
     char lat[8] = ""; // Set your location manually with latitudinal and longitudinal coordinates. If you leave it empty the program will get you general location automatically via your IP.
     char lon[8] = "";
 
-    char openweathermaptoken[33] = "";
-    char newsapitoken[33]        = "";
+    char weatherapitoken[33] = "";
+    char newsapitoken[33]    = "";
 
     char spotifyClientID[33]     = "";
     char spotifyClientSecret[33] = "";
