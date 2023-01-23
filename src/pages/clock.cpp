@@ -4,7 +4,7 @@
  * Created Date: 01.09.2021 15:17:00
  * Author: 3urobeat
  * 
- * Last Modified: 23.01.2023 10:32:53
+ * Last Modified: 23.01.2023 12:34:02
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -43,7 +43,7 @@ namespace clockPage
     void update()
     {
         // Always print the current time
-        getTime(timeResult, sizeof(timeResult) - 1, Config::timeformat);
+        getTime(timeResult, sizeof(timeResult), Config::timeformat);
 
         lcd.centerPrint(timeResult, 1, false);
 

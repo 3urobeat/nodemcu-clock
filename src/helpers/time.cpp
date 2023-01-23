@@ -4,7 +4,7 @@
  * Created Date: 03.09.2021 10:06:00
  * Author: 3urobeat
  * 
- * Last Modified: 23.01.2023 10:37:50
+ * Last Modified: 23.01.2023 12:33:32
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -27,10 +27,11 @@ void getDate(char *dest, uint16_t destLen)
 {
     unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
-    char buf[5];
+    char buf[5] = "";
 
-    //copy dateformat into dest
-    memcpy(dest, Config::dateformat, strlen(Config::dateformat));
+    // Copy dateformat into dest (I previously just used memcpy but that seems to be broken on the ESP32 so I need to clear and then strcpy format into dest)
+    memset(dest, '\0', destLen);
+    strncpy(dest, Config::dateformat, destLen - 1);
 
     strrpl(dest, "dd", lcd.toFixedLengthNumber(buf, day(epoch), 2), destLen);
     strrpl(dest, "mm", lcd.toFixedLengthNumber(buf, month(epoch), 2), destLen);
@@ -48,10 +49,11 @@ void getTime(char *dest, uint16_t destLen, const char *format)
 {
     unsigned long epoch = timeClient.getEpochTime() + timeoffset;
 
-    char buf[5];
+    char buf[5] = "";
 
-    //copy dateformat into dest
-    memcpy(dest, format, strlen(format));
+    // Copy format into dest (I previously just used memcpy but that seems to be broken on the ESP32 so I need to clear and then strcpy format into dest)
+    memset(dest, '\0', destLen);
+    strncpy(dest, format, destLen - 1);
 
     strrpl(dest, "hh", lcd.toFixedLengthNumber(buf, hour(epoch), 2), destLen);
     strrpl(dest, "mm", lcd.toFixedLengthNumber(buf, minute(epoch), 2), destLen);
