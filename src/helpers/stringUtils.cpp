@@ -4,7 +4,7 @@
  * Created Date: 23.12.2021 15:58:05
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:07
+ * Last Modified: 23.01.2023 12:32:39
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -25,14 +25,14 @@
  * @param newchars News chars that should replace oldchars
  * @param maxlen The maxmimum length an excerpt from src might have, is used for allocating buffer
  */
-void strrpl(char *src, const char *oldchars, const char *newchars, uint16_t maxlen) //Credit: https://forum.arduino.cc/t/replace-and-remove-char-arrays/485806/4
+void strrpl(char *src, const char *oldchars, const char *newchars, uint16_t maxlen) // Modified & fixed version of https://forum.arduino.cc/t/replace-and-remove-char-arrays/485806/4
 {
     char *p = strstr(src, oldchars);
     char buf[maxlen + 1] = "";       // Init with empty char arr to clear any gibberish
     
     do {
         if (p) {
-            memset(buf, '\0', strlen(buf));
+            memset(buf, '\0', sizeof(buf));
 
             if (src == p) {
                 strcpy(buf, newchars);
