@@ -4,7 +4,7 @@
  * Created Date: 23.12.2022 13:50:55
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 17:06:00
+ * Last Modified: 22.01.2023 18:45:42
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -29,7 +29,7 @@ bool setupModeEnabledCheck(bool forceSetupMode)
     #ifdef ESP8266
         const uint8_t switchPin = D0;
     #elif ESP32
-        const uint8_t switchPin = 12;
+        const uint8_t switchPin = 19;
     #endif
     
     
