@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 23.01.2023 12:36:46
+ * Last Modified: 23.01.2023 12:41:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -25,7 +25,7 @@ char           tempCondStr[20];   // Stores temp and weather condition
 char           sunRiseSetStr[20]; // Stores sunrise and sunset time
 
 uint32_t lastPageModWeather = millis();
-bool     currentModWeather  = false;    // Tracks pageElementSwitch, as we only have 2 mods here (sunrise & sunset) we can use a bool
+bool     currentModWeather  = false;    // Tracks pageElemSwitch, as we only have 2 mods here (sunrise & sunset) we can use a bool
 
 
 namespace weatherPage
@@ -53,8 +53,8 @@ namespace weatherPage
      */
     void update()
     {
-        // Switch between temp & cond and sunrise & sunset when pageElementSwitch ms passed since last mod switch
-        if (Config::pageElementSwitch > 0 && millis() >= lastPageModWeather + Config::pageElementSwitch) {
+        // Switch between temp & cond and sunrise & sunset when pageElemSwitch ms passed since last mod switch
+        if (Config::pageElemSwitch > 0 && millis() >= lastPageModWeather + Config::pageElemSwitch) {
             currentModWeather  = !currentModWeather;
             lastPageModWeather = millis();
             lcd.clearLine(2); // Clear temp & cond line

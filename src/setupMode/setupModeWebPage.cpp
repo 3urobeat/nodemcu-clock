@@ -4,7 +4,7 @@
  * Created Date: 24.12.2022 19:02:04
  * Author: 3urobeat
  * 
- * Last Modified: 23.01.2023 12:36:46
+ * Last Modified: 23.01.2023 12:41:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2022 3urobeat <https://github.com/HerrEurobeat>
@@ -55,7 +55,7 @@ String processor(const String& var) // I need to use String here because the lib
     if (var == "pageOrder_input") return String(Config::pageOrder[0]) + ", " + String(Config::pageOrder[1]) + ", " + String(Config::pageOrder[2]);
     if (var == "showuntil_input") return String(Config::showuntil[0]) + ", " + String(Config::showuntil[1]) + ", " + String(Config::showuntil[2]);
     if (var == "alwaysShowTime_input") return Config::alwaysShowTime ? "checked" : ""; // Return checked or replace with nothing
-    if (var == "pageElementSwitch_input") return String(Config::pageElementSwitch);
+    if (var == "pageElemSwitch_input") return String(Config::pageElemSwitch);
 
     return String();
 }
@@ -189,7 +189,7 @@ void setupModeWebPageSave(AsyncWebServerRequest *request)
     if (request->arg("alwaysShowTime_input") == "on") Config::alwaysShowTime = true;
         else Config::alwaysShowTime = false;
 
-    if (request->hasArg("pageElementSwitch_input")) Config::pageElementSwitch = (uint16_t) request->arg("pageElementSwitch_input").toInt();
+    if (request->hasArg("pageElemSwitch_input")) Config::pageElemSwitch = (uint16_t) request->arg("pageElemSwitch_input").toInt();
 
 
     // Write config changes to fs
