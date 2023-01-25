@@ -7,6 +7,7 @@
   
   copyright 2021 noiasca noiasca@yahoo.com
   
+  2022-03-19 init() alias
   2021-10-30 Print  
   2021-08-14 support of 4004
   2021-03-13 new development
@@ -27,6 +28,10 @@
  #endif
 #endif
 
+/* 
+   parallel mode 4 bit - base class
+   
+*/
 class LiquidCrystal_4bit_base : public Print, public LiquidCrystal_dummy {
   public:     
  
@@ -62,7 +67,9 @@ class LiquidCrystal_4bit_base : public Print, public LiquidCrystal_dummy {
       blPin(blPin), blType(blType),
       dataPin{d4Pin, d5Pin, d6Pin, d7Pin}
       {} 
-      
+/**
+    \brief writes a character to the LCD
+*/       
     size_t write(uint8_t value) {
       DEBUG_PRINTLN(F("4bit_base write"));
       send(value, rsDR);
@@ -96,7 +103,7 @@ class LiquidCrystal_4bit_base : public Print, public LiquidCrystal_dummy {
     void begin(){                                          // 4bit standard
       hwInit();
       // Datasheet p46 Figure 24 - 4bit
-      delayMicroseconds(40);                               // wait for more than 40µs
+      delayMicroseconds(45);                               // wait for more than 40µs
       write4bits((functionset | functionset_8bit) >> 4);   // 01 function set (interface is 8 bits long)
       delay(5);                                            // wait for more than 4.1ms
       write4bits((functionset | functionset_8bit) >> 4);   // 02 function set (interface is 8 bits long)
@@ -109,6 +116,8 @@ class LiquidCrystal_4bit_base : public Print, public LiquidCrystal_dummy {
       clear();                                             // 07 display clear - slow command. There is a method anyway
       command(entrymodeset | entrymode_increment);         // 08 entry mode set 
     }
+    
+    void init() {begin();};
     
     void backlight(void) {
       if (blPin < 255)
@@ -231,6 +240,10 @@ class LiquidCrystal_4bit_base : public Print, public LiquidCrystal_dummy {
 #endif
 };
 
+/** 
+   \brief parallel mode 4 bit
+   
+*/
 class LiquidCrystal_4bit : public LiquidCrystal_4bit_base {
   protected:
     using CallBack = uint8_t (*)(uint32_t &special, uint8_t &value);
@@ -272,7 +285,12 @@ class LiquidCrystal_4bit : public LiquidCrystal_4bit_base {
       LiquidCrystal_4bit_base(rsPin, enPin, d4Pin, d5Pin, d6Pin, d7Pin, blPin, blType, cols, rows),
       funcPtr(funcPtr)        
       {}
+ 
+/**
+    \brief writes a character to the LCD
     
+    This function uses the converter for UTF-8 characters.
+*/  
     inline size_t write(uint8_t value) {
       DEBUG_PRINTLN(F("4bit write"));
       switch(funcPtr (special, value))
@@ -337,7 +355,7 @@ class LiquidCrystal_4bit_4004_base : public LiquidCrystal_4bit_base {
       { 
         DIGITALWRITE(enPin, HIGH);
         DIGITALWRITE(en2Pin, HIGH);
-        delayMicroseconds(1);            // p52 230ns / p58 figure 25 (p 49 PWeh 450ns) 
+        delayMicroseconds(1);          // p52 230ns / p58 figure 25 (p 49 PWeh 450ns) 
         DIGITALWRITE(enPin, LOW);
         DIGITALWRITE(en2Pin, LOW);
       }
@@ -358,7 +376,12 @@ class LiquidCrystal_4bit_4004_base : public LiquidCrystal_4bit_base {
     }
 };
 
-
+/** 
+   \brief parallel mode 4 bit 4 rows - 40 characters
+   
+   the class for a 40 character 4 lines display with two enable lines
+   
+*/
 class LiquidCrystal_4bit_4004 : public LiquidCrystal_4bit_4004_base {
   protected:
     using CallBack = uint8_t (*)(uint32_t &special, uint8_t &value);
@@ -382,8 +405,13 @@ class LiquidCrystal_4bit_4004 : public LiquidCrystal_4bit_4004_base {
                             CallBack funcPtr) : 
       LiquidCrystal_4bit_4004_base(rsPin, enPin, en2Pin, d4Pin, d5Pin, d6Pin, d7Pin, blPin, blType, cols, rows),
       funcPtr(funcPtr)        // function pointer to default converter
-      {}      
+      {}
       
+/**
+    \brief writes a character to the LCD
+    
+    This function uses the converter for UTF-8 characters.
+*/        
     inline size_t write(uint8_t value) {
       DEBUG_PRINTLN(F("4bit_4004 write"));
       switch(funcPtr (special, value))

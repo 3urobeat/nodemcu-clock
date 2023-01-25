@@ -6,18 +6,22 @@
   Open topics
   - tbd 2022: change message to alert
 
-  copyright 2021 noiasca noiasca@yahoo.com
+  copyright 2022 noiasca noiasca@yahoo.com
   
-  2021-05-16
+  2022-01-15
 */
 
 #pragma once
 #pragma message ("Warning: Don't include lcd_i2c.h. Use lcd_PCF8574.h instead!" )
-// MISSING change to alert in 2022
+/*
+   MISSING change to alert in 2022
+   \todo
+*/
 #include <NoiascaHW/lcd_PCF8574.h>
 
 /*
-   Old I2C_base class 
+   Old I2C_base class
+   \deprecated 
 */
 class LiquidCrystal_I2C_base : public LiquidCrystal_PCF8574_base {
   public:     
@@ -28,7 +32,8 @@ class LiquidCrystal_I2C_base : public LiquidCrystal_PCF8574_base {
 };
 
 /*
-   Old I2C class 
+   Old I2C class
+   \deprecated 
 */
 class LiquidCrystal_I2C : public LiquidCrystal_PCF8574 {
   public:
@@ -43,6 +48,7 @@ class LiquidCrystal_I2C : public LiquidCrystal_PCF8574 {
 
 /*
    I2C class replaces capital Ä with Ae
+   \deprecated 
 */
 class LiquidCrystal_I2C_Ae : public LiquidCrystal_PCF8574 {
   public:
@@ -52,6 +58,7 @@ class LiquidCrystal_I2C_Ae : public LiquidCrystal_PCF8574 {
 
 /*
    I2C small: adds 3 Variables for the replacement characters, defaults to the small character. Ä -> ä 
+   \deprecated 
 */
 class LiquidCrystal_I2C_Small : public LiquidCrystal_PCF8574 {
   public:
@@ -60,7 +67,8 @@ class LiquidCrystal_I2C_Small : public LiquidCrystal_PCF8574 {
 };
 
 /*
-   I2C specials: uses 3 special characters for capital letters Ä Ö Ü 
+   I2C specials: uses 3 special characters for capital letters Ä Ö Ü
+   \deprecated 
 */
 class LiquidCrystal_I2C_Special : public LiquidCrystal_PCF8574 {
   public:
@@ -70,6 +78,7 @@ class LiquidCrystal_I2C_Special : public LiquidCrystal_PCF8574 {
 
 /*
    I2C ST7070: uses the extended characters of the ST7070
+   \deprecated 
 */
 class LiquidCrystal_I2C_ST7070 : public LiquidCrystal_PCF8574 {
   public:
@@ -79,6 +88,7 @@ class LiquidCrystal_I2C_ST7070 : public LiquidCrystal_PCF8574 {
 
 /*
    I2C ST7070_Ext: even more characters from second pattern
+   \deprecated 
 */
 class LiquidCrystal_I2C_ST7070_Ext : public LiquidCrystal_PCF8574 {
   public:

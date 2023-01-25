@@ -19,11 +19,11 @@ The user must not
   If you want to reuse parts of code contact the rights owner and ask for permission.
 
 - You must not remove any copyright information from any file in this library.
-  As you should not change the software there is no legitime reason 
+  As you should not change the software there is no legit reason 
   to change any copyright information neither.
   
 The user should not
 - You should not distribute modified versions of this software. 
   If you need changes inform the rights owner and ask for the adoption of the software.
   
-License Version 2021-05-16
+License Version 2022-07-28
