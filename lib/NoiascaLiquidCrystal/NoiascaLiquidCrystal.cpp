@@ -1,8 +1,10 @@
 /*
   Noiasca Liquid Crystal - 2.x
   
-  copyright 2021 noiasca noiasca@yahoo.com
-  
+  copyright 2022 noiasca noiasca@yahoo.com
+
+  2022-12-10 longer wait for clear and home
+  2022-01-15 comments for doxygen
   2021-03-13 started new development
 */
 
@@ -43,13 +45,15 @@ void LiquidCrystal_dummy::clear() {
   currentRow = 255;                                        // only for 4004
   command(cleardisplay); 
   currentRow = 0;                                          // only for 4004
-  delayMicroseconds(waitlong - waitshort);                 // send (called in command) will wait short
+  //delayMicroseconds(waitlong - waitshort);                 // send (called in command) will wait short
+  delayMicroseconds(waitlong);
 }
   
 void LiquidCrystal_dummy::home() {       
   currentRow = 0;                                          // only for 4004
   command(returnhome);
-  delayMicroseconds(waitlong - waitshort);                 // p24 Table 6
+  //delayMicroseconds(waitlong - waitshort);                 // p24 Table 64
+  delayMicroseconds(waitlong);
 }
 
 void LiquidCrystal_dummy::setCursor(uint8_t newCol, uint8_t newRow) {
@@ -59,32 +63,32 @@ void LiquidCrystal_dummy::setCursor(uint8_t newCol, uint8_t newRow) {
 }
   
 void LiquidCrystal_dummy::cursor() {
-  displaycontrolFlag |= displaycontrol_cursor;             // p24 0b0001xCx
+  displaycontrolFlag |= displaycontrol_cursor;             // p24 0b00001xCx
   command(displaycontrol | displaycontrolFlag);
 }
 
 void LiquidCrystal_dummy::noCursor() {
-  displaycontrolFlag &= ~displaycontrol_cursor;            // p24 0b0001xCx
+  displaycontrolFlag &= ~displaycontrol_cursor;            // p24 0b00001xCx
   command(displaycontrol | displaycontrolFlag);
 }
 
 void LiquidCrystal_dummy::blink() {
-  displaycontrolFlag |= displaycontrol_blink;              // p24 0b0001xxB
+  displaycontrolFlag |= displaycontrol_blink;              // p24 0b00001xxB
   command(displaycontrol | displaycontrolFlag);
 }
 
 void LiquidCrystal_dummy::noBlink() {
-  displaycontrolFlag &= ~displaycontrol_blink;             // p24 0b0001xxB
+  displaycontrolFlag &= ~displaycontrol_blink;             // p24 0b00001xxB
   command(displaycontrol | displaycontrolFlag);
 }
 
 void LiquidCrystal_dummy::on() {
-  displaycontrolFlag |= displaycontrol_on;                 // p24 0b0001Dxxx
+  displaycontrolFlag |= displaycontrol_on;                 // p24 0b00001Dxx
   command(displaycontrol | displaycontrolFlag);
 }
 
 void LiquidCrystal_dummy::off() {
-  displaycontrolFlag &= ~displaycontrol_on;                // p24 0b0001Dxxx
+  displaycontrolFlag &= ~displaycontrol_on;                // p24 0b00001Dxx
   command(displaycontrol | displaycontrolFlag);
 }
 

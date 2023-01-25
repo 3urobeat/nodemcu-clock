@@ -7,9 +7,11 @@
   - Support RW pin
   - class for 4004 (40 characters, 4 rows) with two enable inputs
   
-  copyright 2021 noiasca noiasca@yahoo.com
+  copyright 2022 noiasca noiasca@yahoo.com
   
   Version
+  2022-03-06 added support for any I2C interface (TwoWire)  
+  2022-01-15 comments for doxygen
   2021-11-27 TwoWire.h
   2021-10-30 Print
   2021-08-26 removed hardcoded Wire.h
@@ -31,7 +33,7 @@
 #endif
 
 /* ****************************************************************************
-    class for custom pin assignment on the 16 channel MCP23017
+    \brief class for custom pin assignment on the 16 channel MCP23017
     version: 
     - MCP23017 in "16" bit mode
       The expander always sends two bytes/16 bit
@@ -45,19 +47,33 @@
 
 class LiquidCrystal_MCP23017_custompin_base : public Print, public LiquidCrystal_dummy {
   public:     
-    LiquidCrystal_MCP23017_custompin_base( uint8_t lcdAddr,
+    LiquidCrystal_MCP23017_custompin_base(uint8_t lcdAddr,
                                uint8_t rsPin, uint8_t /* rwPin */, uint8_t enPin, 
                                uint8_t d4Pin, uint8_t d5Pin, uint8_t d6Pin, uint8_t d7Pin, 
                                uint8_t blPin, t_backlightPol blType,
                                uint8_t cols, uint8_t rows) : 
       LiquidCrystal_dummy(cols, rows),
+      i2cPort(&Wire),
       lcdAddr{lcdAddr},
       rsPin{rsPin}, enPin{enPin}, 
       blPin{blPin},
       blType{blType},
       dataPin{(d4Pin), (d5Pin), (d6Pin), (d7Pin)}
       {}
-    
+      
+    LiquidCrystal_MCP23017_custompin_base(TwoWire &i2cPort, uint8_t lcdAddr,
+                               uint8_t rsPin, uint8_t /* rwPin */, uint8_t enPin, 
+                               uint8_t d4Pin, uint8_t d5Pin, uint8_t d6Pin, uint8_t d7Pin, 
+                               uint8_t blPin, t_backlightPol blType,
+                               uint8_t cols, uint8_t rows) : 
+      LiquidCrystal_dummy(cols, rows),
+      i2cPort(&i2cPort),
+      lcdAddr{lcdAddr},
+      rsPin{rsPin}, enPin{enPin}, 
+      blPin{blPin},
+      blType{blType},
+      dataPin{(d4Pin), (d5Pin), (d6Pin), (d7Pin)}
+      {}    
     size_t write(uint8_t value) {
       DEBUG_PRINTLN(F("MCP23017_base write"));
       send(value, rsDR);
@@ -68,42 +84,42 @@ class LiquidCrystal_MCP23017_custompin_base : public Print, public LiquidCrystal
       DEBUG_PRINTLN(F("MCP23017_custompin_base hwInit"));
 #if defined(__AVR__)
       if (TWCR == 0) {
-        Wire.begin();                  // only call when not started before
+        i2cPort->begin();              // only call when not started before
         DEBUG_PRINTLN(F("E: add Wire.begin() in sketch!"));
       }
 #endif
      // MCP23017; bank=0, sequence, up to two bytes/16 bit 
 
-      Wire.beginTransmission(lcdAddr);
-      Wire.write(0x05);                // if the IC was in bank=1 set the IOCON to 0 and therefore to bank = 0
-      Wire.write(0b00000000);          // if we were already in bank = 0 then we just write to GPINTEN
-      Wire.endTransmission();
+      i2cPort->beginTransmission(lcdAddr);
+      i2cPort->write(0x05);            // if the IC was in bank=1 set the IOCON to 0 and therefore to bank = 0
+      i2cPort->write(0b00000000);      // if we were already in bank = 0 then we just write to GPINTEN
+      i2cPort->endTransmission();
      
-      Wire.beginTransmission(lcdAddr);
-      Wire.write(0x0A);                // now we are for sure in bank 0, set IOCON to 0 (including bank = 0)
-      Wire.write(0b00000000);
-      Wire.write(0b00000000);
-      Wire.endTransmission();
+      i2cPort->beginTransmission(lcdAddr);
+      i2cPort->write(0x0A);            // now we are for sure in bank 0, set IOCON to 0 (including bank = 0)
+      i2cPort->write(0b00000000);
+      i2cPort->write(0b00000000);
+      i2cPort->endTransmission();
      
-      Wire.beginTransmission(lcdAddr);
-      Wire.write(ioDirRegA);
-      Wire.write(0b00000000);          // A 0 = Pin is configured as an output.
-      Wire.write(0b00000000);          // B 0 = Pin is configured as an output.
-      Wire.endTransmission();
+      i2cPort->beginTransmission(lcdAddr);
+      i2cPort->write(ioDirRegA);
+      i2cPort->write(0b00000000);      // A 0 = Pin is configured as an output.
+      i2cPort->write(0b00000000);      // B 0 = Pin is configured as an output.
+      i2cPort->endTransmission();
       
-      Wire.beginTransmission(lcdAddr);
-      Wire.write(gpioRegA);
-      //Wire.write(0b11000000);          // A on the keypad shield red an blue are inverted active MISSING: tbc no invert
-      //Wire.write(0b00000001);          // B on the keypad shield green is inverted active MISSING: tbc no invert
-      Wire.write(0);
-      Wire.write(0);
-      Wire.endTransmission();      
+      i2cPort->beginTransmission(lcdAddr);
+      i2cPort->write(gpioRegA);
+      //i2cPort->write(0b11000000);    // A on the keypad shield red an blue are inverted active MISSING: tbc no invert
+      //i2cPort->write(0b00000001);    // B on the keypad shield green is inverted active MISSING: tbc no invert
+      i2cPort->write(0);
+      i2cPort->write(0);
+      i2cPort->endTransmission();      
       
-      //Wire.beginTransmission(lcdAddr);
-      //Wire.write(gpPuA);               // GPIO Pull up Register
-      //Wire.write(0b00000000);          
-      //Wire.write(0b00000000);          
-      //Wire.endTransmission();
+      //i2cPort->beginTransmission(lcdAddr);
+      //i2cPort->write(gpPuA);         // GPIO Pull up Register
+      //i2cPort->write(0b00000000);          
+      //i2cPort->write(0b00000000);          
+      //i2cPort->endTransmission();
     }
     
     void begin()                                           // 4bit standard
@@ -134,19 +150,19 @@ class LiquidCrystal_MCP23017_custompin_base : public Print, public LiquidCrystal
     void init() {begin();};                                // alias for LCD API 
     
     // MISSING: handling of positive/negative
-    int setBacklight (uint8_t value) {                               // LCD API
+    int setBacklight (uint8_t value) {                     // LCD API
       DEBUG_PRINTLN(F("MCP23017_custompin_base setBacklight()"));
       if (blPin < 16)    
         if (blType == NEGATIVE) value = !value;
-        this->digitalWrite(blPin, value);                            // will also store the state in pinState      
+        this->digitalWrite(blPin, value);                  // will also store the state in pinState      
       return 0;   // assume access    
       // old way:
-      //value ? backlightState = 1 : backlightState = 0;             // no PWM on MCP23017
+      //value ? backlightState = 1 : backlightState = 0;   // no PWM on MCP23017
       //bitWrite(pinStatus, blPin, value);
-      //Wire.beginTransmission(lcdAddr);
-      //Wire.write(gpioRegA);
-      //Wire.write(_BV(blPin) * backlightState);
-      //return Wire.endTransmission();
+      //i2cPort->beginTransmission(lcdAddr);
+      //i2cPort->write(gpioRegA);
+      //i2cPort->write(_BV(blPin) * backlightState);
+      //return i2cPort->endTransmission();
     }
     
     int backlight() {
@@ -166,11 +182,11 @@ class LiquidCrystal_MCP23017_custompin_base : public Print, public LiquidCrystal
       else
         bitClear(pinStatus, pin);
       // output to expander
-      Wire.beginTransmission(lcdAddr);
-      Wire.write(gpioRegA);
-      Wire.write((uint8_t)(pinStatus & 0xFF));   // low byte to register A
-      Wire.write((uint8_t)(pinStatus >> 8));     // high byte shifted to register B
-      Wire.endTransmission();  
+      i2cPort->beginTransmission(lcdAddr);
+      i2cPort->write(gpioRegA);
+      i2cPort->write((uint8_t)(pinStatus & 0xFF));         // low byte to register A
+      i2cPort->write((uint8_t)(pinStatus >> 8));           // high byte shifted to register B
+      i2cPort->endTransmission();  
       //Serial.print(pinStatus); Serial.print("\t IOs:"); Serial.println(pinStatus, BIN);
     }
     
@@ -184,12 +200,12 @@ class LiquidCrystal_MCP23017_custompin_base : public Print, public LiquidCrystal
       uint8_t port = pin / 8;                    // port A (0) or B (1)
       uint8_t reg = gpioRegA;                    // the register to be written
       if (port == 1) reg = gpioRegB;
-      Wire.beginTransmission(lcdAddr);
-      Wire.write(reg);
-      Wire.endTransmission();
+      i2cPort->beginTransmission(lcdAddr);
+      i2cPort->write(reg);
+      i2cPort->endTransmission();
       byte actual = 0;
-      if (Wire.requestFrom(lcdAddr, (uint8_t)1)) // avoid warning and hand over uint8_t, uint8_t
-         actual = Wire.read();
+      if (i2cPort->requestFrom(lcdAddr, (uint8_t)1))       // avoid warning and hand over uint8_t, uint8_t
+         actual = i2cPort->read();
       else
       {
         DEBUG_PRINTLN(F("E179: nothing received"));
@@ -216,11 +232,11 @@ class LiquidCrystal_MCP23017_custompin_base : public Print, public LiquidCrystal
       uint8_t reg = ioDirRegA;                   // the register to be written
       if (port == 1) reg = ioDirRegB;
       // I2C read old value
-      Wire.beginTransmission(lcdAddr);
-      Wire.write(reg);
-      Wire.endTransmission();
-      Wire.requestFrom(lcdAddr, (uint8_t)1);     // avoid warning and hand over uint8_t, uint8_t
-      byte actual = Wire.read();  
+      i2cPort->beginTransmission(lcdAddr);
+      i2cPort->write(reg);
+      i2cPort->endTransmission();
+      i2cPort->requestFrom(lcdAddr, (uint8_t)1); // avoid warning and hand over uint8_t, uint8_t
+      byte actual = i2cPort->read();  
       // update value (the bit)
       if (mode == OUTPUT)
         bitClear(actual, bit); 
@@ -228,31 +244,31 @@ class LiquidCrystal_MCP23017_custompin_base : public Print, public LiquidCrystal
         bitSet(actual, bit); 
       //Serial.print("\t actual:"); Serial.println(actual, BIN);
       // I2C write new value 
-      Wire.beginTransmission(lcdAddr);
-      Wire.write(reg);
-      Wire.write(actual);
-      Wire.endTransmission();    
+      i2cPort->beginTransmission(lcdAddr);
+      i2cPort->write(reg);
+      i2cPort->write(actual);
+      i2cPort->endTransmission();    
       
       if (mode == INPUT || mode == INPUT_PULLUP)
       {
         reg = gpPuA;
         if (port == 1) reg = gpPuB;
         // I2C read old value
-        Wire.beginTransmission(lcdAddr);
-        Wire.write(reg);
-        Wire.endTransmission();
-        Wire.requestFrom(lcdAddr, (uint8_t)1);   // avoid warning and hand over uint8_t, uint8_t
-        byte actual = Wire.read();  
+        i2cPort->beginTransmission(lcdAddr);
+        i2cPort->write(reg);
+        i2cPort->endTransmission();
+        i2cPort->requestFrom(lcdAddr, (uint8_t)1);         // avoid warning and hand over uint8_t, uint8_t
+        byte actual = i2cPort->read();  
         // update value (the bit)
         if (mode == INPUT)
           bitWrite(actual, bit, 0);              // deactivate the pull up bit
         else
           bitWrite(actual, bit, 1);              // activate pull up 
         // I2C write new value 
-        Wire.beginTransmission(lcdAddr);
-        Wire.write(reg);
-        Wire.write(actual);
-        Wire.endTransmission(); 
+        i2cPort->beginTransmission(lcdAddr);
+        i2cPort->write(reg);
+        i2cPort->write(actual);
+        i2cPort->endTransmission(); 
       }  
     }
 
@@ -265,6 +281,7 @@ class LiquidCrystal_MCP23017_custompin_base : public Print, public LiquidCrystal
     static const byte gpPuA = 0x0c;    // GPIO PULL-UP RESISTOR REGISTER
     static const byte gpPuB = 0x0d;
     // other LCD member variables
+    TwoWire *i2cPort;				           // generic connection to user's chosen I2C hardware
     const uint8_t lcdAddr;             // I2C address of the expander
     const uint8_t rsPin, enPin;        // GPIOs where LCD is connected to
     // const uint8_t rwPin;            // the Read Write select is not used in this library. Always write.
@@ -299,29 +316,31 @@ class LiquidCrystal_MCP23017_custompin_base : public Print, public LiquidCrystal
       //if (rw = rwRead) out |= rwPin;           // for future use
       uint16_t after = out;
       /*
-      Wire.beginTransmission(lcdAddr);
-      Wire.write(gpioRegA);
-      Wire.write(out & 0x0F);
-      Wire.write(out >> 8);
-      Wire.endTransmission();
+      i2cPort->beginTransmission(lcdAddr);
+      i2cPort->write(gpioRegA);
+      i2cPort->write(out & 0x0F);
+      i2cPort->write(out >> 8);
+      i2cPort->endTransmission();
       */
       out |= _BV(enPin);                         // shortcut: send with activated enable pin - MISSING: tbd: 4004
-      Wire.beginTransmission(lcdAddr);
-      Wire.write(gpioRegA);
-      Wire.write(out & 0xFF);                    // to register A
-      Wire.write(out >> 8);                      // to register B
-      Wire.endTransmission();
+      i2cPort->beginTransmission(lcdAddr);
+      i2cPort->write(gpioRegA);
+      i2cPort->write(out & 0xFF);                // to register A
+      i2cPort->write(out >> 8);                  // to register B
+      i2cPort->endTransmission();
       //Serial.print(value, HEX); Serial.print("\t LCD:"); Serial.println(out, BIN);
-      Wire.beginTransmission(lcdAddr);
-      Wire.write(gpioRegA);
-      Wire.write(after & 0xFF);
-      Wire.write(after >> 8);                    // to be tested with different hardware
-      Wire.endTransmission();   
+      i2cPort->beginTransmission(lcdAddr);
+      i2cPort->write(gpioRegA);
+      i2cPort->write(after & 0xFF);
+      i2cPort->write(after >> 8);                // to be tested with different hardware
+      i2cPort->endTransmission();   
     }
 };
 
-/*
-   MCP23017 default class with special character support
+/**
+   \brief MCP23017 I2C default class with special character support.
+   
+   This class can be used with a MCP23017 - a 16 channel I2C portexpander.
 */
 class LiquidCrystal_MCP23017_custompin : public LiquidCrystal_MCP23017_custompin_base {
   protected:
@@ -329,6 +348,24 @@ class LiquidCrystal_MCP23017_custompin : public LiquidCrystal_MCP23017_custompin
     CallBack funcPtr;  
     
   public:
+     /** 
+      \brief constructor for a LCD on a MCP23017 with free pin assignement
+      
+      This constructor uses the default character converter
+      
+      \param lcdAddr the I2C address
+      \param rsPin the RS pin
+      \param rwPin the RW pin 
+      \param enPin the Enable pin
+      \param d4Pin data pin 4
+      \param d5Pin data pin 5
+      \param d6Pin data pin 6
+      \param d7Pin data pin 7
+      \param blPin pin for backlight 
+      \param blType set to POSITIVE or NEGATIVE 
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2, or 4
+    */   
     // default converter
     LiquidCrystal_MCP23017_custompin(uint8_t lcdAddr,
                                      uint8_t rsPin, uint8_t rwPin, uint8_t enPin, 
@@ -338,7 +375,26 @@ class LiquidCrystal_MCP23017_custompin : public LiquidCrystal_MCP23017_custompin
       LiquidCrystal_MCP23017_custompin_base(lcdAddr, rsPin, rwPin, enPin, d4Pin, d5Pin, d6Pin, d7Pin, blPin, blType, cols, rows),
       funcPtr(convert)       // function pointer to default converter
       {}
-    
+      
+    /** 
+      \brief constructor for a LCD on a MCP23017 with free pin assignement
+      
+      This constructor an indidvidual character converter
+      
+      \param lcdAddr the I2C address
+      \param rsPin the RS pin
+      \param rwPin the RW pin 
+      \param enPin the Enable pin
+      \param d4Pin data pin 4
+      \param d5Pin data pin 5
+      \param d6Pin data pin 6
+      \param d7Pin data pin 7
+      \param blPin pin for backlight 
+      \param blType set to POSITIVE or NEGATIVE 
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2, or 4
+      \param funcPtr a callback to convert UTF-8 characters
+    */      
     // with function pointer to individual callback
     LiquidCrystal_MCP23017_custompin(uint8_t lcdAddr,
                                      uint8_t rsPin, uint8_t rwPin, uint8_t enPin, 
@@ -347,7 +403,66 @@ class LiquidCrystal_MCP23017_custompin : public LiquidCrystal_MCP23017_custompin
                                      uint8_t cols, uint8_t rows, CallBack funcPtr) :
       LiquidCrystal_MCP23017_custompin_base(lcdAddr, rsPin, rwPin, enPin, d4Pin, d5Pin, d6Pin, d7Pin, blPin, blType, cols, rows),
       funcPtr(funcPtr)       // function pointer to individual converter
-      {}   
+      {}
+      
+    /** 
+      \brief constructor for a LCD on a MCP23017 with free pin assignement
+      
+      This constructor accepts a Wire interface and the default converter
+      
+      \param i2cPort the I2C port, i.e. Wire
+      \param lcdAddr the I2C address
+      \param rsPin the RS pin
+      \param rwPin the RW pin 
+      \param enPin the Enable pin
+      \param d4Pin data pin 4
+      \param d5Pin data pin 5
+      \param d6Pin data pin 6
+      \param d7Pin data pin 7
+      \param blPin pin for backlight 
+      \param blType set to POSITIVE or NEGATIVE 
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2, or 4
+    */  
+    // default converter
+    LiquidCrystal_MCP23017_custompin(TwoWire &i2cPort, uint8_t lcdAddr,
+                                     uint8_t rsPin, uint8_t rwPin, uint8_t enPin, 
+                                     uint8_t d4Pin, uint8_t d5Pin, uint8_t d6Pin, uint8_t d7Pin, 
+                                     uint8_t blPin, t_backlightPol blType,
+                                     uint8_t cols, uint8_t rows) :
+      LiquidCrystal_MCP23017_custompin_base(i2cPort, lcdAddr, rsPin, rwPin, enPin, d4Pin, d5Pin, d6Pin, d7Pin, blPin, blType, cols, rows),
+      funcPtr(convert)       // function pointer to default converter
+      {}
+
+    /** 
+      \brief constructor for a LCD on a MCP23017 with free pin assignement
+      
+      This constructor accepts a Wire interface and a indidvidual character converter
+      
+      \param i2cPort the I2C port, i.e. Wire
+      \param lcdAddr the I2C address
+      \param rsPin the RS pin
+      \param rwPin the RW pin 
+      \param enPin the Enable pin
+      \param d4Pin data pin 4
+      \param d5Pin data pin 5
+      \param d6Pin data pin 6
+      \param d7Pin data pin 7
+      \param blPin pin for backlight 
+      \param blType set to POSITIVE or NEGATIVE 
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2, or 4
+      \param funcPtr a callback to convert UTF-8 characters
+    */       
+    // with function pointer to individual callback
+    LiquidCrystal_MCP23017_custompin(TwoWire &i2cPort, uint8_t lcdAddr,
+                                     uint8_t rsPin, uint8_t rwPin, uint8_t enPin, 
+                                     uint8_t d4Pin, uint8_t d5Pin, uint8_t d6Pin, uint8_t d7Pin, 
+                                     uint8_t blPin, t_backlightPol blType,
+                                     uint8_t cols, uint8_t rows, CallBack funcPtr) :
+      LiquidCrystal_MCP23017_custompin_base(i2cPort, lcdAddr, rsPin, rwPin, enPin, d4Pin, d5Pin, d6Pin, d7Pin, blPin, blType, cols, rows),
+      funcPtr(funcPtr)       // function pointer to individual converter
+      {}      
    
     size_t write(uint8_t value) {      // decided against inline
       DEBUG_PRINTLN(F("MCP23017_custompin write"));

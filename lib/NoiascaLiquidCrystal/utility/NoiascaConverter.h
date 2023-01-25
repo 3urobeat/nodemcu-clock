@@ -10,6 +10,8 @@
    copyright 2021 noiasca noiasca@yahoo.com
 
    Version
+   2022-12-22 added ROM_SPLC780D1_015A hebrew
+   2022-08-31 comments
    2021-10-30 constexpr
    2021-04-04 updated Cyrillic converter & SPLC780D1_002A, changed to UTF-8 w/o BOM 
    2021-02-15 reorganised converter files (brought converters to this file, brought mapping to this file)
@@ -29,7 +31,10 @@
 // these tables map the UTF-8 characters to an existing ROM Address on the LCD:
 // the struct Mapping is definied in NoiascaUTF8.h
 
-// the standard HD44780 A00 ROM character set (English - Japanese)
+/** 
+   \brief  the standard HD44780 A00 ROM character set (English - Japanese)
+   
+*/
 const Mapping ROM_A00[] PROGMEM = {
   {0xC384, 'A'},   // Ä   // large Umlauts may be overwritten in the write method
   {0xC396, 'O'},   // Ö
@@ -40,7 +45,7 @@ const Mapping ROM_A00[] PROGMEM = {
   {0xC39F, 0xE2},  // ß to GREEK SMALL LETTER BETA
   {0xC2A3, 0xED},  // £ Pound SIGN
   {0xC2A5, 0x5C},  // ¥ YEN SIGN
-  {0xC2B0, 0xDF},  // DEGREE SIGN#
+  {0xC2B0, 0xDF},  // DEGREE SIGN
   {0xC2B5, 0xE4},  // MICRO SIGN
   {0xC2B7, 0xA5},  // MIDDLE DOT
   {0xC3B1, 0xEE},  // LATIN SMALL LETTER N WITH TILDE
@@ -64,7 +69,10 @@ const Mapping ROM_A00[] PROGMEM = {
 };
 
 
-// the ST7070 ROM character set (page 1)
+/**
+   \brief the ST7070 ROM character set (page 1)
+
+*/
 const Mapping ROM_ST7070[] PROGMEM = {
   {0xc2a1, 0x86},  // ¡	INVERTED EXCLAMATION MARK
   {0xc2a5, 0x90},  // § SECTION SIGN
@@ -77,7 +85,7 @@ const Mapping ROM_ST7070[] PROGMEM = {
   {0xC2A2, 0x8C},  // cent SIGN ?
   {0xC2A3, 0x95},  // £ Pound SIGN ist eigentlich ed
   {0xC2A5, 0x5C},  // ¥ YEN SIGN
-  {0xC2B0, 0xDF},  // DEGREE SIGN#
+  {0xC2B0, 0xDF},  // DEGREE SIGN
   {0xC2B5, 0xE4},  // MICRO SIGN
   {0xC2B7, 0xA5},  // MIDDLE DOT
   {0xC3B1, 0xEE},  // LATIN SMALL LETTER N WITH TILDE vieleicht besser N mit -
@@ -118,8 +126,11 @@ const Mapping ROM_ST7070[] PROGMEM = {
 //#define startIndexPattern1 0
 
 
-// the ST7070 ROM character set (page 2)
-// greek 0x70 - 0xAF missing in the table
+/**
+   \brief the ST7070 ROM character set (page 2)
+   
+   greek 0x70 - 0xAF missing in the table
+*/
 const Mapping ROM_ST7070_P2[] PROGMEM = {
   {0xc482, 0x4c},  //	A  LATIN CAPITAL LETTER A WITH BREVE ?
   {0xc483, 0x5a},  //	a  LATIN SMALL LETTER A WITH BREVE
@@ -275,10 +286,13 @@ const Mapping ROM_ST7070_P2[] PROGMEM = {
   {0xd1b5, 'y'}    // ѵ  CYRILLIC SMALL LETTER IZHITSA 
 };
 
-// character mapping for the SPLC780D1 002A ROM (Cyrillic characters)
-// sorted by UTF8 - 2 byte characters only
-// this table also contains some normalization of characters if not supported by the ROM
-// not complete, missing end of datasheet rows 7, D, E, complete row F, 
+/**
+   \brief character mapping for the SPLC780D1 002A ROM (Cyrillic characters)
+   
+   sorted by UTF8 - 2 byte characters only
+   this table also contains some normalization of characters if not supported by the ROM
+   not complete, missing end of datasheet rows 7, D, E, complete row F, 
+*/
 const Mapping ROM_SPLC780D1_002A[] PROGMEM = {
   {0xd081, 0xA2}, // Ё  CYRILLIC CAPITAL LETTER IO
   {0xd086, 'I'},  // ?  CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I
@@ -361,11 +375,13 @@ const Mapping ROM_SPLC780D1_002A[] PROGMEM = {
   {0xd1b5, 'y'},  // ѵ  CYRILLIC SMALL LETTER IZHITSA      - substitute ASCII according GOST
 };
 
-
-// character mapping for the SPLC780D1 003A ROM (European Languages)
-// plus supplements for European Languages
-// splitted in 2 byte and 3 byte, then sorted by ROM address
-// this table also contains some normalization of characters if not supported by the ROM
+/**
+   \brief character mapping for the SPLC780D1 003A ROM (European Languages)
+   
+   plus supplements for European Languages
+   splitted in 2 byte and 3 byte, then sorted by ROM address
+   this table also contains some normalization of characters if not supported by the ROM
+*/
 const Mapping ROM_SPLC780D1_003A[] PROGMEM = {
   // German Umlauts sorted to top, assumption: ä ö ü are used more often
   {0xC3A4, 0x84},    // ä   
@@ -627,12 +643,140 @@ const Mapping ROM_SPLC780D1_003A[] PROGMEM = {
   {0x8497, 0xFF},    // ?  SOUND RECORDING COPYRIGHT       0xe28497
 };
 
+/**
+   \brief character mapping for the SPLC780D1 015A ROM (HEBREW, CYRILLIC)
+   
+   Hebrew (quite complete )
+   Cyrillic (uncomplete, only capital letters)
+   plus some LATIN for European Languages
+   no mapping for Katakana
+   sorted by ROM address (no preference for ä ö ü...)
+  */
+const Mapping ROM_SPLC780D1_015A[] PROGMEM = {
+  {0xC2A5, 0x5C},  // ¥ YEN SIGN                 
+  {0x8692, 0x7E},  // ?  Rightwards Arrow      0xE286x92
+  {0x8690, 0x7F},  // ?  Leftwards Arrow       0xE286x90
+  
+  {0xd091, 0x80},  // Б  CYRILLIC CAPITAL LETTER BE
+  {0xd094, 0x81},  // Д  CYRILLIC CAPITAL LETTER DE
+  {0xd096, 0x82},  // Ж  CYRILLIC CAPITAL LETTER ZHE
+  {0xd097, 0x83},  // З  CYRILLIC CAPITAL LETTER ZE
+  {0xd098, 0x84},  // И  CYRILLIC CAPITAL LETTER I
+  {0xd099, 0x85},  // Й  CYRILLIC CAPITAL LETTER SHORT I
+  {0xd09b, 0x86},  // Л  CYRILLIC CAPITAL LETTER EL
+  {0xd09f, 0x87},  // П  CYRILLIC CAPITAL LETTER PE
+  {0xd0a3, 0x88},  // У  CYRILLIC CAPITAL LETTER U
+  {0xd0a6, 0x8A},  // Ч  CYRILLIC CAPITAL LETTER CHE
+  {0xd0a8, 0x8B},  // Ш  CYRILLIC CAPITAL LETTER SHA
+  {0xd0a9, 0x8C},  // Щ  CYRILLIC CAPITAL LETTER SHCHA
+  {0xd0aa, 0x8D},  // Ъ  CYRILLIC CAPITAL LETTER HARD SIGN
+  {0xd0ab, 0x8E},  // Ы  CYRILLIC CAPITAL LETTER YERU
+  {0xd0ad, 0x8F},  // Э  CYRILLIC CAPITAL LETTER E
+  
+  // blank
+  // blank
+  {0xd093, 0x92},  // Г  CYRILLIC CAPITAL LETTER GHE
+  // blank
+  {0xC3B6, 0x94},  // ö
+  {0xC3A4, 0x95},  // ä  LATIN SMALL LETTER A WITH DIAERESIS 
+  // ne?
+  // average?
+  {0xd0a4, 0x98},  // Ф  CYRILLIC CAPITAL LETTER EF
+  {0xC396, 0x99},  // Ö
+  //               // o with ring?
+  {0xc38b, 0x9B},  // Ë  LATIN CAPITAL LETTER E WITH DIAERESIS
+  {0xd0ae, 0x9C},  // Ю  CYRILLIC CAPITAL LETTER YU - JU
+  {0xd0af, 0x9D},  // Я  CYRILLIC CAPITAL LETTER YA  - JA
+  {0xC384, 0x9E},  // Ä
+  {0xc385, 0x9F},  // Å  LATIN CAPITAL LETTER A WITH RING ABOVE
+  {0xc382, 0x9F},  // Â  LATIN CAPITAL LETTER A WITH CIRCUMFLEX
+  
+  {0xd790, 0xA0},  // א HEBREW LETTER ALEF
+  {0xd791, 0xA1},  // ב HEBREW LETTER BET
+  {0xd792, 0xA2},  // ג HEBREW LETTER GIMEL
+  {0xd793, 0xA3},  // ד HEBREW LETTER DALET
+  {0xd794, 0xA4},  // ה HEBREW LETTER HE
+  {0xd795, 0xA5},  // ו HEBREW LETTER VAV
+  {0xd796, 0xA6},  // ז HEBREW LETTER ZAYIN
+  {0xd797, 0xA7},  // ח HEBREW LETTER HET
+  {0xd798, 0xA8},  // ט HEBREW LETTER TET
+  {0xd799, 0xA9},  // י HEBREW LETTER YOD
+  {0xd79a, 0xAA},  // ך HEBREW LETTER FINAL KAF
+  {0xd79b, 0xAB},  // כ HEBREW LETTER KAF
+  {0xd79c, 0xAC},  // ל HEBREW LETTER LAMED
+  {0xd79d, 0xAD},  // ם HEBREW LETTER FINAL MEM
+  {0xd79e, 0xAE},  // מ HEBREW LETTER MEM
+  {0xd79f, 0xAF},  // ן HEBREW LETTER FINAL NUN
+  {0xd7a0, 0xB0},  // נ HEBREW LETTER NUN
+  {0xd7a1, 0xB1},  // ס HEBREW LETTER SAMEKH
+  {0xd7a2, 0xB2},  // ע HEBREW LETTER AYIN
+  {0xd7a3, 0xB3},  // ף HEBREW LETTER FINAL PE
+  {0xd7a4, 0xB4},  // פ HEBREW LETTER PE
+  {0xd7a5, 0xB5},  // ץ HEBREW LETTER FINAL TSADI
+  {0xd7a6, 0xB6},  // צ HEBREW LETTER TSADI
+  {0xd7a7, 0xB7},  // ק HEBREW LETTER QOF
+  {0xd7a8, 0xB8},  // ר HEBREW LETTER RESH
+  {0xd7a9, 0xB9},  // ש HEBREW LETTER SHIN
+  {0xd7aa, 0xBA},  // ת HEBREW LETTER TAV
+  // Kata???
+  //
+  
+  /* // not found in char rom
+  {0xd7af, 0x},     // ׯ HEBREW YOD TRIANGLE
+  {0xd7b0, 0x},     // װ HEBREW LIGATURE YIDDISH DOUBLE VAV
+  {0xd7b1, 0x},     // ױ HEBREW LIGATURE YIDDISH VAV YOD
+  {0xd7b2, 0x},     // ײ HEBREW LIGATURE YIDDISH DOUBLE YOD
+  {0xd7b3, 0x},     // ׳ HEBREW PUNCTUATION GERESH
+  {0xd7b4, 0x},     // ״ HEBREW PUNCTUATION GERSHAYIM
+*/
+  // column 0xC seems to be katakana
+  // column 0xD seems to be katakana
+  {0xC2B0, 0xDF},  // DEGREE SIGN
+  
+  {0xceb1, 0xE0},  // α  GREEK SMALL LETTER ALPHA
+  // ä but already used from 0x95
+  {0xCEB2, 0xE2},  // GREEK SMALL LETTER BETA
+  {0xC39F, 0xE2},  // ß to GREEK SMALL LETTER BETA
+  {0xCEB5, 0xE3},  // GREEK SMALL LETTER EPSILON
+  {0xc2b5, 0xE4},  // µ  GREEK SMALL LETTER MU
+  // 
+  {0xCF81, 0xE6},  // GREEK SMALL LETTER RHO
+  //g?
+  {0x889A, 0xE8},  // SQUARE ROOT                            0xE2889A
+  //
+  // j
+  // mark
+  // c
+  {0xe1a0, 0xED},   // LATIN CAPITAL LETTER L WITH DOUBLE BAR  0xE2B1A0
+  // n 
+  
+  // p
+  // q
+  // o
+  {0x889E, 0xF3},  // Infiniy                                 0xE2889
+  {0xCEA9, 0xF4},  // GREEK CAPITAL LETTER OMEGA  
+  {0xC3BC, 0xF5},  // ü
+  {0xCEA3, 0xF6},  // GREEK CAPITAL LETTER SIGMA
+  {0xCF80, 0xF7},  // GREEK SMALL LETTER PI
+  // x
+  // y
+  // kata?
+  // kata?
+  // 
+  {0xC3B7, 0xFD},  // DIVISION SIGN
+  // blank
+  {0x9688, 0xFF},  // █	 FULL BLOCK  
+};
 
-// character mapping for the LEC1621_01 ROM (Western European - I)
-// plus supplements for European Languages
-// splitted in 2 byte and 3 byte, then sorted by ROM address - currently unsorted
-// this table also contains some normalization of German Umlauts if not supported by the ROM
-// the mapping is not complete
+
+/**
+   \brief character mapping for the LEC1621_01 ROM (Western European - I)
+   
+   plus supplements for European Languages
+   splitted in 2 byte and 3 byte, then sorted by ROM address - currently unsorted
+   this table also contains some normalization of German Umlauts if not supported by the ROM
+   the mapping is not complete
+*/
 const Mapping ROM_LEC1621_01[] PROGMEM = {
   // German Umlauts sorted to top, assumption: ä ö ü are used more often
                       
@@ -957,11 +1101,14 @@ const Mapping ROM_LEC1621_01[] PROGMEM = {
 };
 
 
-// character mapping for the LEC1621_02 ROM (English Russian)
-// sorted by UTF-8
-// Cyrillic follows ROM_SPLC780D1_002A
-// MISSING: the Latin letters are straight forward and should be implemented in a separate converter (similar to ST7070_ext)
-// the mapping is complete, but there are several 7bit characters not according to ASCII
+/**
+   \brief character mapping for the LEC1621_02 ROM (English Russian)
+   
+   sorted by UTF-8
+   Cyrillic follows ROM_SPLC780D1_002A
+   MISSING: the Latin letters are straight forward and should be implemented in a separate converter (similar to ST7070_ext)
+   the mapping is complete, but there are several 7bit characters not according to ASCII
+*/
 const Mapping ROM_LEC1621_02[] PROGMEM = {
   // LATIN
   {0xc380, 0x10},    // À  LATIN CAPITAL LETTER A WITH GRAVE
@@ -1014,7 +1161,7 @@ const Mapping ROM_LEC1621_02[] PROGMEM = {
   {0xc3af, 0x9F},    // ï  LATIN SMALL LETTER I WITH DIAERESIS
   // no more LATIN
   // some replacement for GERMAN
-  {0xc3b6, 'o'},    // ö  LATIN SMALL LETTER O WITH DIAERESIS
+  //F
   {0xc3bc, 'u'},    // ü  LATIN SMALL LETTER U WITH DIAERESIS
   
   // Cyrillic
@@ -1133,6 +1280,8 @@ uint8_t convert_ST7070(uint32_t &special, uint8_t &value);           // ST7070 s
 uint8_t convert_ST7070_ext(uint32_t &special, uint8_t &value);       // ST7070 extended for nearly all characters in font2
 uint8_t convert_SPLC780D1_002A(uint32_t &special, uint8_t &value);   // SPLC780D1 with 002A ROM only (Cyrillic)
 uint8_t convert_SPLC780D1_003A(uint32_t &special, uint8_t &value);   // SPLC780D1 with 003A ROM only (European) also for some OLED font table 3
+uint8_t convert_SPLC780D1_015A(uint32_t &special, uint8_t &value);   // SPLC780D1 with 015A ROM only (Hebrew)
+
 //uint8_t convert_HD44780A02(uint32_t &special, uint8_t &value);     // HD44780_A02 - alternative ROM A02 - European (latin) and some cyrillic letters - tbd
 
 // this example callback converter maps UTF-8 characters including up to 8 custom characters
@@ -1144,7 +1293,7 @@ uint8_t convert_LEC1621_01(uint32_t &special, uint8_t &value);       // OLED LEC
 uint8_t convert_LEC1621_02(uint32_t &special, uint8_t &value);       // OLED LEC1621 font 2 English Russian
 uint8_t convert_LEC1621_03(uint32_t &special, uint8_t &value);       // OLED LEC1621 font 3 (will reuse SPLC780D1_003A)
 
-extern uint32_t utf8_to_customChar[8];                                // has to be extern in .h
+extern uint32_t utf8_to_customChar[8];                               // has to be extern in .h
 
 /*
    language specific converters
@@ -1174,12 +1323,12 @@ uint8_t convert_cyrillic_min(uint32_t &special, uint8_t &value);     // cyrillic
 
 // deprecated alias functions - to be removed in 1.2.2 + 3 or after 2021-08-15
 // Latin to ASCII replacement - to be replaced two version after 1.2.2
-#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)
-  uint8_t __attribute__((deprecated("use convert_ASCII() instead"))) convert_ANSI(uint32_t &special, uint8_t &value);
-#elif defined(__GNUC__)
-  uint8_t __attribute__((deprecated)) convert_ANSI(uint32_t &special, uint8_t &value);
-#else
-  uint8_t convert_ANSI(uint32_t &special, uint8_t &value);
-#endif
+//#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)
+//  uint8_t __attribute__((deprecated("use convert_ASCII() instead"))) convert_ANSI(uint32_t &special, uint8_t &value);
+//#elif defined(__GNUC__)
+//  uint8_t __attribute__((deprecated)) convert_ANSI(uint32_t &special, uint8_t &value);
+//#else
+//  uint8_t convert_ANSI(uint32_t &special, uint8_t &value);
+//#endif
 
 #endif // old include guard

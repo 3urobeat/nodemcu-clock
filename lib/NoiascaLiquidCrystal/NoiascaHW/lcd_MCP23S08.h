@@ -8,6 +8,7 @@
   
   copyright 2021 noiasca noiasca@yahoo.com
   
+  2023-01-07 init backlightState
   2021-10-30 Print 
   2021-05-17 OK
   2021-04-11 OK
@@ -27,7 +28,7 @@ const byte gpioRegA = 0x09;   // Output Bank0
    ************************************************************************** */
 
 class LiquidCrystal_MCP23S08_base : public Print, public LiquidCrystal_dummy {
-  public:     
+  public:  
     LiquidCrystal_MCP23S08_base( uint8_t lcdAddr,
                                  uint8_t csPin,                      // New Pinorder from 2.0
                                  uint8_t cols, uint8_t rows) : 
@@ -131,7 +132,7 @@ class LiquidCrystal_MCP23S08_base : public Print, public LiquidCrystal_dummy {
     static const uint8_t blPin = 0b00001000;     // 0b00001000 the backlight pin - MISSING: tbc if this interferes with the OLED
     const uint8_t csPin;
     //const uint8_t dataPin[4];                  // data pins hi nibble 4 5 6 7
-    uint8_t backlightState;                      // we need to keep track of the backlight pin on the port expander      
+    uint8_t backlightState = 0;                  // we need to keep track of the backlight pin on the port expander      
 
     void send(uint8_t value, uint8_t rs, uint8_t rw = rwWrite)                 // 4 bit type only - generic
     {
@@ -176,8 +177,11 @@ class LiquidCrystal_MCP23S08_base : public Print, public LiquidCrystal_dummy {
 };
 
 
-/*
-   SPI default class with special character support
+/**
+   \brief MCP23S08 SPI class with special character support.
+   
+   This class can be used with a MCP23S08 - a 8 channel SPI portexpander.   
+   Remember that the MCP23S08 has 3 address pins also.   
 */
 class LiquidCrystal_MCP23S08 : public LiquidCrystal_MCP23S08_base {
   protected:
@@ -185,11 +189,24 @@ class LiquidCrystal_MCP23S08 : public LiquidCrystal_MCP23S08_base {
     CallBack funcPtr;  
     
   public:
+/**
+   \param lcd_Addr the I2C address of the IC
+   \param csPin the Chip Select pin
+   \param lcd_cols columns (e.g. 16)
+   \param lcd_rows the rows (e.g. 2)
+*/  
     LiquidCrystal_MCP23S08(uint8_t lcd_Addr, uint8_t csPin, uint8_t lcd_cols, uint8_t lcd_rows) :
       LiquidCrystal_MCP23S08_base(lcd_Addr, csPin, lcd_cols, lcd_rows),
       funcPtr(convert)        // function pointer to default converter
       {}
-      
+
+/**
+   \param lcd_Addr the I2C address of the IC
+   \param csPin the Chip Select pin
+   \param lcd_cols columns (e.g. 16)
+   \param lcd_rows the rows (e.g. 2)
+   \param funcPtr a function pointer to a character converter
+*/       
     LiquidCrystal_MCP23S08(uint8_t lcd_Addr, uint8_t csPin, uint8_t lcd_cols, uint8_t lcd_rows, CallBack funcPtr) :
       LiquidCrystal_MCP23S08_base(lcd_Addr, csPin, lcd_cols, lcd_rows),
       funcPtr(funcPtr)        

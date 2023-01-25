@@ -15,8 +15,10 @@
   Open topics
   - 
   
-  copyright 2021 noiasca noiasca@yahoo.com
-  
+  copyright 2022 noiasca noiasca@yahoo.com
+
+  2022-03-06 added support for any I2C interface (TwoWire)  
+  2022-01-15 comments for doxygen
   2021-11-27 TwoWire.h
   2021-05-30 new development
 */
@@ -38,6 +40,7 @@
 
 class LiquidCrystal_Wire_base : public Print, public LiquidCrystal_dummy {
   protected:
+    TwoWire *i2cPort;				                     // generic connection to user's chosen I2C hardware
     const uint8_t lcdAddr;                       // I2C address of display
     const uint8_t waitshort = 41;                // AIP31068L datasheet p15 using the value fo data write (instead of 37)
     const uint16_t waitlong = 1530;              // AIP31068L datasheet p15 (instead of 1520)
@@ -52,18 +55,25 @@ class LiquidCrystal_Wire_base : public Print, public LiquidCrystal_dummy {
     void write8bits(uint8_t value, uint8_t rs = rsIR, uint8_t rw = rwWrite) {  // low level HW access in 8 bit mode
       DEBUG_PRINTLN(F("Wire_base write4bits"));
       (void)rw;
-      Wire.beginTransmission(lcdAddr);
+      i2cPort->beginTransmission(lcdAddr);
       if (rs == rsDR) 
-        Wire.write(0x40);              // set bit7 to 0 (last control byte) and set bit6 (0x40) (datasheet p12)
+        i2cPort->write(0x40);              // set bit7 to 0 (last control byte) and set bit6 (0x40) (datasheet p12)
       else
-        Wire.write(0);                 // set bit7 to 0 (last control byte) and bit6 to 0 (datasheet p12)
-      Wire.write(value);
-      Wire.endTransmission();
+        i2cPort->write(0);                 // set bit7 to 0 (last control byte) and bit6 to 0 (datasheet p12)
+      i2cPort->write(value);
+      i2cPort->endTransmission();
     }
   
   public:     
     LiquidCrystal_Wire_base(uint8_t lcdAddr, uint8_t cols, uint8_t rows) : 
       LiquidCrystal_dummy(cols, rows),
+      i2cPort(&Wire),
+      lcdAddr{lcdAddr}
+      {}
+      
+    LiquidCrystal_Wire_base(TwoWire &i2cPort,uint8_t lcdAddr, uint8_t cols, uint8_t rows) : 
+      LiquidCrystal_dummy(cols, rows),
+      i2cPort(&i2cPort),
       lcdAddr{lcdAddr}
       {}
 
@@ -77,15 +87,14 @@ class LiquidCrystal_Wire_base : public Print, public LiquidCrystal_dummy {
       DEBUG_PRINTLN(F("Wire_base hwInit"));
 #if defined(__AVR__)
       if (TWCR == 0) {
-        Wire.begin();                                      // only call when not started before
+        i2cPort->begin();                                      // only call when not started before
         DEBUG_PRINTLN(F("E: add Wire.begin() in sketch!"));
       }
 #endif
     }
 
-/*  
-    init()
-    LCD API: Initializes the display.
+/**  
+    Initializes the display (LCD API: init())
     Clears the screen and puts the cursor to 0, 0
     noiasca: methods are on HW implementation level
              I prefer the begin() methods
@@ -118,8 +127,11 @@ class LiquidCrystal_Wire_base : public Print, public LiquidCrystal_dummy {
 };
 
 
-/*
-   I2C default class with special character support
+/**
+   \brief Native I2C default class with special character support.
+   
+   Some LCD come with a native I2C support. Here we use 8bit mode.
+   This class is NOT for the usage with portexpanders like the PCF8574.
 */
 class LiquidCrystal_Wire : public LiquidCrystal_Wire_base {
   protected:
@@ -127,28 +139,78 @@ class LiquidCrystal_Wire : public LiquidCrystal_Wire_base {
     CallBack funcPtr;  
     
   public:
-    LiquidCrystal_Wire(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows) :
-      LiquidCrystal_Wire_base(lcd_Addr, lcd_cols, lcd_rows),
+    /** 
+      \brief constructor for a native I2C LCD
+      
+      This constructor uses the default character converter
+      
+      \param lcdAddr the I2C address
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2, or 4
+    */    
+    LiquidCrystal_Wire(uint8_t lcdAddr, uint8_t cols, uint8_t rows) :
+      LiquidCrystal_Wire_base(lcdAddr, cols, rows),
+      funcPtr{convert}       // function pointer to default converter
+      {}
+      
+    /** 
+      \brief constructor for a native I2C LCD
+      
+      This constructor accepts a indidvidual character converter
+      
+      \param lcdAddr the I2C address
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2, or 4
+      \param funcPtr a callback to convert UTF-8 characters
+    */      
+    // with function pointer to individual callback
+    LiquidCrystal_Wire(uint8_t lcdAddr, uint8_t cols, uint8_t rows, CallBack funcPtr) :
+      LiquidCrystal_Wire_base(lcdAddr, cols, rows),
+      funcPtr{funcPtr}       // function pointer to individual converter
+      {} 
+      
+    /** 
+      \brief constructor for a native I2C LCD
+      
+      This constructor accepts a Wire interface and uses the custom converter
+      
+      \param i2cPort the I2C port, i.e. Wire
+      \param lcdAddr the I2C address
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2, or 4
+    */  
+    LiquidCrystal_Wire(TwoWire &i2cPort, uint8_t lcdAddr, uint8_t cols, uint8_t rows) :
+      LiquidCrystal_Wire_base(i2cPort, lcdAddr, cols, rows),
       funcPtr{convert}       // function pointer to default converter
       {}
     
-    // with function pointer to individual callback
-    LiquidCrystal_Wire(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows, CallBack funcPtr) :
-      LiquidCrystal_Wire_base(lcd_Addr, lcd_cols, lcd_rows),
-      funcPtr{funcPtr}       // function pointer to individual converter
-      {}   
-   
+    /** 
+      \brief constructor for a native I2C LCD
+      
+      This constructor accepts a Wire interface and a indidvidual character converter
+      
+      \param i2cPort the I2C port, i.e. Wire
+      \param lcdAddr the I2C address
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2, or 4
+      \param funcPtr a callback to convert UTF-8 characters
+    */    
+    LiquidCrystal_Wire(TwoWire &i2cPort, uint8_t lcdAddr, uint8_t cols, uint8_t rows, CallBack funcPtr) :
+      LiquidCrystal_Wire_base(i2cPort, lcdAddr, cols, rows),
+      funcPtr{funcPtr}                 // function pointer to individual converter
+      {}  
+      
     size_t write(uint8_t value) {      // decided against inline
       DEBUG_PRINTLN(F("I2C write"));
       switch(funcPtr (special, value))
       {
-        case NOPRINT :       // don't print
+        case NOPRINT :                 // don't print
           break;
-        case ADDE :          // print an additional e after character
+        case ADDE :                    // print an additional e after character
           send(value, rsDR);   
-          send('e', rsDR);   // add a small e after the printed character
+          send('e', rsDR);             // add a small e after the printed character
           break;
-        default :            // includes 1: just print
+        default :                      // includes 1: just print
           send(value, rsDR);
       }
       return 1;
@@ -156,16 +218,19 @@ class LiquidCrystal_Wire : public LiquidCrystal_Wire_base {
 };
 
 
-/*
-  Wire/I2c Display with RGB Backlight PCA9633
-    Sureeno or Grove 
+/**
+  \brief Wire/I2C Display with RGB Backlight PCA9633
+  
+  Some LCD come with a dedicated RGB IC PCA9633. 
+  This class combines the native I2C display an the RGB IC.
+  These displays are sold by Sureeno or Grove 
 */
 // native 8bit Wire interface
 class LiquidCrystal_Wire_RGB : public LiquidCrystal_Wire_base {
   protected:
     const uint8_t rgbAddr;                                 // hardwired on Sureeno display
     byte blRed = 127, blGreen = 127, blBlue = 127;         // backlight default colors (medium grey/white)
-    uint8_t backlightState;                                // keep track of the backlight state 
+    uint8_t backlightState = 255;                          // keep track of the backlight state 
     using CallBack = uint8_t (*)(uint32_t &special, uint8_t &value);
     CallBack funcPtr;  
     
@@ -182,41 +247,118 @@ class LiquidCrystal_Wire_RGB : public LiquidCrystal_Wire_base {
     static constexpr uint8_t REG_OUTPUT = 0x08;  // LED driver output state, LEDOUT
   
   public:
+    /** 
+      \brief constructor for a native I2C LCD with RGB chip
+      
+      This constructor uses the custom converter
+      
+      \param lcdAddr the I2C address
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2 or 4
+    */ 
     // defaulted rgbAddr, defaulted callback function pointer
-    LiquidCrystal_Wire_RGB(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows) : 
-      LiquidCrystal_Wire_base(lcd_Addr, lcd_cols, lcd_rows),
+    LiquidCrystal_Wire_RGB(uint8_t lcdAddr, uint8_t cols, uint8_t rows) : 
+      LiquidCrystal_Wire_base(lcdAddr, cols, rows),
       rgbAddr{RGB_ADDR},               // default value from define
       funcPtr{convert}                 // function pointer to default converter
       {
         backlightState = 255;
       }
       
+    /** 
+      \brief constructor for a native I2C LCD with RGB chip
+      
+      This constructor accepts an individual the custom converter
+      \param lcdAddr the I2C address
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2 or 4
+      \param funcPtr a callback to the converter function
+    */       
     // defaulted rgbAddr but dedicated function pointer
-    LiquidCrystal_Wire_RGB(uint8_t lcd_Addr, uint8_t lcd_cols, uint8_t lcd_rows, CallBack funcPtr) : 
-      LiquidCrystal_Wire_base(lcd_Addr, lcd_cols, lcd_rows),
+    LiquidCrystal_Wire_RGB(uint8_t lcdAddr, uint8_t cols, uint8_t rows, CallBack funcPtr) : 
+      LiquidCrystal_Wire_base(lcdAddr, cols, rows),
       rgbAddr{RGB_ADDR},               // default value from define
       funcPtr{funcPtr}                 // function pointer to individual converter
       {
         backlightState = 255;
       }
-    
+      
+    /** 
+      \brief constructor for a native I2C LCD with RGB chip
+      
+      This constructor accepts an address for the RGB chip and uses the custom converter
+      \param lcdAddr the I2C address
+      \param rgbAddr the I2C address of the RGB chip
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2 or 4
+    */ 
     // dedicated rgbAddr but defaulted callback function pointer
-    LiquidCrystal_Wire_RGB(uint8_t lcd_Addr, uint8_t rgbAddr, uint8_t lcd_cols, uint8_t lcd_rows) : 
-      LiquidCrystal_Wire_base(lcd_Addr, lcd_cols, lcd_rows),
+    LiquidCrystal_Wire_RGB(uint8_t lcdAddr, uint8_t rgbAddr, uint8_t cols, uint8_t rows) : 
+      LiquidCrystal_Wire_base(lcdAddr, cols, rows),
       rgbAddr{rgbAddr},
       funcPtr{convert}                 // function pointer to default converter
       {
         backlightState = 255;
       }
+
+    /** 
+      \brief constructor for a native I2C LCD with RGB chip
       
+      This constructor accepts a Wire interface and uses the custom converter
+      \param lcdAddr the I2C address
+      \param rgbAddr the I2C address of the RGB chip
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2 or 4
+      \param funcPtr a callback to the converter function
+    */       
     // dedicated rgbAddr and dedicated function pointer
-    LiquidCrystal_Wire_RGB(uint8_t lcd_Addr, uint8_t rgbAddr, uint8_t lcd_cols, uint8_t lcd_rows, CallBack funcPtr) : 
-      LiquidCrystal_Wire_base(lcd_Addr, lcd_cols, lcd_rows),
+    LiquidCrystal_Wire_RGB(uint8_t lcdAddr, uint8_t rgbAddr, uint8_t cols, uint8_t rows, CallBack funcPtr) : 
+      LiquidCrystal_Wire_base(lcdAddr, cols, rows),
       rgbAddr{rgbAddr},
       funcPtr{funcPtr}                 // function pointer to individual converter
       {
         backlightState = 255;
       }
+
+    /** 
+      \brief constructor for a native I2C LCD with RGB chip
+      
+      This constructor accepts a Wire interface and uses the custom converter
+      \param i2cPort a Wire interface
+      \param lcdAddr the I2C address
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2 or 4
+    */  
+    // defaulted rgbAddr, defaulted callback function pointer
+    LiquidCrystal_Wire_RGB(TwoWire &i2cPort, uint8_t lcdAddr, uint8_t cols, uint8_t rows) : 
+      LiquidCrystal_Wire_base(i2cPort, lcdAddr, cols, rows),
+      rgbAddr{RGB_ADDR},               // default value from define
+      funcPtr{convert}                 // function pointer to default converter
+      {
+        backlightState = 255;
+      }
+      
+    /** 
+      \brief constructor for a native I2C LCD with RGB chip
+      
+      This constructor accepts a Wire interface and uses the custom converter
+      
+      \param i2cPort a Wire interface
+      \param lcdAddr the I2C address
+      \param cols the columns 8, 16, 20, 24 or 40
+      \param rows the rows: 1, 2 or 4
+      \param funcPtr a callback to the converter function
+    */     
+    // defaulted rgbAddr but dedicated function pointer
+    LiquidCrystal_Wire_RGB(TwoWire &i2cPort, uint8_t lcdAddr, uint8_t cols, uint8_t rows, CallBack funcPtr) : 
+      LiquidCrystal_Wire_base(i2cPort, lcdAddr, cols, rows),
+      rgbAddr{RGB_ADDR},               // default value from define
+      funcPtr{funcPtr}                 // function pointer to individual converter
+      {
+        backlightState = 255;
+      }
+      
+    // variants for individual Wire and individual RGB address not implemented
 
     inline size_t write(uint8_t value) {
       DEBUG_PRINTLN(F("Wire_RGB write"));
@@ -234,7 +376,7 @@ class LiquidCrystal_Wire_RGB : public LiquidCrystal_Wire_base {
       return 1; // allways assume success
     }        
       
-    /*    
+    /**    
        Turn the (optional) backlight on
        for these displays it's done by hardware with the RGB chip
     */               
@@ -242,7 +384,7 @@ class LiquidCrystal_Wire_RGB : public LiquidCrystal_Wire_base {
       setRegRGB(REG_OUTPUT, 0xFF);     // table 13: LED driver x individual brightness and group dimming/blinking can be controlled through its PWMx register and the GRPPWM registers.
     }
     
-    /*    
+    /**    
        switch on the backlight
        for these displays it's done by hardware with the RGB chip
     */
@@ -250,7 +392,7 @@ class LiquidCrystal_Wire_RGB : public LiquidCrystal_Wire_base {
       setRegRGB(REG_OUTPUT, 0x00);     // table 13: LED driver x is off
     }
 
-    /*    
+    /**    
        set brightness of LED backlight
     */    
     void setBacklight(uint8_t new_val)
@@ -259,7 +401,7 @@ class LiquidCrystal_Wire_RGB : public LiquidCrystal_Wire_base {
       setRGB(blRed, blGreen, blBlue); 
     }
 
-    /*    
+    /**    
        switch on the backlight - LED blinking
     */
     void blinkBacklight(void)
@@ -271,7 +413,7 @@ class LiquidCrystal_Wire_RGB : public LiquidCrystal_Wire_base {
       setRegRGB(0x06, 0x7F);           // half on, half off     GRPPWM
     }
     
-    /*    
+    /**    
        switch off the backlight - LED blinking
     */    
     void noBlinkBacklight(void) 
@@ -289,7 +431,7 @@ class LiquidCrystal_Wire_RGB : public LiquidCrystal_Wire_base {
       DEBUG_PRINTLN(F("Wire hwInit"));
 #if defined(__AVR__)
   if (TWCR == 0) {
-        Wire.begin();                  // only call when not started before
+        i2cPort->begin();                  // only call when not started before
         DEBUG_PRINTLN(F("E: add Wire.begin() in sketch!"));
       }
 #endif
@@ -304,10 +446,10 @@ class LiquidCrystal_Wire_RGB : public LiquidCrystal_Wire_base {
     {
       DEBUG_PRINTLN(F("Wire initRGB"));
       // reset chips on bus            // datasheet chapter 7.6 Software Reset
-      Wire.beginTransmission(0x03);    // SWRST I2C-bus address ‘0000 011’ 
-      Wire.write(0xA5);                // Byte 1 = A5h: the PCA9633 acknowledges this value only
-      Wire.write(0x5A);                // Byte 2 = 5Ah: the PCA9633 acknowledges this value only
-      Wire.endTransmission();          // the PCA9633 then resets to the default value (power-up value)        
+      i2cPort->beginTransmission(0x03);// SWRST I2C-bus address ‘0000 011’ 
+      i2cPort->write(0xA5);            // Byte 1 = A5h: the PCA9633 acknowledges this value only
+      i2cPort->write(0x5A);            // Byte 2 = 5Ah: the PCA9633 acknowledges this value only
+      i2cPort->endTransmission();      // the PCA9633 then resets to the default value (power-up value)        
       // backlight init
       setRegRGB(REG_MODE1, 0);         // table 8: Normal mode, does not respond to I2C-bus subaddress, does not respond to LED All Call I2C-bus address
       // set LEDs controllable by both PWM and GRPPWM registers
@@ -318,37 +460,45 @@ class LiquidCrystal_Wire_RGB : public LiquidCrystal_Wire_base {
     }
     
     /* 
-        sets a RGB Chip register to a value (i.e. one specific color register)
+        \brief set a RGB Chip register to a value (i.e. one specific color register)
+        
         low level function to I2C registers
-        MISSING: tbd: make it protected
+        \todo: make it protected
     */
-    void setRegRGB(unsigned char reg, unsigned char value) {
-      Wire.beginTransmission(rgbAddr);
-      Wire.write(reg);
-      Wire.write(value);
-      Wire.endTransmission();
+    void setRegRGB(uint8_t reg, uint8_t value) {
+      i2cPort->beginTransmission(rgbAddr);
+      i2cPort->write(reg);
+      i2cPort->write(value);
+      i2cPort->endTransmission();
     }
     
-    /* 
-        sets all three backlight colors
+    /** 
+        \brief set all three backlight colors
+        
         Sends data with autoincrement, which should be faster but needs 32 bytes more than the former version 
+        @param r red color
+        @param g green color
+        @param b blue color
     */
-    void setRGB(unsigned char r, unsigned char g, unsigned char b) {   
+    void setRGB(uint8_t r, uint8_t g, uint8_t b) {   
       // 
       blRed = r;
       blGreen = g;
       blBlue = b;
       const byte autoincrement = 0x80;  // datasheet table 6, Auto-Increment for all registers. D3, D2, D1, D0 roll over to ‘0000’ after the last register (1100) is accessed.
-      Wire.beginTransmission(rgbAddr);
-      Wire.write((REG_BLUE | autoincrement));
-      Wire.write(b * backlightState / 255U);
-      Wire.write(g * backlightState / 255U);
-      Wire.write(r * backlightState / 255U);
-      Wire.endTransmission();     
+      i2cPort->beginTransmission(rgbAddr);
+      i2cPort->write((REG_BLUE | autoincrement));
+      i2cPort->write(b * backlightState / 255U);
+      i2cPort->write(g * backlightState / 255U);
+      i2cPort->write(r * backlightState / 255U);
+      i2cPort->endTransmission();     
     }
    
-    /*
-        sets the three backlight colors
+    /**
+        \brief set backlight color 
+        
+        Sets the backlight the given RGB value        
+        @param newColor combined color as RGB value in the common 0xRRGGBB format
     */
     void setRGB(uint32_t newColor) {
       uint8_t r = newColor >> 16;
