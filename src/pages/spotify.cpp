@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 17:05:56
+ * Last Modified: 25.01.2023 12:29:53
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -172,7 +172,9 @@ namespace spotifyPage
         uint8_t amountOfHashtags = (spaceLeft - 1) * ((float) currentProgress / (float) spotifyData.songLength); // Calculate amount of hashtags by calculating percentage and stuff lol
 
         lcd.setCursor(0, 3);
-        for (uint8_t i = 0; i < amountOfHashtags && i < spaceLeft - 1; i++) lcd.print('>'); // Print progress bar, limit to spaceLeft to avoid overflow
+        uint8_t i;
+        for (i = 0; i < amountOfHashtags && i < spaceLeft - 1; i++) lcd.print('>'); // Print progress bar, limit to spaceLeft to avoid overflow
+        for (i = i; i < spaceLeft - 1; i++) lcd.print(' ');                         // Overwrite left over space with spaces to clear out old content
     }
 
     /**
