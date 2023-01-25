@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 25.01.2023 12:29:53
+ * Last Modified: 25.01.2023 12:40:09
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -109,11 +109,14 @@ namespace spotifyPage
                 prefs.getBytes("spotifyRefreshToken", spotifyRefreshToken, sizeof(spotifyRefreshToken));
 
                 fetchAccessToken(spotifyRefreshToken, "refresh_token");
-            }
+                displayCurrentData(); // Display something when done fetching token
 
-            // Skip page if user has playback paused (but still refresh playback so next time the page will show should the user have just resumed playback)
-            if (spotifyData.currentlyPlaying) displayCurrentData(); // Do this before updating so there is no akward empty page shown until API response was processed (which takes ~1.5 secs)
-                else nextPage();
+            } else { // Only check if we should skip page when we didn't just refresh our token
+
+                // Skip page if user has playback paused (but still refresh playback so next time the page will show should the user have just resumed playback)
+                if (spotifyData.currentlyPlaying) displayCurrentData(); // Do this before updating so there is no akward empty page shown until API response was processed (which takes ~1.5 secs)
+                    else nextPage();
+            }
 
             // Get current data each updateIntervalSpotify ms
             if (millis() >= spotifyLastPlaybackUpdate + updateIntervalSpotify) refreshCurrentPlayback();
