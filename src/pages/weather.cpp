@@ -4,7 +4,7 @@
  * Created Date: 05.09.2021 17:53:00
  * Author: 3urobeat
  * 
- * Last Modified: 23.01.2023 13:09:59
+ * Last Modified: 25.01.2023 15:33:30
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2021 3urobeat <https://github.com/HerrEurobeat>
@@ -39,7 +39,7 @@ namespace weatherPage
      */
     void setup()
     {
-        lcd.centerPrint(city, 1, false);
+
     }
 
 
@@ -59,6 +59,9 @@ namespace weatherPage
 
         // Check if it's time to update weather cache (do this here instead of in setup so long showuntils don't fail)
         if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateIntervalWeather <= millis()) refreshCache();
+
+        // Print city name after refreshing to avoid it glitching into "Loading..."
+        lcd.centerPrint(city, 1, false);
         
         // Switch between temp & cond and sunrise & sunset when pageElemSwitch ms passed since last mod switch
         if (Config::pageElemSwitch > 0 && millis() >= lastPageModWeather + Config::pageElemSwitch) {
