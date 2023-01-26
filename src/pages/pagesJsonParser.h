@@ -4,7 +4,7 @@
  * Created Date: 12.01.2023 12:40:54
  * Author: 3urobeat
  * 
- * Last Modified: 22.01.2023 10:24:07
+ * Last Modified: 26.01.2023 14:34:50
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -253,7 +253,7 @@ class SpotifyAccessTokenJsonHandler final : public JsonHandler
             // Check which key we are dealing with and copy value into correct variable
             if (strcmp(key, "access_token") == 0) strncpy(_accessToken, value.getString(), _accessTokenSize - 1);
             else if (strcmp(key, "expires_in") == 0) *_expiresTimestamp += value.getInt() * 1000; // add expires_in from sec to ms to millis() already in timestamp var
-            else if (strcmp(key, "refresh_token") == 0) prefs.putBytes("spotifyRefreshToken", value.getString(), 256); // Put it directly into flash as we only need it every hour
+            else if (strcmp(key, "refresh_token") == 0) prefs.putBytes("spotifyRefToken", value.getString(), 256); // Put it directly into flash as we only need it every hour
         }
 
         virtual ~SpotifyAccessTokenJsonHandler() = default; // To fix warning delete-non-virtual-dtor
