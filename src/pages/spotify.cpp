@@ -4,7 +4,7 @@
  * Created Date: 17.01.2023 10:39:35
  * Author: 3urobeat
  * 
- * Last Modified: 26.01.2023 12:08:09
+ * Last Modified: 26.01.2023 14:41:11
  * Modified By: 3urobeat
  * 
  * Copyright (c) 2023 3urobeat <https://github.com/HerrEurobeat>
@@ -86,10 +86,10 @@ namespace spotifyPage
         }
 
         // Check if user did not auth before and run first time setup
-        char spotifyRefreshToken[256] = "";
-        prefs.getBytes("spotifyRefreshToken", spotifyRefreshToken, sizeof(spotifyRefreshToken));
+        char spotifyRefToken[256] = "";
+        prefs.getBytes("spotifyRefToken", spotifyRefToken, sizeof(spotifyRefToken));
 
-        if (strlen(spotifyRefreshToken) == 0) requestAuth();
+        if (strlen(spotifyRefToken) == 0) requestAuth();
     }
 
     /**
@@ -105,10 +105,10 @@ namespace spotifyPage
 
             // Check if accessToken is about to expire (do this here instead of in setup so long showuntils don't fail)
             if (millis() + 5000 >= spotifyAccessTokenExpiresTimestamp) {
-                char spotifyRefreshToken[256] = "";
-                prefs.getBytes("spotifyRefreshToken", spotifyRefreshToken, sizeof(spotifyRefreshToken));
+                char spotifyRefToken[256] = "";
+                prefs.getBytes("spotifyRefToken", spotifyRefToken, sizeof(spotifyRefToken));
 
-                fetchAccessToken(spotifyRefreshToken, "refresh_token");
+                fetchAccessToken(spotifyRefToken, "refresh_token");
                 displayCurrentData(); // Display something when done fetching token
 
             } else { // Only check if we should skip page when we didn't just refresh our token
@@ -378,10 +378,11 @@ namespace spotifyPage
 
         /* --------- Send POST request --------- */
         client->setInsecure();
-        client->setNoDelay(false);
         
         if (client->connect("accounts.spotify.com", 443)) { // Only proceed if connection succeeded
             client->print(request); // Send our POST req data over
+
+            debug(F("spotify page: Connected, waiting for response..."));
 
             // Prepare spotifyAccessTokenExpiresTimestamp, parser will do +=
             spotifyAccessTokenExpiresTimestamp = millis();
