@@ -19,7 +19,7 @@
 #include "../config/config.cpp" // I don't know why I need to include config.cpp here but it otherwise results in an undefined reference to Config::... linker error
 
 
-const char version[] = "v0.9.0";
+const char version[] = "v0.10.0";
 
 byte *stack_start; // Measure amount of stack used at start so we can track it later from debug.cpp
 
