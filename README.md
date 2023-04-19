@@ -6,12 +6,12 @@ By connecting the setup pins listed below with a switch, for example, you can en
 &nbsp;
 
 ## Pages
-| **Name** | **About** | **Picture** |
+| **Name** | **About** | **Demo** |
 | -------- | --------- | ----------- |
-| Clock    | Displays current time, date and weekday. Automatically geolocates your timezone. Uses NTP for syncing time and ip-api for geolocating. | TBA |
-| Weather  | Displays city name, current weather, temp, sunrise and sunset time. Automatically geolocates your coords and city but can be overwritten in config. Uses openweathermap.org (API key required!). | ![Picture](https://raw.githubusercontent.com/HerrEurobeat/nodemcu-clock/main/.github/img/page-weather.jpg) |
-| News     | Displays 4 current headlines from different news outlets, switching to the next one on page reset. Page switch on event (headline finished scrolling through) or after time supported. Uses newsapi.org (API key required!). | TBA |
-| Spotify  | Displays your current Spotify playback title, artist and progress. | TBA |
+| Clock    | Displays current time, date and weekday. Automatically geolocates your timezone. Uses NTP for syncing time and ip-api for geolocating. | ![Demo](https://raw.githubusercontent.com/HerrEurobeat/nodemcu-clock/main/.github/img/page-clock.gif) |
+| Weather  | Displays city name, current weather, temp, sunrise and sunset time. Automatically geolocates your coords and city but can be overwritten in config. Uses openweathermap.org (API key required!). | ![Demo](https://raw.githubusercontent.com/HerrEurobeat/nodemcu-clock/main/.github/img/page-weather.gif) |
+| News     | Displays 4 current headlines from different news outlets, switching to the next one on page reset. Page switch on event (headline finished scrolling through) or after time supported. Uses newsapi.org (API key required!). | ![Demo](https://raw.githubusercontent.com/HerrEurobeat/nodemcu-clock/main/.github/img/page-news.gif) |
+| Spotify  | Displays your current Spotify playback title, artist and progress. | ![Demo](https://raw.githubusercontent.com/HerrEurobeat/nodemcu-clock/main/.github/img/page-spotify.gif) |
 
 &nbsp;
 
