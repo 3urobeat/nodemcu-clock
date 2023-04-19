@@ -37,7 +37,7 @@ TBA
 
 ## Configuration & Setup Mode
 There are two methods of configuring your nodemcu-clock.  
-You can either use the aforementioned setupMode at runtime or by editing the `config.cpp` file at compile-time.  
+You can either use the aforementioned setupMode at runtime or edit the `config.cpp` file at compile-time.  
 
 <details>
     <summary><b>Setup Mode (click to expand)</b></summary>
@@ -59,10 +59,14 @@ You can either use the aforementioned setupMode at runtime or by editing the `co
     <summary><b>Compile-time Config (click to expand)</b></summary>
 
     - Open the `config/config.cpp` file in a text editor  
-    - When done making changes, save the file, recompile the firmware and flash it onto the device. See [Compiling and flashing firmware](https://github.com/HerrEurobeat/nodemcu-clock/#compiling-and-flashing-firmware) for more information.
+    - When done making changes, save the file, recompile the firmware and flash it onto the device.  
+      See [Compiling and flashing firmware](https://github.com/HerrEurobeat/nodemcu-clock/#compiling-and-flashing-firmware) for more information.
 
-    Note: Changes made here will only be applied if no settings have already been saved onto the device by a previous start with compile-time config or by using the setup mode.  
-    To circumvent this you can uncomment the `CLOCK_IGNOREFS` build flag in `platformio.ini`. Recompile and flash the firmware again.  
+    Note:  
+    Changes made here will only be applied if no settings have already been saved onto the  
+    device by a previous start with compile-time config or by using the setup mode.  
+    To circumvent this you can uncomment the `CLOCK_IGNOREFS` build flag in `platformio.ini`.  
+    Recompile and flash the firmware again.  
     The internal storage will now be ignored and only the compile-time config will be used.
 </details>
 
