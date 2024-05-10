@@ -4,7 +4,7 @@
  * Created Date: 2021-09-05 17:53:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:15:30
+ * Last Modified: 2024-05-10 15:13:51
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -31,7 +31,7 @@ bool     currentModWeather  = false;    // Tracks pageElemSwitch, as we only hav
 namespace weatherPage
 {
     // Declare function here and define it later below to reduce clutter while being accessible from setup()
-    void refreshCache();
+    bool refreshCache();
 
 
     /**
@@ -57,8 +57,17 @@ namespace weatherPage
             return;
         }
 
+
         // Check if it's time to update weather cache (do this here instead of in setup so long showuntils don't fail)
-        if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateIntervalWeather <= millis()) refreshCache();
+        if (lastWeatherRefresh == 0 || lastWeatherRefresh + updateIntervalWeather <= millis()) {
+            bool refreshSuccess = refreshCache();
+
+            if (!refreshSuccess) { // Check if the request succeeded
+                nextPage();
+                return;
+            }
+        }
+
 
         // Print city name after refreshing to avoid it glitching into "Loading..."
         lcd.centerPrint(city, 1, false);
@@ -89,7 +98,7 @@ namespace weatherPage
     /**
      * Helper function to refresh newsCache every updateIntervalNews ms, called by setup function
      */
-    void refreshCache()
+    bool refreshCache()
     {
         debug(F("weather page: Refreshing cache"));
 
@@ -131,6 +140,14 @@ namespace weatherPage
         delete(parser);
 
 
+        // Check if weatherCond is empty, indicating that the request probably failed
+        if (strlen(weatherCond) == 0) {
+            lcd.centerPrint("Failed to refresh!", 2);
+            delay(2500);
+            return false;
+        }
+
+
         // Concat weatherCond & temp to tempCondStr
         memset(tempCondStr, 0, sizeof(tempCondStr)); // Clear previous content
 
@@ -170,5 +187,6 @@ namespace weatherPage
         lcd.clearLine(2);
 
         debug(F("weather page: Refresh done"));
+        return true;
     }
 }
