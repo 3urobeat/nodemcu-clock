@@ -4,7 +4,7 @@
  * Created Date: 2021-12-12 21:27:54
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:14:11
+ * Last Modified: 2024-05-10 14:51:39
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -35,7 +35,7 @@ uint8_t moveOffset = 0; // moveOffset for movingPrint() call that displays title
 namespace newsPage
 {
     // Declare function here and define it later below to reduce clutter while being accessible from setup()
-    void refreshCache();
+    bool refreshCache();
 
 
     /**
@@ -48,14 +48,31 @@ namespace newsPage
         lcd.print("News");
 
         // Check if updateIntervalNews ms passed and update newsCache
-        if (lastRefresh == 0 || lastRefresh + updateIntervalNews <= millis()) refreshCache();
+        if (lastRefresh == 0 || lastRefresh + updateIntervalNews <= millis()) {
+            bool refreshSuccess = refreshCache();
+
+            if (!refreshSuccess) { // Check if request succeeded
+                nextPage();        // Skip this page for now, the next time this page is loaded it will re-attempt to refresh all titles
+                return;
+            }
+        }
+
 
         // Switch to next article and reset moveOffset so next title starts at index 0
         currentArticle++;
         moveOffset = 0;
 
-        // Reset to first article if last has been displayed
-        if (currentArticle >= 4) currentArticle = 0;
+        if (currentArticle >= 4) currentArticle = 0; // Rollover if index exceeds size
+
+
+        // Skip ahead if this titleCache entry is empty. This should *theoretically* never softlock since refreshCache() checks for failed requests
+        while (strlen(titleCache[currentArticle]) == 0) {
+            debug(F("newsPage: Empty titleCache entry detected, skipping ahead to next entry!"));
+
+            currentArticle++;
+            if (currentArticle >= 4) currentArticle = 0;
+        }
+
 
         // Show article source
         lcd.setCursor(0, 1);
@@ -84,23 +101,26 @@ namespace newsPage
 
 
     /**
-     * Helper function to refresh newsCache every updateIntervalNews ms, called by setup function
+     * Helper function to refresh newsCache every updateIntervalNews ms, called by setup function. Returns true on success, false otherwise.
      */
-    void refreshCache()
+    bool refreshCache()
     {
         // Check if user didn't provide an API key, display warning for 5 seconds and force-progress page
         if (strlen(Config::newsapitoken) == 0) {
             lcd.centerPrint("Error!", 1);
             lcd.centerPrint("No API key provided.", 3);
             delay(5000);
-            nextPage();
-            return;
+            return false;
         }
 
         debug(F("news page: Refreshing cache"));
 
         // Display loading message so the device doesn't look like it crashed
         lcd.centerPrint("Loading...", 2, false);
+
+        // Clear titleCache
+        memset(titleCache, 0, sizeof(titleCache));
+
 
         // Construct URL (128 B in stack should be fine, we only need it every 20 min so keeping it in heap might be wasted mem)
         char path[128] = "/v2/top-headlines?country="; // Use http instead of https as the SSL header takes like 20KB of heap, it's crazy
@@ -121,6 +141,21 @@ namespace newsPage
         // Clear up memory
         delete(parser);
 
+
+        // Check if all titles are !null
+        bool allPagesEmpty = true;
+
+        for (int i = 0; i < 4; i++) {
+            if (strlen(titleCache[i]) > 0) allPagesEmpty = false; // Set var to false if at least one page succeeded to load
+        }
+
+        if (allPagesEmpty) {
+            lcd.centerPrint("Failed to refresh!", 2);
+            delay(2500);
+            return false;
+        }
+
+
         // Update lastRefresh timestamp so next refresh only happens in updateIntervalNews ms
         lastRefresh = millis();
 
@@ -128,5 +163,6 @@ namespace newsPage
         lcd.clearLine(2);
 
         debug(F("news page: Refresh done"));
+        return true;
     }
 }
