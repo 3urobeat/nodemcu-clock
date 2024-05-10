@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 15:42:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:12:19
+ * Last Modified: 2024-05-10 11:34:36
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -22,7 +22,7 @@ void(* resetFunc) (void) = 0; // create a standard reset function
 
 
 /**
- * Attempts to establish WiFi connection by checking all wifi networks set in config.  
+ * Attempts to establish WiFi connection by checking all wifi networks set in config.
  * If no network provided in config could be found then the device will reset after 10 seconds.
  * @param row LCD display row to print connection related messages at (counted from 0)
  */
@@ -44,6 +44,11 @@ void initWifi(uint8_t row)
     for (uint8_t i = 0; i <= n; i++) {
         for (uint8_t j = 0; j < ssidAmount; j++) {
             WiFiLib.SSID(i).toCharArray(thisSSID, 64, 0);
+
+            #ifdef CLOCK_DEBUG
+                Serial.print("initWifi(): Found wifi SSID: ");
+                Serial.println(thisSSID);
+            #endif
 
             if (strcmp(thisSSID, Config::wifiSSID[j]) == 0) {
 

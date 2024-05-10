@@ -100,6 +100,13 @@ class NewsJsonHandler final : public JsonHandler
             // Get the current key
             const char *key = path.getKey();
 
+            #ifdef CLOCK_DEBUG
+                Serial.print("News: ");
+                Serial.print(key);
+                Serial.print(": ");
+                Serial.println(value.getString());
+            #endif
+
             if (_currentIndex >= _cacheSize) return; // This should never happen when the URL has the right amount of pages set but let's make sure
 
             // Quick pointer arithmetic to make passing 2D arrays easier. We just pass pointer to element 0 of array to function and offset correctly inside function wiht passed sizes to reach desired element

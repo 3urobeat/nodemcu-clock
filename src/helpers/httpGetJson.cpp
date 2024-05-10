@@ -92,6 +92,11 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
             strncpy(buf, wifiClient->readStringUntil('\r').c_str() + 9, 3); // Substring HTTP Code from "HTTP/1.1 200 OK"
             httpCode = atoi(buf);
 
+            #ifdef CLOCK_DEBUG
+                Serial.print("httpGetJson(): Received HTTP Code: ");
+                Serial.println(httpCode);
+            #endif
+
             // Send each char we are receiving over to our parser while the connection is alive (unless code 204 No Content was received)
             if (httpCode != 204) {
                 while (wifiClient->connected() || wifiClient->available()) {
@@ -112,6 +117,11 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
             // Get HTTP Code
             strncpy(buf, wifiSecureClient->readStringUntil('\r').c_str() + 9, 3); // Substring HTTP Code from "HTTP/1.1 200 OK" to "200"
             httpCode = atoi(buf);
+
+            #ifdef CLOCK_DEBUG
+                Serial.print("httpGetJson(): Received HTTP Code: ");
+                Serial.println(httpCode);
+            #endif
 
             // Send each char we are receiving over to our parser while the connection is alive (unless code 204 No Content was received)
             if (httpCode != 204) {
