@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 15:42:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:34:36
+ * Last Modified: 2024-05-10 15:39:20
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -35,6 +35,8 @@ void initWifi(uint8_t row)
     delay(500);
 
     // Search for wifi networks in range
+    const uint32_t startedScanningTimestamp = millis();
+
     uint8_t n = WiFiLib.scanNetworks();
     bool found = false;
 
@@ -77,6 +79,13 @@ void initWifi(uint8_t row)
 
     while (WiFiLib.status() != WL_CONNECTED)
     {
+        // Timeout wifi connect attempt after 60 seconds and reset device
+        if (millis() - startedScanningTimestamp > 60000) {
+            lcd.centerPrint("Connection Timeout", row);
+            delay(10000);
+            resetFunc();
+        }
+
         lcd.animationPrint(lcd.animations.waiting, 5, &animationFrame, 13, row); // Use lcdHelper's animationPrint and default waiting animation
 
         delay(500);
