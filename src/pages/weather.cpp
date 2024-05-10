@@ -1,14 +1,14 @@
 /*
  * File: weather.cpp
  * Project: nodemcu-clock
- * Created Date: 05.09.2021 17:53:00
+ * Created Date: 2021-09-05 17:53:00
  * Author: 3urobeat
- * 
- * Last Modified: 30.06.2023 09:47:10
+ *
+ * Last Modified: 2024-05-10 11:15:30
  * Modified By: 3urobeat
- * 
- * Copyright (c) 2021 3urobeat <https://github.com/3urobeat>
- * 
+ *
+ * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
@@ -62,7 +62,7 @@ namespace weatherPage
 
         // Print city name after refreshing to avoid it glitching into "Loading..."
         lcd.centerPrint(city, 1, false);
-        
+
         // Switch between temp & cond and sunrise & sunset when pageElemSwitch ms passed since last mod switch
         if (Config::pageElemSwitch > 0 && millis() >= lastPageModWeather + Config::pageElemSwitch) {
             currentModWeather  = !currentModWeather;
@@ -97,7 +97,7 @@ namespace weatherPage
         lcd.setCursor(0, 0);
         lcd.print("Weather");
         lcd.centerPrint("Loading...", 2, false);
-        
+
 
         // Construct URL
         char path[128] = "/data/2.5/weather?lat=";
@@ -135,7 +135,7 @@ namespace weatherPage
         memset(tempCondStr, 0, sizeof(tempCondStr)); // Clear previous content
 
         char *tempP = tempCondStr;
-        
+
         tempP = mystrcat(tempP, temp);
         tempP = mystrcat(tempP, "°C, ");
         tempP = mystrcat(tempP, weatherCond);
@@ -161,9 +161,9 @@ namespace weatherPage
         strrpl(sunRiseSetStr, "mm", lcd.toFixedLengthNumber(buf, minute(sunset), 2), sizeof(sunRiseSetStr) - 1);
         *(sunP) = '\0';                                 // Make sure there is a null char at the end
 
-        // Refresh timestamp so the next update will be in updateIntervalWeather ms 
+        // Refresh timestamp so the next update will be in updateIntervalWeather ms
         lastWeatherRefresh = millis();
-        
+
         // Clear "Weather" and "Loading..."
         lcd.setCursor(0, 0);
         lcd.print("       ");

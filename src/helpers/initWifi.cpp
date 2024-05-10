@@ -1,14 +1,14 @@
 /*
  * File: initWifi.cpp
  * Project: nodemcu-clock
- * Created Date: 30.08.2021 15:42:00
+ * Created Date: 2021-08-30 15:42:00
  * Author: 3urobeat
- * 
- * Last Modified: 30.06.2023 09:47:10
+ *
+ * Last Modified: 2024-05-10 11:12:19
  * Modified By: 3urobeat
- * 
- * Copyright (c) 2021 3urobeat <https://github.com/3urobeat>
- * 
+ *
+ * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
@@ -34,13 +34,13 @@ void initWifi(uint8_t row)
     lcd.print("Connecting");
     delay(500);
 
-    //Search for wifi networks in range
+    // Search for wifi networks in range
     uint8_t n = WiFiLib.scanNetworks();
     bool found = false;
 
-    char thisSSID[64]; //wifi SSIDs should have a max length of 32 characters
+    char thisSSID[64]; // wifi SSIDs should have a max length of 32 characters
 
-    //Try to connect by iterating for every found network over all networks in array (I tried doing this with indexOf() to avoid using a nested for loop but it had different results depending on the order in wifiSSID which was weird)
+    // Try to connect by iterating for every found network over all networks in array (I tried doing this with indexOf() to avoid using a nested for loop but it had different results depending on the order in wifiSSID which was weird)
     for (uint8_t i = 0; i <= n; i++) {
         for (uint8_t j = 0; j < ssidAmount; j++) {
             WiFiLib.SSID(i).toCharArray(thisSSID, 64, 0);
@@ -49,17 +49,17 @@ void initWifi(uint8_t row)
 
                 WiFiLib.begin(Config::wifiSSID[j], Config::wifiPW[j]);
 
-                found = true; //stop parent loop
-                break; //stop this loop
+                found = true; // Stop parent loop
+                break;        // Stop this loop
             }
         }
 
         if (found) break;
 
-        //Display error message if no network from wifiSSID array was found
+        // Display error message if no network from wifiSSID array was found
         if (i == n && !found) {
             lcd.centerPrint("No match found!", row, false);
-            delay(10000); //wait a few sec and reset to rescan
+            delay(10000); // Wait a few sec and reset to rescan
             resetFunc();
         }
     }
@@ -77,6 +77,6 @@ void initWifi(uint8_t row)
         delay(500);
     }
 
-    //Connection established
+    // Connection established
     lcd.centerPrint("Connected!", row, true);
 }

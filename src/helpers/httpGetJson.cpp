@@ -1,14 +1,14 @@
 /*
  * File: httpGetJson.cpp
  * Project: nodemcu-clock
- * Created Date: 30.08.2021 22:37:00
+ * Created Date: 2021-08-30 22:37:00
  * Author: 3urobeat
- * 
- * Last Modified: 30.06.2023 09:47:10
+ *
+ * Last Modified: 2023-12-27 13:48:09
  * Modified By: 3urobeat
- * 
- * Copyright (c) 2021 3urobeat <https://github.com/3urobeat>
- * 
+ *
+ * Copyright (c) 2021 - 2023 3urobeat <https://github.com/3urobeat>
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
@@ -49,7 +49,7 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
         if (port != 80) wifiSecureClient = new WiFiClientSecure();
     #endif
 
-    
+
     bool parserLibMade = false; // Track if we need to delete here
 
     if (parserLib == NULL) { // Create new handler obj if caller didn't pass one
@@ -78,7 +78,7 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
     reqP = mystrcat(reqP, "Connection: close\r\n\r\n");
 
     debug(F("httpGetJson(): GET request constructed, connecting..."));
-    
+
 
     /* --------- Send POST request with correct class type --------- */
     char buf[4] = "";
@@ -124,9 +124,9 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
         }
     #endif
     }
-    
+
     debug(F("httpGetJson(): Connection closed, cleaning up..."));
-    
+
 
     /* --------- Clean Up --------- */
     if (port == 80) delete(wifiClient);

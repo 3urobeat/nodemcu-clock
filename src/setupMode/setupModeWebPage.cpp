@@ -1,14 +1,14 @@
 /*
  * File: setupWebPage.cpp
  * Project: nodemcu-clock
- * Created Date: 24.12.2022 19:02:04
+ * Created Date: 2022-12-24 19:02:04
  * Author: 3urobeat
- * 
- * Last Modified: 30.06.2023 09:47:10
+ *
+ * Last Modified: 2024-05-10 11:16:30
  * Modified By: 3urobeat
- * 
- * Copyright (c) 2022 3urobeat <https://github.com/3urobeat>
- * 
+ *
+ * Copyright (c) 2022 - 2024 3urobeat <https://github.com/3urobeat>
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
@@ -26,7 +26,7 @@ String processor(const String& var) // I need to use String here because the lib
     // Fill "wifiNetworksIncluded" array with already stored wifi networks - this is prob quite inefficient but idc too much in setupMode
     char wifiSSIDTemp[10] = "wifiSSID0";
     char wifiPWTemp[8]    = "wifiPW0";
-    
+
     for (uint8_t i = 1; i <= ssidAmount; i++) { // Input names start with 1, not with 0 in this case
         // Update both char arrs with index i for this iteration
         wifiSSIDTemp[8] = '0' + i;
@@ -124,7 +124,7 @@ void setupModeWebPageSave(AsyncWebServerRequest *request)
 
         for (uint8_t i = 0; i < strlen(pageOrderInput); i++) {
             char e = pageOrderInput[i]; // Alias the char we are looking at to make using it easier
-            
+
             // Progress to next element in array when comma is detected
             if (e == ',') {
                 Config::pageOrder[arrayProgress][elemProgress] = '\0'; // Make sure null byte exists at the end of our element
@@ -132,7 +132,7 @@ void setupModeWebPageSave(AsyncWebServerRequest *request)
                 elemProgress = 0; // Reset element progress to start at 0 of next element
                 continue;
             }
-            
+
             // Skip empty chars
             if (e == ' ') continue;
 
@@ -155,12 +155,12 @@ void setupModeWebPageSave(AsyncWebServerRequest *request)
 
         for (uint8_t i = 0; i < strlen(showuntilInput); i++) {
             char e = showuntilInput[i]; // Alias the char we are looking at to make using it easier
-            
+
             // Progress to next element in array when comma is detected or if we reached the end of the input
             if (e == ',' || i == strlen(showuntilInput) - 1) {
                 // Append last char in last iteration, otherwise we are missing the last digit of the last element
                 if (e != ',') showuntilTemp[elemProgress] = e;
-                
+
                 // Convert showuntilTemp to int and store into Config
                 Config::showuntil[arrayProgress] = atoi(showuntilTemp);
 
@@ -171,7 +171,7 @@ void setupModeWebPageSave(AsyncWebServerRequest *request)
                 elemProgress = 0; // Reset element progress to start at 0 of next element
                 continue;
             }
-            
+
             // Skip empty chars
             if (e == ' ') continue;
 
