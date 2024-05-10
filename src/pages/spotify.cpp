@@ -1,14 +1,14 @@
 /*
  * File: spotify.cpp
  * Project: nodemcu-clock
- * Created Date: 17.01.2023 10:39:35
+ * Created Date: 2023-01-17 10:39:35
  * Author: 3urobeat
- * 
- * Last Modified: 30.06.2023 09:47:10
+ *
+ * Last Modified: 2024-05-10 11:15:07
  * Modified By: 3urobeat
- * 
- * Copyright (c) 2023 3urobeat <https://github.com/3urobeat>
- * 
+ *
+ * Copyright (c) 2023 - 2024 3urobeat <https://github.com/3urobeat>
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
@@ -52,7 +52,7 @@ uint8_t  spotifyTitleOffset;
 namespace spotifyPage
 {
     // Declare function here and define it later below to reduce clutter while being accessible from setup()
-    
+
     // Functions & Pointers needed for "normal" execution
     ArudinoStreamParser parserLib;
     SpotifyRefreshPlaybackJsonHandler parser(spotifyData.title, sizeof(spotifyData.title), spotifyData.artist, sizeof(spotifyData.artist), &spotifyData.progressTimestamp, &spotifyData.songLength, &spotifyData.currentlyPlaying);
@@ -63,7 +63,7 @@ namespace spotifyPage
     // Functions & Pointers needed for token API interactions
     AsyncWebServer *spotifyAuthWebserver;
     char *authCode;
-    
+
     void requestAuth();
     void requestAuthLoop();
     void fetchAccessToken(const char *code, const char *grantType);
@@ -133,7 +133,7 @@ namespace spotifyPage
                 lcd.clearLine(1);
                 lcd.clearLine(2);
                 lcd.clearLine(3);
-            }            
+            }
         }
     }
 
@@ -167,7 +167,7 @@ namespace spotifyPage
         *(p) = '\0'; // Make sure there is a null char at the end
 
         uint8_t spaceLeft = Config::maxcol - strlen(progressStr); // Calculate space left for setting cursor and calculating progress bar
-        
+
         lcd.setCursor(spaceLeft, 3);
         lcd.print(progressStr);
 
@@ -228,7 +228,7 @@ namespace spotifyPage
 
         // Block page switch by setting a large pageUpdate
         pageUpdate += 999999;
-        
+
         authCode = new char[256]; // Provide char arr for callback function to copy into, code was in testing 212 chars long
         authCode[0] = '\0'; // Clear at least the first char so that our check in update() works, memsetting the whole thing is not really necessary here
 
@@ -281,7 +281,7 @@ namespace spotifyPage
     void requestAuthLoop()
     {
         static uint8_t animFrame = 0; // Tracking var for animation frame
-            
+
         lcd.animationPrint(lcd.animations.waiting, 5, &animFrame, 12, 3);
 
         // Check for requestAuth() in a non blocking way if callback was received, clean up and call fetchAccessToken()
@@ -317,7 +317,7 @@ namespace spotifyPage
 
         // Create objects and send post request with code
         WiFiClientSecure *client = new WiFiClientSecure(); // Using WiFiClientSecure costs 10% flash which sucks ass but the request won't work otherwise
-        
+
         SpotifyAccessTokenJsonHandler *tokenParser = new SpotifyAccessTokenJsonHandler(spotifyAccessToken, sizeof(spotifyAccessToken), &spotifyAccessTokenExpiresTimestamp);
 
         parserLib.setHandler(tokenParser); // Set our parser as JSON data handler in the lib
@@ -326,7 +326,7 @@ namespace spotifyPage
         /* --------- Construct post request data --------- */
         char postData[312] = "grant_type="; // Length was 292 in testing for grantType authorization_code
         char *postP = postData;
-        
+
         postP = mystrcat(postP, grantType);
 
         // Depending on if we are requesting an accessToken or just refreshing it we need different parameters
@@ -345,7 +345,7 @@ namespace spotifyPage
 
         // Get length of our finished postData str so we can include it later in our request
         char postDataLength[6] = "";
-        
+
         itoa(strlen(postData), postDataLength, 10);
 
 
@@ -359,7 +359,7 @@ namespace spotifyPage
         strncpy(authStr, base64::encode(authStr).c_str(), sizeof(authStr) - 1); // Encode authStr as needed and overwrite authStr to save some memory
 
         debug(F("spotify page: POST content constructed and objects made"));
-        
+
 
         /* --------- Construct POST request headers --------- */
         // Construct POST request manually as using HTTPClient always failed (Inspired by: https://github.com/ThingPulse/esp8266-spotify-remote/blob/b1d8c18ed893b6a5a45b26c74c9b73c6625deae8/SpotifyClient.cpp#L221)
@@ -378,7 +378,7 @@ namespace spotifyPage
 
         /* --------- Send POST request --------- */
         client->setInsecure();
-        
+
         if (client->connect("accounts.spotify.com", 443)) { // Only proceed if connection succeeded
             client->print(request); // Send our POST req data over
 
@@ -425,7 +425,7 @@ namespace spotifyPage
 
     void update()
     {
-        
+
     }
 }
 

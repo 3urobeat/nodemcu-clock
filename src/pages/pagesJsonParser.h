@@ -1,17 +1,17 @@
 /*
  * File: pagesJsonParser.h
  * Project: nodemcu-clock
- * Created Date: 12.01.2023 12:40:54
+ * Created Date: 2023-01-12 12:40:54
  * Author: 3urobeat
- * 
- * Last Modified: 30.06.2023 09:47:10
+ *
+ * Last Modified: 2024-05-10 11:14:45
  * Modified By: 3urobeat
- * 
- * Copyright (c) 2023 3urobeat <https://github.com/3urobeat>
- * 
+ *
+ * Copyright (c) 2023 - 2024 3urobeat <https://github.com/3urobeat>
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>. 
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 
@@ -29,7 +29,7 @@ class WeatherJsonHandler final : public JsonHandler
         char     *_temp;
         uint32_t *_sunrise;
         uint32_t *_sunset;
-    
+
     public:
         // Constructor that takes pointers to char arrays where the result should go to
         WeatherJsonHandler(char *cond, uint8_t condSize, char *temp, uint32_t *sunrise, uint32_t *sunset)
@@ -80,7 +80,7 @@ class NewsJsonHandler final : public JsonHandler
         uint8_t  _cacheSize;      // Thats the amount of different articles in cache
 
         uint8_t  _currentIndex = 0;   // Stores index of article we are at right now
-    
+
     public:
         // Constructor that takes pointers to char arrays where the result should go to
         NewsJsonHandler(char *sourceCache, uint8_t sourceCacheSize, char *pubAtCache, uint8_t pubAtCacheSize, char *titleCache, uint16_t titleCacheSize, uint8_t cacheSize) // Big boy sheesh
@@ -105,11 +105,11 @@ class NewsJsonHandler final : public JsonHandler
             // Quick pointer arithmetic to make passing 2D arrays easier. We just pass pointer to element 0 of array to function and offset correctly inside function wiht passed sizes to reach desired element
             if (strcmp(key, "name") == 0) {
                 strncpy(_sourceCache + (_sourceCacheSize * _currentIndex), value.getString(), _sourceCacheSize - 1);
-                
+
             } else if (strcmp(key, "title") == 0) {
                 // First copy two spaces to the front so the title doesn't start as "abruptly" when being displayed later
                 char *p = _titleCache + (_titleCacheSize * _currentIndex);
-                
+
                 strcpy(p, "  ");
                 strncpy(p + 2, value.getString(), _titleCacheSize - 5); // Concat the actual title after the two spaces, limit by available space - 5 (2 spaces + 2 spaces + null byte)
                 strcat(p, "  \0"); // Add two more spaces and a null byte behind the title
@@ -128,11 +128,11 @@ class NewsJsonHandler final : public JsonHandler
 
                 // Format time using miniClockFormat, copy into pubAtCache
                 strncpy(_pubAtCache + (_pubAtCacheSize * _currentIndex), Config::miniClockFormat, _pubAtCacheSize - 1);
-                
+
                 // Replace format chars that are now in _titleCache
                 strrpl(_pubAtCache + (_pubAtCacheSize * _currentIndex), "hh", lcd.toFixedLengthNumber(buf, hour(inLocalSeconds)  , 2), _pubAtCacheSize - 1);
                 strrpl(_pubAtCache + (_pubAtCacheSize * _currentIndex), "mm", lcd.toFixedLengthNumber(buf, minute(inLocalSeconds), 2), _pubAtCacheSize - 1);
-                
+
             } else if (strcmp(key, "content") == 0) {
                 _currentIndex++; // content is the last transmitted key of an article, so lets increment our index
             }
@@ -199,7 +199,7 @@ class SpotifyRefreshPlaybackJsonHandler final : public JsonHandler
                 }
             } else if (strcmp(_fullPath, "item.duration_ms") == 0) {
                 *_songLength = value.getInt();
-                
+
             } else if (strcmp(_fullPath, "item.name") == 0) {
                 uint8_t len = strlen(value.getString());
 
@@ -234,7 +234,7 @@ class SpotifyAccessTokenJsonHandler final : public JsonHandler
         char     *_accessToken;
         uint16_t  _accessTokenSize;
         uint32_t *_expiresTimestamp;
-    
+
     public:
         // Constructor that takes pointers to char arrays where the result should go to
         SpotifyAccessTokenJsonHandler(char *accessToken, uint16_t accessTokenSize, uint32_t *expiresTimestamp)

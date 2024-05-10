@@ -1,14 +1,14 @@
 /*
  * File: getLocation.cpp
  * Project: nodemcu-clock
- * Created Date: 05.09.2021 14:16:00
+ * Created Date: 2021-09-05 14:16:00
  * Author: 3urobeat
- * 
- * Last Modified: 30.06.2023 09:47:10
+ *
+ * Last Modified: 2024-05-10 11:11:06
  * Modified By: 3urobeat
- * 
- * Copyright (c) 2021 3urobeat <https://github.com/3urobeat>
- * 
+ *
+ * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
@@ -25,7 +25,7 @@ void getLocation()
 {
     // If the user didn't provide a lat & lon value in Config then get values from geocoding API
     if (strlen(Config::lat) == 0 && strlen(Config::lon) == 0) {
-        
+
         // Create obj of our parser class and make request
         GetLocationJsonHandler1 *parser = new GetLocationJsonHandler1();
 
@@ -35,7 +35,7 @@ void getLocation()
         delete(parser);
 
     } else { // ...otherwise ping openweathermap once with the coords to get the city name and timeoffset
-    
+
         // Construct URL
         char path[128] = "/data/2.5/weather?lat=";
         char *p = path;
