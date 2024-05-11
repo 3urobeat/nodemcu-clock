@@ -4,7 +4,7 @@
  * Created Date: 2022-10-30 19:01:32
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:17:09
+ * Last Modified: 2024-05-11 11:40:15
  * Modified By: 3urobeat
  *
  * Copyright (c) 2022 - 2024 3urobeat <https://github.com/3urobeat>
@@ -52,6 +52,9 @@ void loopHandler()
     // Log available memory if DEBUG mode is enabled
     debug();
 
+    // Update miniClock if enabled. Run this before page to prevent clock being hidden when page takes time to load
+    if (Config::alwaysShowTime) miniClock(hideMiniClock);
+
     // Call update function for current page
     if (strcmp(Config::pageOrder[currentPage], "clock") == 0) {
         clockPage::update();
@@ -62,9 +65,6 @@ void loopHandler()
     } else if (strcmp(Config::pageOrder[currentPage], "spotify") == 0) {
         spotifyPage::update();
     }
-
-    // Update miniClock if enabled
-    if (Config::alwaysShowTime) miniClock(hideMiniClock);
 }
 
 

@@ -4,7 +4,7 @@
  * Created Date: 2023-01-17 10:39:35
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 11:33:13
+ * Last Modified: 2024-05-11 11:35:08
  * Modified By: 3urobeat
  *
  * Copyright (c) 2023 - 2024 3urobeat <https://github.com/3urobeat>
@@ -132,7 +132,7 @@ namespace spotifyPage
 
                 displayCurrentData();
 
-                lcd.clearLine(1);
+                lcd.clearLine(1); // TODO: This is slow, optimize it
                 lcd.clearLine(2);
                 lcd.clearLine(3);
             }
