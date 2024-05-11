@@ -4,10 +4,10 @@
  * Created Date: 2021-08-30 22:37:00
  * Author: 3urobeat
  *
- * Last Modified: 2023-12-27 13:48:09
+ * Last Modified: 2024-05-11 11:23:26
  * Modified By: 3urobeat
  *
- * Copyright (c) 2021 - 2023 3urobeat <https://github.com/3urobeat>
+ * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -34,7 +34,9 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
     #ifdef CLOCK_DEBUG
         Serial.print("httpGetJson(): Sending GET request to: ");
         Serial.print(host);
-        Serial.println(path);
+        Serial.print(path);
+        Serial.print(":");
+        Serial.println(port);
 
         debug(F("httpGetJson(): Creating new lib objects..."));
     #endif
@@ -112,7 +114,7 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
         wifiSecureClient->setInsecure();
 
         if (wifiSecureClient->connect(host, port)) { // Only proceed if connection succeeded
-            wifiSecureClient->print(request); // Send our GET req data over
+            wifiSecureClient->print(request);        // Send our GET req data over
 
             // Get HTTP Code
             strncpy(buf, wifiSecureClient->readStringUntil('\r').c_str() + 9, 3); // Substring HTTP Code from "HTTP/1.1 200 OK" to "200"

@@ -72,6 +72,8 @@ You can either use the aforementioned setupMode at runtime or edit the `config.c
 
 &nbsp;
 
+## FAQ
+
 **What needs to be configured?**  
 - You always need to have at least one wifi network configured.  
 - Depending on which pages you use you need to have the API keys they require configured (see [Pages](https://github.com/3urobeat/nodemcu-clock/#pages) for more information)
@@ -80,3 +82,7 @@ Everything else can be left at default.
 
 **How do I get the API keys?**  
 TBA
+
+**The clock won't connect to my iPhone hotpot!**  
+Open the settings app and leave the "Personal Hotspot" page open while the clock attempts to connect to available WiFi networks.  
+This ensures that the WiFi network is visible.

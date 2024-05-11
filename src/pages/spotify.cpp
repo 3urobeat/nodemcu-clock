@@ -4,7 +4,7 @@
  * Created Date: 2023-01-17 10:39:35
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:15:07
+ * Last Modified: 2024-05-11 11:33:13
  * Modified By: 3urobeat
  *
  * Copyright (c) 2023 - 2024 3urobeat <https://github.com/3urobeat>
@@ -129,7 +129,9 @@ namespace spotifyPage
 
                 // Don't clear/write anything if user just paused playback
                 if (!spotifyData.currentlyPlaying) return; // Next update() iteration will immediately run and skip page
+
                 displayCurrentData();
+
                 lcd.clearLine(1);
                 lcd.clearLine(2);
                 lcd.clearLine(3);
@@ -147,6 +149,7 @@ namespace spotifyPage
         lcd.setCursor(0, 2);
         lcd.movingPrint(spotifyData.title, &spotifyTitleOffset, Config::maxcol);
 
+
         // Calculate progress with current timestamp and last update timestamp
         char buf[4] = "";
         uint32_t currentProgress = (millis() - spotifyLastPlaybackUpdate) + spotifyData.progressTimestamp - 1000; // Subtract last API update timestamp from now, add the difference to progressTimestamp and subtract some tolerance
@@ -154,6 +157,8 @@ namespace spotifyPage
         // Set max if song ended and we need to wait for the next data refresh
         if (currentProgress > spotifyData.songLength) currentProgress = spotifyData.songLength;
 
+
+        // Construct page content and update screen
         char progressStr[12] = "";
         char *p = progressStr;
 
@@ -170,6 +175,7 @@ namespace spotifyPage
 
         lcd.setCursor(spaceLeft, 3);
         lcd.print(progressStr);
+
 
         // Display progress bar based on currentProgress
         uint8_t amountOfHashtags = (spaceLeft - 1) * ((float) currentProgress / (float) spotifyData.songLength); // Calculate amount of hashtags by calculating percentage and stuff lol
