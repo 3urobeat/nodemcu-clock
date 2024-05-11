@@ -4,7 +4,7 @@
  * Created Date: 2023-01-17 10:39:35
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 12:23:31
+ * Last Modified: 2024-05-11 14:33:00
  * Modified By: 3urobeat
  *
  * Copyright (c) 2023 - 2024 3urobeat <https://github.com/3urobeat>
@@ -51,6 +51,10 @@ uint8_t  spotifyTitleOffset;
 
 namespace spotifyPage
 {
+    const char *title = "Spotify";
+    const bool hideMiniClock = false;
+
+
     // Declare function here and define it later below to reduce clutter while being accessible from setup()
 
     // Functions & Pointers needed for "normal" execution
@@ -74,10 +78,6 @@ namespace spotifyPage
      */
     void setup()
     {
-        // Show page title
-        lcd.setCursor(0, 0);
-        lcd.print("Spotify");
-
         // Concatenate IP if not done by a previous iteration
         if (strlen(spotifyRedirectUri) < 10) {
             debug(F("spotify page: Constructing redirect URI for the first time"));
