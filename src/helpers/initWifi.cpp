@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 15:42:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 15:39:20
+ * Last Modified: 2024-05-11 11:02:05
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -30,8 +30,8 @@ void initWifi(uint8_t row)
 {
     lcd.clearLine(row); //clear line just to make sure no old characters are left
 
-    lcd.setCursor(3, row);
-    lcd.print("Connecting");
+    lcd.setCursor(4, row);
+    lcd.print("Searching");
     delay(500);
 
     // Search for wifi networks in range
@@ -43,6 +43,9 @@ void initWifi(uint8_t row)
     char thisSSID[64]; // wifi SSIDs should have a max length of 32 characters
 
     // Try to connect by iterating for every found network over all networks in array (I tried doing this with indexOf() to avoid using a nested for loop but it had different results depending on the order in wifiSSID which was weird)
+    lcd.setCursor(3, row);
+    lcd.print("Connecting");
+
     for (uint8_t i = 0; i <= n; i++) {
         for (uint8_t j = 0; j < ssidAmount; j++) {
             WiFiLib.SSID(i).toCharArray(thisSSID, 64, 0);
