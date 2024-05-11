@@ -4,7 +4,7 @@
  * Created Date: 2021-12-12 21:27:54
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 14:51:39
+ * Last Modified: 2024-05-11 14:36:41
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -34,6 +34,10 @@ uint8_t moveOffset = 0; // moveOffset for movingPrint() call that displays title
 
 namespace newsPage
 {
+    const char *title = "News";
+    const bool hideMiniClock = false;
+
+
     // Declare function here and define it later below to reduce clutter while being accessible from setup()
     bool refreshCache();
 
@@ -43,10 +47,6 @@ namespace newsPage
      */
     void setup()
     {
-        // Show page title
-        lcd.setCursor(0, 0);
-        lcd.print("News");
-
         // Check if updateIntervalNews ms passed and update newsCache
         if (lastRefresh == 0 || lastRefresh + updateIntervalNews <= millis()) {
             bool refreshSuccess = refreshCache();
@@ -80,6 +80,7 @@ namespace newsPage
 
         // Show article date
         lcd.setCursor(0, 2);
+        lcd.print("Published ");
         lcd.print(pubAtCache[currentArticle]);
     }
 

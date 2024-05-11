@@ -4,7 +4,7 @@
  * Created Date: 2021-09-05 17:53:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 15:13:51
+ * Last Modified: 2024-05-11 14:36:33
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -30,6 +30,10 @@ bool     currentModWeather  = false;    // Tracks pageElemSwitch, as we only hav
 
 namespace weatherPage
 {
+    const char *title = "";
+    const bool hideMiniClock = false;
+
+
     // Declare function here and define it later below to reduce clutter while being accessible from setup()
     bool refreshCache();
 

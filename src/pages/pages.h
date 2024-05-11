@@ -4,7 +4,7 @@
  * Created Date: 2021-09-01 15:17:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:14:26
+ * Last Modified: 2024-05-11 14:31:19
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -22,21 +22,33 @@
 
 
 namespace clockPage {
+    extern const char *title;
+    extern const bool hideMiniClock;
+
     void setup();
     void update();
 }
 
 namespace weatherPage {
+    extern const char *title;
+    extern const bool hideMiniClock;
+
     void setup();
     void update();
 }
 
 namespace newsPage {
+    extern const char *title;
+    extern const bool hideMiniClock;
+
     void setup();
     void update();
 }
 
 namespace spotifyPage {
+    extern const char *title;
+    extern const bool hideMiniClock;
+
     void setup();
     void update();
 }
