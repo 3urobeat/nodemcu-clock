@@ -4,7 +4,7 @@
  * Created Date: 2023-01-17 10:39:35
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 11:35:08
+ * Last Modified: 2024-05-11 12:23:31
  * Modified By: 3urobeat
  *
  * Copyright (c) 2023 - 2024 3urobeat <https://github.com/3urobeat>
@@ -317,6 +317,7 @@ namespace spotifyPage
         lcd.clearLine(1);
         lcd.clearLine(3);
         lcd.centerPrint("Refreshing token...", 2, true);
+        indicateLoading(); // Manually display loading icon because we aren't using httpGetJson() here
 
         debug(F("spotify page: fetchAcessToken() called, accessToken probably expired unless requestAuth just ran"));
 

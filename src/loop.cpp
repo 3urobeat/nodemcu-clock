@@ -109,7 +109,7 @@ void nextPage()
  */
 void indicateLoading(bool clearIcon)
 {
-    if (clearIcon && !loadingActive) return; // Prevent unnecessary calculations below when no icon is currently shown
+    if ((clearIcon && !loadingActive) || (!clearIcon && loadingActive)) return; // Prevent unnecessary calculations below when call is redundant
 
     // Calculate position, depending on if the mini clock is currently active
     uint8_t pos = Config::maxcol - strlen(Config::miniClockFormat) - 2;
