@@ -4,7 +4,7 @@
  * Created Date: 2021-11-30 17:25:23
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:17:42
+ * Last Modified: 2024-05-11 12:02:48
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -82,3 +82,4 @@ extern Preferences prefs;
 void setupHandler();
 void loopHandler();
 void nextPage();
+void indicateLoading(bool clearIcon = false);
