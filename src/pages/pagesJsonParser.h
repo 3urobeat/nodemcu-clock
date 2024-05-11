@@ -4,7 +4,7 @@
  * Created Date: 2023-01-12 12:40:54
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:14:45
+ * Last Modified: 2024-05-11 11:05:39
  * Modified By: 3urobeat
  *
  * Copyright (c) 2023 - 2024 3urobeat <https://github.com/3urobeat>
@@ -77,9 +77,9 @@ class NewsJsonHandler final : public JsonHandler
         uint8_t  _pubAtCacheSize;
         char    *_titleCache;
         uint16_t _titleCacheSize;
-        uint8_t  _cacheSize;      // Thats the amount of different articles in cache
+        uint8_t  _cacheSize;        // Thats the amount of different articles in cache
 
-        uint8_t  _currentIndex = 0;   // Stores index of article we are at right now
+        uint8_t  _currentIndex = 0; // Stores index of article we are at right now
 
     public:
         // Constructor that takes pointers to char arrays where the result should go to
@@ -109,7 +109,7 @@ class NewsJsonHandler final : public JsonHandler
 
             if (_currentIndex >= _cacheSize) return; // This should never happen when the URL has the right amount of pages set but let's make sure
 
-            // Quick pointer arithmetic to make passing 2D arrays easier. We just pass pointer to element 0 of array to function and offset correctly inside function wiht passed sizes to reach desired element
+            // Quick pointer arithmetic to make passing 2D arrays easier. We just pass pointer to element 0 of array to function and offset correctly inside function with passed sizes to reach desired element
             if (strcmp(key, "name") == 0) {
                 strncpy(_sourceCache + (_sourceCacheSize * _currentIndex), value.getString(), _sourceCacheSize - 1);
 
