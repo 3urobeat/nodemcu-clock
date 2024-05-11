@@ -4,7 +4,7 @@
  * Created Date: 2021-12-12 21:27:54
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 14:36:41
+ * Last Modified: 2024-05-11 14:41:00
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -80,7 +80,7 @@ namespace newsPage
 
         // Show article date
         lcd.setCursor(0, 2);
-        lcd.print("Published ");
+        lcd.print("Published at ");
         lcd.print(pubAtCache[currentArticle]);
     }
 
