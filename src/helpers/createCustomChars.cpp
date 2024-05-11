@@ -4,7 +4,7 @@
  * Created Date: 2023-01-15 23:15:22
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:10:09
+ * Last Modified: 2024-05-11 11:54:48
  * Modified By: 3urobeat
  *
  * Copyright (c) 2023 - 2024 3urobeat <https://github.com/3urobeat>
@@ -41,7 +41,7 @@ void createCustomChars()
 
     lcd.createChar(0, arrowUpChar);
 
-    // Byte 0: Arrow Down
+    // Byte 1: Arrow Down
     byte arrowDownChar[8] = {
         0b00000,
         0b00100,
@@ -54,4 +54,18 @@ void createCustomChars()
     };
 
     lcd.createChar(1, arrowDownChar);
+
+    // Byte 2: Loading
+    byte loadingChar[8] = {
+        0b01101,
+        0b10011,
+        0b00111,
+        0b00000,
+        0b00000,
+        0b11100,
+        0b11001,
+        0b10110
+    };
+
+    lcd.createChar(2, loadingChar);
 }
