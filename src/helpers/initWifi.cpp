@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 15:42:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 11:13:26
+ * Last Modified: 2024-05-11 13:25:06
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -18,7 +18,7 @@
 #include "helpers.h"
 
 
-void(* resetFunc) (void) = 0; // create a standard reset function
+void(* resetFunc) (void) = 0; // Create a standard reset function
 
 
 /**
@@ -30,8 +30,8 @@ void initWifi(uint8_t row)
 {
     lcd.clearLine(row); //clear line just to make sure no old characters are left
 
-    lcd.setCursor(4, row);
-    lcd.print("Searching");
+    lcd.setCursor(3, row);
+    lcd.print("Searching WiFi");
     delay(500);
 
     // Search for wifi networks in range
