@@ -4,7 +4,7 @@
  * Created Date: 2022-10-30 18:45:33
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:12:33
+ * Last Modified: 2024-05-11 14:16:30
  * Modified By: 3urobeat
  *
  * Copyright (c) 2022 - 2024 3urobeat <https://github.com/3urobeat>
@@ -26,13 +26,10 @@ char miniClockResult[6];
  * Call this function on every loop() iteration
  * @param hideMiniClock Ignores call if true, some pages (for example clock) don't need another clock in the corner
  */
-void miniClock(bool hideMiniClock)
+void miniClock()
 {
-    if (!hideMiniClock)
-    {
-        getTime(miniClockResult, sizeof(miniClockResult), Config::miniClockFormat);
+    getTime(miniClockResult, sizeof(miniClockResult), Config::miniClockFormat);
 
-        lcd.setCursor(Config::maxcol - strlen(Config::miniClockFormat), 0); //set cursor to the very right of the first line
-        lcd.print(miniClockResult);
-    }
+    lcd.setCursor(Config::maxcol - strlen(Config::miniClockFormat), 0); //set cursor to the very right of the first line
+    lcd.print(miniClockResult);
 }

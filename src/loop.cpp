@@ -4,7 +4,7 @@
  * Created Date: 2022-10-30 19:01:32
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 12:12:59
+ * Last Modified: 2024-05-11 14:40:36
  * Modified By: 3urobeat
  *
  * Copyright (c) 2022 - 2024 3urobeat <https://github.com/3urobeat>
@@ -20,14 +20,16 @@
 #include "pages/pages.h"
 
 
-int8_t   currentPage = -1;      // Current page index in pageOrder array (init with  -1 to not skip page 0 on startup)
-int8_t   oldPage;               // Save previous page to determine if we need to call lcd.clear() (useful if user only set one page in pageOrder to avoid blinking every showuntil seconds)
-uint32_t pageUpdate;            // Save timestamp when page was updated in order to keep track of showuntil without blocking thread with delay()
-bool     hideMiniClock = false; // Will be set to true when clockpage is active
+int8_t   currentPage = -1; // Current page index in pageOrder array (init with  -1 to not skip page 0 on startup)
+int8_t   oldPage;          // Save previous page to determine if we need to call lcd.clear() (useful if user only set one page in pageOrder to avoid blinking every showuntil seconds)
+uint32_t pageUpdate;       // Save timestamp when page was updated in order to keep track of showuntil without blocking thread with delay()
+bool     miniClockActive;  // Tracks if the mini clock is currently shown
 bool     loadingActive = false; // Will be set to true when a loading icon is currently shown. Checking this var is faster than updating the screen every loop
+
 
 // Declare functions here and define it later below to reduce clutter while being accessible from loopHandler()
 void nextPage();
+void updateTitleBar(const char *title, bool hideMiniClock);
 
 
 /**
@@ -53,8 +55,8 @@ void loopHandler()
     // Log available memory if DEBUG mode is enabled
     debug();
 
-    // Update miniClock if enabled. Run this before page to prevent clock being hidden when page takes time to load
-    if (Config::alwaysShowTime) miniClock(hideMiniClock);
+    // Update miniClock if enabled. Run this before page update to prevent clock being hidden when page takes time to load
+    if (miniClockActive) miniClock();
 
     // Remove loading icon again
     indicateLoading(true);
@@ -82,24 +84,44 @@ void nextPage()
     // Reset currentPage if we exceeded the amount of pages in the array
     if (currentPage + 1 > *(&Config::pageOrder + 1) - Config::pageOrder) currentPage = 0; // Credit for array size hack: https://www.geeksforgeeks.org/how-to-find-size-of-array-in-cc-without-using-sizeof-operator/
 
-    hideMiniClock = false;    // Default
-    pageUpdate    = millis(); // Update timestamp
+    pageUpdate = millis(); // Update timestamp
 
     lcd.clear(); // Clear content of old page
 
     // Check if pageOrder entry for this index is empty or 0 and skip page
     if (strlen(Config::pageOrder[currentPage]) == 0 || Config::pageOrder[currentPage][0] == '0') return nextPage();
 
-    // Call setup function for incoming page
+    // Construct title bar based on page metadata and call setup function for incoming page
     if (strcmp(Config::pageOrder[currentPage], "clock") == 0) {
+        updateTitleBar(clockPage::title, clockPage::hideMiniClock);
         clockPage::setup();
     } else if (strcmp(Config::pageOrder[currentPage], "weather") == 0) {
+        updateTitleBar(weatherPage::title, weatherPage::hideMiniClock);
         weatherPage::setup();
     } else if (strcmp(Config::pageOrder[currentPage], "news") == 0) {
+        updateTitleBar(newsPage::title, newsPage::hideMiniClock);
         newsPage::setup();
     } else if (strcmp(Config::pageOrder[currentPage], "spotify") == 0) {
+        updateTitleBar(spotifyPage::title, spotifyPage::hideMiniClock);
         spotifyPage::setup();
     }
+}
+
+
+/**
+ * Updates the title bar
+ * @param title Title of the page to show
+ * @param hideMiniClock If the mini clock should not be shown
+ */
+void updateTitleBar(const char *title, bool hideMiniClock)
+{
+    lcd.setCursor(0, 0);
+    lcd.print(title); // TODO: Cut and append "..." if too long
+
+    // Display mini clock unless page doesn't want us to
+    if (!hideMiniClock) miniClock();
+
+    miniClockActive = !hideMiniClock;
 }
 
 
@@ -114,7 +136,7 @@ void indicateLoading(bool clearIcon)
     // Calculate position, depending on if the mini clock is currently active
     uint8_t pos = Config::maxcol - strlen(Config::miniClockFormat) - 2;
 
-    if (hideMiniClock) pos = Config::maxcol - 1;
+    if (!miniClockActive) pos = Config::maxcol - 1;
 
     // Set cursor to position and write loading icon char or whitespace to screen
     lcd.setCursor(pos, 0);
