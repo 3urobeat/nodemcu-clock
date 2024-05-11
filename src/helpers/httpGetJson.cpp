@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 22:37:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 11:23:26
+ * Last Modified: 2024-05-11 12:22:22
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -19,7 +19,7 @@
 
 
 /**
- * Sends HTTP or HTTPS GET request to an URL and parses JSON data via streaming from it
+ * Sends HTTP or HTTPS GET request to an URL and parses JSON data via streaming from it. Calling this function will trigger the loading icon to be displayed.
  * @param host The host to request data from (without http://)
  * @param path The path to request data from (everything after the domain, starting with a /)
  * @param port The port to use (80 for http, 443 for https)
@@ -40,6 +40,9 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
 
         debug(F("httpGetJson(): Creating new lib objects..."));
     #endif
+
+    // Display loading icon
+    indicateLoading();
 
     // Create correct lib objects and set handler
     WiFiClient       *wifiClient;
