@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 15:42:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 11:02:05
+ * Last Modified: 2024-05-11 11:03:41
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -55,7 +55,7 @@ void initWifi(uint8_t row)
                 Serial.println(thisSSID);
             #endif
 
-            if (strcmp(thisSSID, Config::wifiSSID[j]) == 0) {
+            if (strlen(thisSSID) > 0 && strcmp(thisSSID, Config::wifiSSID[j]) == 0) { // Checking if thisSSID is >0 seems to make this check a bit more reliable, not exactly sure why though
 
                 WiFiLib.begin(Config::wifiSSID[j], Config::wifiPW[j]);
 
