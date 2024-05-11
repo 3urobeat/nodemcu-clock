@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 22:37:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 12:22:22
+ * Last Modified: 2024-05-11 14:46:14
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -131,7 +131,11 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
             // Send each char we are receiving over to our parser while the connection is alive (unless code 204 No Content was received)
             if (httpCode != 204) {
                 while (wifiSecureClient->connected() || wifiSecureClient->available()) {
-                    parserLib->parse((char) wifiSecureClient->read());
+                    char thisChar = (char) wifiSecureClient->read();
+
+                    delay(1); // This delay just blew in from stupid town, yes. This is an experimental "fix" for the device crashing when loading large Spotify API responses
+
+                    parserLib->parse(thisChar);
                 }
             }
         } else {
