@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 15:42:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 13:25:06
+ * Last Modified: 2024-05-12 10:32:30
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -89,6 +89,8 @@ void initWifi(uint8_t row)
         }
 
         lcd.animationPrint(lcd.animations.waiting, 5, &animationFrame, 13, row); // Use lcdHelper's animationPrint and default waiting animation
+
+        handleBacklight(); // Update backlight to make switching on/off during connection phase possible
 
         delay(500);
     }

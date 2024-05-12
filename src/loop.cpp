@@ -4,7 +4,7 @@
  * Created Date: 2022-10-30 19:01:32
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-12 09:53:32
+ * Last Modified: 2024-05-12 10:05:52
  * Modified By: 3urobeat
  *
  * Copyright (c) 2022 - 2024 3urobeat <https://github.com/3urobeat>
@@ -52,6 +52,9 @@ void loopHandler()
 
     // Log available memory if DEBUG mode is enabled
     debug();
+
+    // Check if backlight should be toggled
+    handleBacklight();
 
     // Update miniClock if enabled. Run this before page update to prevent clock being hidden when page takes time to load
     if (miniClockActive) miniClock();

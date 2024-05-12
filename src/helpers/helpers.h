@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 11:19:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-12 09:54:18
+ * Last Modified: 2024-05-12 10:14:00
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -20,6 +20,9 @@
 #include "main.h"
 #include "helpersJsonParser.h"
 
+
+void handleBacklight();
+void setupBacklight();
 
 bool configDetectFirstStart();
 void readConfigFromStorage();

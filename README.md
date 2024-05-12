@@ -22,11 +22,13 @@ Connect VCC & GND to the respective pins of your devkit board.
 - SDA: D2  
 - SCL: D1  
 - setupMode switch: D0 -> GND  
+- backlight switch: D3 -> GND
 
 **ESP32:**
 - SDA: 21  
 - SCL: 22  
 - setupMode switch: 19 -> GND  
+- backlight switch: 18 -> GND
 
 &nbsp;
 
