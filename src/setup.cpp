@@ -4,7 +4,7 @@
  * Created Date: 2022-10-30 19:01:26
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:18:00
+ * Last Modified: 2024-05-12 10:13:49
  * Modified By: 3urobeat
  *
  * Copyright (c) 2022 - 2024 3urobeat <https://github.com/3urobeat>
@@ -48,7 +48,7 @@ void setupHandler()
     // Initiate display & preferences lib
     Wire.begin();
     lcd.begin();
-    lcd.backlight();
+    setupBacklight();
     prefs.begin("nodemcu-clock");
 
     // Register custom lcd chars
