@@ -4,7 +4,7 @@
  * Created Date: 2022-10-30 19:01:32
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 14:40:36
+ * Last Modified: 2024-05-12 09:53:32
  * Modified By: 3urobeat
  *
  * Copyright (c) 2022 - 2024 3urobeat <https://github.com/3urobeat>
@@ -23,8 +23,6 @@
 int8_t   currentPage = -1; // Current page index in pageOrder array (init with  -1 to not skip page 0 on startup)
 int8_t   oldPage;          // Save previous page to determine if we need to call lcd.clear() (useful if user only set one page in pageOrder to avoid blinking every showuntil seconds)
 uint32_t pageUpdate;       // Save timestamp when page was updated in order to keep track of showuntil without blocking thread with delay()
-bool     miniClockActive;  // Tracks if the mini clock is currently shown
-bool     loadingActive = false; // Will be set to true when a loading icon is currently shown. Checking this var is faster than updating the screen every loop
 
 
 // Declare functions here and define it later below to reduce clutter while being accessible from loopHandler()
@@ -104,48 +102,5 @@ void nextPage()
     } else if (strcmp(Config::pageOrder[currentPage], "spotify") == 0) {
         updateTitleBar(spotifyPage::title, spotifyPage::hideMiniClock);
         spotifyPage::setup();
-    }
-}
-
-
-/**
- * Updates the title bar
- * @param title Title of the page to show
- * @param hideMiniClock If the mini clock should not be shown
- */
-void updateTitleBar(const char *title, bool hideMiniClock)
-{
-    lcd.setCursor(0, 0);
-    lcd.print(title); // TODO: Cut and append "..." if too long
-
-    // Display mini clock unless page doesn't want us to
-    if (!hideMiniClock) miniClock();
-
-    miniClockActive = !hideMiniClock;
-}
-
-
-/**
- * Helper function that displays a loading icon in the first row beside the mini clock. The next loop iteration deletes the icon again.
- * @param clearIcon If true, the position of the loading icon will be cleared when a loading icon is currently shown. Default: false
- */
-void indicateLoading(bool clearIcon)
-{
-    if ((clearIcon && !loadingActive) || (!clearIcon && loadingActive)) return; // Prevent unnecessary calculations below when call is redundant
-
-    // Calculate position, depending on if the mini clock is currently active
-    uint8_t pos = Config::maxcol - strlen(Config::miniClockFormat) - 2;
-
-    if (!miniClockActive) pos = Config::maxcol - 1;
-
-    // Set cursor to position and write loading icon char or whitespace to screen
-    lcd.setCursor(pos, 0);
-
-    if (!clearIcon) {
-        lcd.write((byte) 2);
-        loadingActive = true;
-    } else {
-        lcd.write(' ');
-        loadingActive = false;
     }
 }
