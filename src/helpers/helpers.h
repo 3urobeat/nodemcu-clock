@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 11:19:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 14:16:36
+ * Last Modified: 2024-05-12 09:54:18
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -40,10 +40,14 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
 
 void initWifi(uint8_t row);
 
-void miniClock();
-
 void strrpl(char *src, const char *oldchars, const char *newchars, uint16_t maxlen);
 char *mystrcat(char* dest, const char* src);
 
 void getDate(char *dest, uint16_t destLen);
 void getTime(char *dest, uint16_t destLen, const char *format);
+
+extern bool miniClockActive;
+extern bool loadingActive;
+void updateTitleBar(const char *title, bool hideMiniClock);
+void indicateLoading(bool clearIcon = false);
+void miniClock();

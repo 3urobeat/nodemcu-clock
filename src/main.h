@@ -4,7 +4,7 @@
  * Created Date: 2021-11-30 17:25:23
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 14:12:44
+ * Last Modified: 2024-05-12 09:52:37
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -82,5 +82,3 @@ extern Preferences prefs;
 void setupHandler();
 void loopHandler();
 void nextPage();
-void updateTitleBar(const char *title, bool hideMiniClock);
-void indicateLoading(bool clearIcon = false);
