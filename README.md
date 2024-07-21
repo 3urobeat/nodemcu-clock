@@ -1,7 +1,9 @@
 # nodemcu-clock
-This is a multifunctional desk clock using a ESP8266 or ESP32 and 4x20 LCD display.  
-The device switches between different pages, which you can see below.  
-By connecting the setup pins listed below with a switch, for example, you can enter a setup mode that spawns an AP to configure the device.  
+Multifunctional desk internet clock, powered by an ESP8266 or ESP32 and a 4x20 LCD display.  
+The device cycles between a collection of pages (configurable), which you can see below.
+
+The firmware contains a separate setup mode, which can be toggled by bridging the setup pins listed below (for example using a switch).  
+Inside the setup mode a WiFi network is spawned, allowing you to connect and configure the device using the web browser of another device (e.g. mobile phone).
 
 &nbsp;
 
@@ -15,8 +17,17 @@ By connecting the setup pins listed below with a switch, for example, you can en
 
 &nbsp;
 
+## Hardware
+- ESP8266 or ESP32 ([Amazon](https://www.amazon.com/s?k=esp8266+development+board))  
+  I recommend buying one with already soldered pins (these are called dev boards/kits). This allows you to connect it easily.
+- LCD Display 4 rows x 20 columns ([Amazon](https://www.amazon.com/s?k=lcd+display+2004))  
+  They are available in Green & Blue. You need one with the 'Serial Adapter', preferably pre-soldered if you can find one.
+
+&nbsp;
+
 ## Display Connection Pins
-Connect VCC & GND to the respective pins of your devkit board.  
+Connect the VCC (aka 5V power) and GND (ground) pins of the display to the respective pins on your microcontroller.  
+They usually have the same name.
 
 **ESP8266:**
 - SDA: D2  
@@ -78,7 +89,7 @@ You can either use the aforementioned setupMode at runtime or edit the `config.c
 
 **What needs to be configured?**  
 - You always need to have at least one wifi network configured.  
-- Depending on which pages you use you need to have the API keys they require configured (see [Pages](https://github.com/3urobeat/nodemcu-clock/#pages) for more information)
+- Depending on which pages you use, you need to have the required API keys configured (see [Pages](https://github.com/3urobeat/nodemcu-clock/#pages) for more information)
 
 Everything else can be left at default.
 
