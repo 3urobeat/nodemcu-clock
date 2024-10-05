@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 22:37:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 14:46:14
+ * Last Modified: 2024-10-05 11:35:50
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
@@ -32,10 +32,10 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
 {
     // Log request if DEBUG mode is enabled
     #ifdef CLOCK_DEBUG
-        Serial.print("httpGetJson(): Sending GET request to: ");
+        Serial.print("httpGetJson(): Sending GET request to: '");
         Serial.print(host);
         Serial.print(path);
-        Serial.print(":");
+        Serial.print("' at port ");
         Serial.println(port);
 
         debug(F("httpGetJson(): Creating new lib objects..."));
@@ -133,7 +133,7 @@ int16_t httpGetJson(const char *host, const char *path, uint16_t port, JsonHandl
                 while (wifiSecureClient->connected() || wifiSecureClient->available()) {
                     char thisChar = (char) wifiSecureClient->read();
 
-                    delay(1); // This delay just blew in from stupid town, yes. This is an experimental "fix" for the device crashing when loading large Spotify API responses
+                    //delay(1); // This delay just blew in from stupid town, yes. This is an experimental "fix" for the device crashing when loading large Spotify API responses
 
                     parserLib->parse(thisChar);
                 }
