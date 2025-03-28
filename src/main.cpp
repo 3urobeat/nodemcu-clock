@@ -4,10 +4,10 @@
  * Created Date: 2021-08-30 11:19:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 14:46:51
+ * Last Modified: 2025-03-28 14:48:52
  * Modified By: 3urobeat
  *
- * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
+ * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -51,6 +51,6 @@ void loop()
     // Call loopHandler which will handle page loading and switching
     loopHandler();
 
-    // Delay next loop iteration, updating every 250ms is fast enough
-    delay(250);
+    // Delay next loop iteration, update relatively fast to allow responsive backlight toggling
+    delay(50);
 }
