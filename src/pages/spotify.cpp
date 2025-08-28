@@ -4,10 +4,10 @@
  * Created Date: 2023-01-17 10:39:35
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 14:33:00
+ * Last Modified: 2025-08-28 21:33:34
  * Modified By: 3urobeat
  *
- * Copyright (c) 2023 - 2024 3urobeat <https://github.com/3urobeat>
+ * Copyright (c) 2023 - 2025 3urobeat <https://github.com/3urobeat>
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -52,6 +52,7 @@ uint8_t  spotifyTitleOffset;
 namespace spotifyPage
 {
     const char *title = "Spotify";
+    const int  updateInterval = 250;
     const bool hideMiniClock = false;
 
 
@@ -232,8 +233,8 @@ namespace spotifyPage
         lcd.setCursor(0, 2); lcd.print(WiFiLib.localIP()); // Get our IP
         lcd.centerPrint("Waiting   ", 3);
 
-        // Block page switch by setting a large pageUpdate
-        pageUpdate += 999999;
+        // Block page switch by setting a large pageSwitch
+        pageSwitch += 999999;
 
         authCode = new char[256]; // Provide char arr for callback function to copy into, code was in testing 212 chars long
         authCode[0] = '\0'; // Clear at least the first char so that our check in update() works, memsetting the whole thing is not really necessary here
@@ -414,7 +415,7 @@ namespace spotifyPage
         debug(F("spotify page: Finished cleaning up"));
 
         // Allow page switching again
-        pageUpdate = millis();
+        pageSwitch = millis();
     }
 }
 
