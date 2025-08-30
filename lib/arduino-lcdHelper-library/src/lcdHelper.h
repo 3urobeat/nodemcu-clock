@@ -1,20 +1,20 @@
 /*
  * File: lcdHelper.h
  * Project: arduino-lcdHelper-library
- * Created Date: 26.08.2022 12:04:51
+ * Created Date: 2022-08-26 12:04:51
  * Author: 3urobeat
- * 
- * Last Modified: 30.06.2023 09:47:10
+ *
+ * Last Modified: 2025-08-30 15:44:04
  * Modified By: 3urobeat
- * 
- * Copyright (c) 2022 3urobeat <https://github.com/3urobeat>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>. 
+ *
+ * Copyright (c) 2022 - 2025 3urobeat <https://github.com/3urobeat>
+ *
+ * Licensed under the MIT license: https://opensource.org/licenses/MIT
+ * Permission is granted to use, copy, modify, and redistribute the work.
+ * Full license information available in the project LICENSE file.
  */
 
-// Version 1.1.0
+// Version 1.2.0
 
 #ifndef LCDHELPER_H
 #define LCDHELPER_H
@@ -23,7 +23,7 @@
 template <typename lcd>
 class lcdHelper : public lcd { //use template as base to inherit from
 public:
-    
+
     /**
      * Constructor
      * @param addr The address of your display
@@ -42,6 +42,13 @@ public:
     void clearLine(uint8_t row);
 
     /**
+     * Gets the offset from the beginning of a row to display a char array centered. If the char array is longer than the display width, 0 will be returned.
+     * @param str The char array to get the offset for
+     * @return Column offset from the beginning of a row
+     */
+    int calculateCenterOffset(const char *str);
+
+    /**
      * Print a char array centered in a row on your display.
      * @param str The char array to print
      * @param row The row to print the char array in
@@ -56,6 +63,16 @@ public:
      * @param width Width of the space on screen the char array will be moved across
      */
     void movingPrint(const char *str, uint8_t *moveOffset, uint8_t width);
+
+    /**
+     * Prints a char array that will fade in left to right, or right to left, from the current cursor position
+     * @param str The char array to print
+     * @param fadeInDelay Optional: Set a different delay between characters than the default of 50ms
+     * @param rightToLeft Optional: Set to true to print from right to left instead of left to right
+     * @param currentCol Semi-Optional: If rightToLeft is true, you must provide the current cursor column here, as the function has to control the cursor now
+     * @param currentRow Semi-Optional: If rightToLeft is true, you must provide the current cursor row here, as the function has to control the cursor now
+     */
+    void fadeInPrint(const char *str, uint8_t fadeInDelay = 50, bool rightToLeft = false, uint8_t currentCol = 0, uint8_t currentRow = 0);
 
     /**
      * Print an animation frame by frame each time the function is called
@@ -91,7 +108,7 @@ public:
      * @param length The length to limit str to
      */
     void limitedPrint(const char *str, uint8_t length);
-    
+
     /**
      * Custom strlen function to correctly count chars that are two bytes long (like ä ö or ü)
      * @param str The char array to get the length of
