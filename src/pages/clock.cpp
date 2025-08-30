@@ -4,7 +4,7 @@
  * Created Date: 2021-09-01 15:17:00
  * Author: 3urobeat
  *
- * Last Modified: 2025-08-28 21:33:34
+ * Last Modified: 2025-08-30 15:41:45
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -57,17 +57,26 @@ namespace clockPage
             currentModClock = !currentModClock;
             lastPageModClock = millis();
             lcd.clearLine(2); // Clear date/weekday line
+        } else {
+            return; // No switch, no need to reprint
         }
 
         // Show weekday if true and date if false, starts with false
         if (currentModClock) {
             unsigned long epoch = timeClient.getEpochTime() + timeoffset;
+            const char *weekdayStr = dayNames[weekday(epoch) - 1];
 
-            lcd.centerPrint(dayNames[weekday(epoch) - 1], 2, false);
+            // Make condition fade in left to right
+            int offset = lcd.calculateCenterOffset(weekdayStr);
+            lcd.setCursor(offset, 2);
+            lcd.fadeInPrint(weekdayStr, 25);
         } else {
             getDate(dateResult, sizeof(dateResult));
 
-            lcd.centerPrint(dateResult, 2, false);
+            // ...and sun rise & sun set fade in right to left
+            int offset = lcd.calculateCenterOffset(dateResult) + lcd.utf8_strlen(dateResult) - 1;
+            lcd.setCursor(offset, 2);
+            lcd.fadeInPrint(dateResult, 25, true, offset, 2);
         }
     }
 }
