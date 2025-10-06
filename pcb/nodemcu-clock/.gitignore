@@ -8,6 +8,7 @@
 .autosave/
 .backup/
 user/
+output/
 *.user.lp
 .lock
 *~
