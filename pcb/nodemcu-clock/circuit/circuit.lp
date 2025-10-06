@@ -85,9 +85,6 @@
    (part "UJC-HP-3-SMT-TR" (manufacturer "CUI Devices")
    )
   )
-  (device 124c6540-d7c0-41d9-b30e-ca7b7293b0e7
-   (variant 098182fe-fbe8-485a-884f-b7fc7f4cc9af)
-  )
   (signal 0148eb05-e599-4187-9e16-4f8446d46e18 (net 91608757-b2dc-477d-9642-448c4cda0779))
   (signal 14f91f62-0398-4413-aae0-3cfdecf0fda7 (net 46dda398-3266-4a8e-903b-22f1c1eca7b2))
   (signal 3fa1bf37-f857-4992-9903-7cfb0a74f864 (net 91608757-b2dc-477d-9642-448c4cda0779))
