@@ -4,10 +4,10 @@
  * Created Date: 2022-12-23 13:50:55
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:15:50
+ * Last Modified: 2025-10-25 14:46:56
  * Modified By: 3urobeat
  *
- * Copyright (c) 2022 - 2024 3urobeat <https://github.com/3urobeat>
+ * Copyright (c) 2022 - 2025 3urobeat <https://github.com/3urobeat>
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -104,4 +104,5 @@ void setupModeLoop()
     }
 
     debug();
+    delay(200); // Loop itself waits 50ms, wait another 200 here to fix animation "racing" over the screen
 }
