@@ -1,13 +1,46 @@
-# nodemcu-clock
-Multifunctional desk internet clock, powered by an ESP8266 or ESP32 and a 4x20 LCD display.  
-The device cycles between a collection of pages (configurable), which you can see below.
+<div align="center">
+    <h1>nodemcu-clock</h1>
+    <h4>Multifunctional desk internet clock, powered by an ESP8266/32 and a LCD display!</h4>
+    <div>
+        <a href="#introduction">Introduction</a> •
+        <a href="#pages">Pages</a> •
+        <a href="#hardware">Hardware</a> •
+        <a href="#setup">Setup</a>
+    </div>
+    <br>
+    <div>
+        <img width=30% src="./.github/img/demo-clock.jpg">
+        <img width=30% src="./.github/img/demo-spotify.jpg">
+        <br>
+        <sup>What it looks like: Clock page (left), Spotify page (right). Enclosure to be added.</sup>
+        <br>
+        <h1>
+            <sup><sub>Sponsored by</sub></sup>
+            <a target="_blank" href="https://www.pcbway.com/"><img width="5.5%" src="./.github/img/pcbway-logo.png"></a>
+        </h1>
+    </div>
+</div>
 
-The firmware contains a separate setup mode, which can be toggled by bridging the setup pins listed below (for example using a switch).  
-Inside the setup mode a WiFi network is spawned, allowing you to connect and configure the device using the web browser of another device (e.g. mobile phone).
+## Introduction
+This is a multifunctional "smart" internet desk clock, powered by a low power microcontroller and a 4x20 LCD display.  
+It not only shows the time but also displays various information, such as local weather, current news, and your Spotify playback!  
+
+The device has become an essential part of my desk in the last few years and is an actual useful source of information.  
+Seriously!
+
+> [!TIP]
+> Want to get your own proper circuit board just like in the pictures above?  
+> Read the [PCB manual](./pcb/nodemcu-clock/README.md) to order your own in just a few minutes at  
+> 
+> ¸                        <a target="_blank" href="https://www.pcbway.com/QuickOrderOnline.aspx"><img width="20%" src="./.github/img/pcbway-logo.png"></a>  
+> <sup>Thank you PCBWay for sponsoring the circuit board creation phase of this project! 🚀</sup>
 
 &nbsp;
 
 ## Pages
+The device cycles between a collection of configurable animated pages, which is explained below.  
+Below listed are the pages that are included by default. If you like, you can add your own to the [pages/](src/pages/) directory (and submit it as a [Pull Request](https://github.com/3urobeat/nodemcu-clock/pulls)!).
+
 | **Name** | **About** | **Demo** |
 | -------- | --------- | ----------- |
 | Clock    | Displays current time, date and weekday. Automatically geolocates your timezone. Uses NTP for syncing time and ip-api for geolocating. | ![Demo](https://raw.githubusercontent.com/3urobeat/nodemcu-clock/main/.github/img/page-clock.gif) |
@@ -18,39 +51,61 @@ Inside the setup mode a WiFi network is spawned, allowing you to connect and con
 &nbsp;
 
 ## Hardware
-- ESP8266 or ESP32 ([Amazon](https://www.amazon.com/s?k=esp8266+development+board))  
-  I recommend buying one with already soldered pins (these are called dev boards/kits). This allows you to connect it easily.
+- ESP8266 or ESP32 (preferred, [DigiKey](https://www.digikey.de/en/products/detail/espressif-systems/ESP32-DEVKITC-32E/12091810))
 - LCD Display 4 rows x 20 columns ([Amazon](https://www.amazon.com/s?k=lcd+display+2004))  
-  They are available in Green & Blue. You need one with the 'Serial Adapter', preferably pre-soldered if you can find one.
+  They are available in Green & Blue. You need one with the 4pin 'Serial Adapter', preferably pre-soldered
+- Optional switches and status LEDs are described in the [PCB manual](./pcb/nodemcu-clock/README.md)
 
 &nbsp;
 
-## Display Connection Pins
-Connect the VCC (aka 5V power) and GND (ground) pins of the display to the respective pins on your microcontroller.  
+### Display Connection Pins
+Connect the VCC/5V and GND (Ground) pins of the display to the respective pins on your microcontroller.  
 They usually have the same name.
 
 **ESP8266:**
 - SDA: D2  
 - SCL: D1  
 - setupMode switch: D0 -> GND  
-- backlight switch: D3 -> GND
+- display backlight toggle: D3 -> GND
+- WiFi status led: n/a
 
 **ESP32:**
 - SDA: 21  
 - SCL: 22  
 - setupMode switch: 19 -> GND  
-- backlight switch: 18 -> GND
+- display backlight toggle: 18 -> GND
+- WiFi status led (3.3V): 32
 
 &nbsp;
 
-## Compiling and flashing firmware
-TBA
+## Setup
+
+### Compiling and flashing firmware
+> [!WARNING]
+> Are you using the manufactured PCB? **DISCONNECT** the main USB-C power input source **BEFORE** connecting the microcontroller to your PC!
+
+Currently done using the VSCode/VSCodium extension [PlatformIO](https://platformio.org/): 
+- [Download](https://github.com/3urobeat/nodemcu-clock/archive/refs/heads/main.zip) this project and extract it
+- Open the folder using VSCode/VSCodium with the PlatformIO extension installed
+- Connect your board to your PC
+  - Linux works out of the box, if Windows requires a driver (CH340?), please refer to the manufacturer's instructions
+- Select your board at 'env:' in the bottom panel. `nodemcuv2` is the ESP8266, `esp-wrover-kit` the ESP32
+- Click the '->' arrow in the bottom panel to compile & upload (flash) the firmware
+  - Port not found? Open the [configuration file](./platformio.ini) and adjust `upload_port` at the top, then retry  
+    Linux uses `/dev/ttyUSBn` syntax, Windows (I think) the `COMn` syntax, where n is the port number
+
+An easier, non developer method is to be added.
+
+**PCB user?** Make sure to **disconnect** the microcontroller **before** re-attaching the main USB-C power source again.
 
 &nbsp;
 
-## Configuration & Setup Mode
-There are two methods of configuring your nodemcu-clock.  
-You can either use the aforementioned setupMode at runtime or edit the `config.cpp` file at compile-time.  
+### Configuration & Setup Mode
+The firmware contains a separate setup mode, which can be toggled by bridging the setup pins listed above (for example with a switch) and then re-powering the board.  
+The setup mode spawns a WiFi network, allowing you to connect and configure the device using the web browser of another device, like your mobile phone.
+
+Another way is to edit the [config.cpp](./config/config.cpp) file and then compile & flash the firmware again.  
+Both methods are explained here:
 
 <details>
     <summary><b>Setup Mode (click to expand)</b></summary>
@@ -65,7 +120,7 @@ You can either use the aforementioned setupMode at runtime or edit the `config.c
         - When done making changes, click "Save" at the bottom  
         - Unbridge the setupMode pins again and reset the device  
     
-    Continue reading below to learn what needs to be configured.
+    See the FAQ to learn what needs to be configured.
 </details>
 
 <details>
