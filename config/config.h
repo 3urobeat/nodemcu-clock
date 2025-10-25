@@ -4,10 +4,10 @@
  * Created Date: 2022-11-14 19:16:25
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:09:31
+ * Last Modified: 2025-10-25 15:12:20
  * Modified By: 3urobeat
  *
- * Copyright (c) 2022 - 2024 3urobeat <https://github.com/3urobeat>
+ * Copyright (c) 2022 - 2025 3urobeat <https://github.com/3urobeat>
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -41,8 +41,8 @@ namespace Config
     extern char timeformat[9];
     extern char miniClockFormat[6];
 
-    extern char     pageOrder[4][32];
-    extern uint32_t showuntil[4];
+    extern char     pageOrder[5][32];
+    extern uint32_t showuntil[5];
     extern bool     alwaysShowTime;
     extern uint16_t pageElemSwitch;
 }

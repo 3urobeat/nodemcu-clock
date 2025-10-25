@@ -4,7 +4,7 @@
  * Created Date: 2021-09-01 15:17:00
  * Author: 3urobeat
  *
- * Last Modified: 2025-08-28 21:33:34
+ * Last Modified: 2025-10-25 14:55:05
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -40,6 +40,15 @@ namespace weatherPage {
 }
 
 namespace newsPage {
+    extern const char *title;
+    extern const int  updateInterval;
+    extern const bool hideMiniClock;
+
+    void setup();
+    void update();
+}
+
+namespace dinoPage {
     extern const char *title;
     extern const int  updateInterval;
     extern const bool hideMiniClock;

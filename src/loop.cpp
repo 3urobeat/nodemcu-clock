@@ -4,7 +4,7 @@
  * Created Date: 2022-10-30 19:01:32
  * Author: 3urobeat
  *
- * Last Modified: 2025-08-28 21:33:34
+ * Last Modified: 2025-10-25 14:54:31
  * Modified By: 3urobeat
  *
  * Copyright (c) 2022 - 2025 3urobeat <https://github.com/3urobeat>
@@ -81,6 +81,9 @@ void loopHandler()
     } else if (strcmp(Config::pageOrder[currentPage], "news") == 0) {
         updateFunc = newsPage::update;
         updateInterval = newsPage::updateInterval;
+    } else if (strcmp(Config::pageOrder[currentPage], "dino") == 0) {
+        updateFunc = dinoPage::update;
+        updateInterval = dinoPage::updateInterval;
     } else if (strcmp(Config::pageOrder[currentPage], "spotify") == 0) {
         updateFunc = spotifyPage::update;
         updateInterval = spotifyPage::updateInterval;
@@ -122,6 +125,9 @@ void nextPage()
     } else if (strcmp(Config::pageOrder[currentPage], "news") == 0) {
         updateTitleBar(newsPage::title, newsPage::hideMiniClock);
         newsPage::setup();
+    } else if (strcmp(Config::pageOrder[currentPage], "dino") == 0) {
+        updateTitleBar(dinoPage::title, dinoPage::hideMiniClock);
+        dinoPage::setup();
     } else if (strcmp(Config::pageOrder[currentPage], "spotify") == 0) {
         updateTitleBar(spotifyPage::title, spotifyPage::hideMiniClock);
         spotifyPage::setup();
