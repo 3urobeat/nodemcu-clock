@@ -3,8 +3,8 @@ Schematics for the nodemcu-clock **P**rinted**C**ircuit**B**oard.
 This is a [LibrePCB](https://librepcb.org) project!
 
 <div align="center">
-    <img width=40% src="./nodemcu-clock_Board.png">
-    <img width=41.5% src="./nodemcu-clock_Board_3D.png">
+    <img width=48% src="./nodemcu-clock_Board.png">
+    <img width=49.5% src="./nodemcu-clock_Board_3D.png">
 </div>
 
 &nbsp;
@@ -12,7 +12,7 @@ This is a [LibrePCB](https://librepcb.org) project!
 ## Manufacturing
 To get your own PCB, download the schematics from the [latest release](https://github.com/3urobeat/nodemcu-clock/releases) and order a "PCB prototype" from a manufacturer of your choice, for example:  
 
-<a target="_blank" href="https://www.pcbway.com/QuickOrderOnline.aspx"><img width="12.5%" src="../../.github/img/pcbway-logo.png"></a>  
+<a target="_blank" href="https://www.pcbway.com/QuickOrderOnline.aspx"><img width="20%" src="../../.github/img/pcbway-logo.png"></a>  
 
 I have had a good experience with PCBWay, who have also generously sponsored the circuit board creation phase of this project!<sup>*</sup>  
 Ordering on their page is really straight forward: 
@@ -24,7 +24,7 @@ Please wait *just* a moment longer though and read this page entirely first.
 
 After a few days, this is what you'll receive in the mail and what it looks like assembled (with amateur soldering skills, ymmv):
 <div align="center">
-    <img width=62.5% src="./pcb.jpg">
+    <img width=75% src="./pcb.jpg">
     <br>
     <sub>* While PCBWay has sponsored the manufacturing of this PCB, this is my own, honest opinion, that was not influenced by them.</sub>
 </div>
