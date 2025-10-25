@@ -4,10 +4,10 @@
  * Created Date: 2022-11-14 19:12:41
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:09:10
+ * Last Modified: 2025-10-25 18:14:34
  * Modified By: 3urobeat
  *
- * Copyright (c) 2022 - 2024 3urobeat <https://github.com/3urobeat>
+ * Copyright (c) 2022 - 2025 3urobeat <https://github.com/3urobeat>
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -39,8 +39,8 @@ namespace Config
     char timeformat[9]       = "hh:mm:ss";
     char miniClockFormat[6]  = "hh:mm";
 
-    char     pageOrder[4][32]   = { "clock", "weather", "news", "spotify" };    // Set an element to "0" to skip that page
-    uint32_t showuntil[4]       = { 5000, 5000, 0, 10000 };                     // How long each page should be shown in ms (Special Case: Set to 0 if page should progress on event, news page would progress when headline was fully displayed)
+    char     pageOrder[5][32]   = { "clock", "weather", "news", "dino", "spotify" }; // Set an element to "0" to skip that page
+    uint32_t showuntil[5]       = { 10000, 10000, 0, 10000, 10000 };            // How long each page should be shown in ms (Special Case: Set to 0 if page should progress on event, news page would progress when headline was fully displayed)
     bool     alwaysShowTime     = true;                                         // Always show the time in the upper right corner
     uint16_t pageElemSwitch     = 2500;                                         // After how much ms a page should switch between elements (for example date & weekday on clock page, temp & sunrise on weather page). Set to 0 to disable
 }
