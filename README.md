@@ -13,10 +13,11 @@
         <img width=40% src="./.github/img/demo-spotify.jpg">
         <br>
         <sup>What it looks like: Clock page (left), Spotify page (right). Enclosure to be added.</sup>
-        <h1>
+        <!-- Neat, but two logos at once look a little pushy, enable should logo in introduction move further down -->
+        <!-- <h1>
             <sup><sub>Sponsored by</sub></sup>
             <a target="_blank" href="https://www.pcbway.com/"><img width="10%" src="./.github/img/pcbway-logo.png"></a>
-        </h1>
+        </h1> -->
     </div>
 </div>
 
@@ -45,6 +46,7 @@ Below listed are the pages that are included by default. If you like, you can ad
 | Clock    | Displays current time, date and weekday. Automatically geolocates your timezone. Uses NTP for syncing time and ip-api for geolocating. | ![Demo](https://raw.githubusercontent.com/3urobeat/nodemcu-clock/main/.github/img/page-clock.gif) |
 | Weather  | Displays city name, current weather, temp, sunrise and sunset time. Automatically geolocates your coords and city but can be overwritten in config. Uses openweathermap.org (API key required!). | ![Demo](https://raw.githubusercontent.com/3urobeat/nodemcu-clock/main/.github/img/page-weather.gif) |
 | News     | Displays 4 current headlines from different news outlets, switching to the next one on page reset. Page switch on event (headline finished scrolling through) or after time supported. Uses newsapi.org (API key required!). | ![Demo](https://raw.githubusercontent.com/3urobeat/nodemcu-clock/main/.github/img/page-news.gif) |
+| Dino     | Displays a little dino game animation :) | ![Demo](https://raw.githubusercontent.com/3urobeat/nodemcu-clock/main/.github/img/page-dino.gif) |
 | Spotify  | Displays your current Spotify playback title, artist and progress. | ![Demo](https://raw.githubusercontent.com/3urobeat/nodemcu-clock/main/.github/img/page-spotify.gif) |
 
 &nbsp;
@@ -89,7 +91,7 @@ Currently done using the VSCode/VSCodium extension [PlatformIO](https://platform
 - Connect your board to your PC
   - Linux works out of the box, if Windows requires a driver (CH340?), please refer to the manufacturer's instructions
 - Select your board at 'env:' in the bottom panel. `nodemcuv2` is the ESP8266, `esp-wrover-kit` the ESP32
-- Click the '->' arrow in the bottom panel to compile & upload (flash) the firmware
+- Click the '->' arrow in the bottom panel to compile & upload (flash) the firmware. You might have to hold the 'BOOT'/'FLASH' button on your board
   - Port not found? Open the [configuration file](./platformio.ini) and adjust `upload_port` at the top, then retry  
     Linux uses `/dev/ttyUSBn` syntax, Windows (I think) the `COMn` syntax, where n is the port number
 
