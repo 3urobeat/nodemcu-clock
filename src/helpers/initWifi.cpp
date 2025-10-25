@@ -4,10 +4,10 @@
  * Created Date: 2021-08-30 15:42:00
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-12 10:32:30
+ * Last Modified: 2025-10-25 14:33:30
  * Modified By: 3urobeat
  *
- * Copyright (c) 2021 - 2024 3urobeat <https://github.com/3urobeat>
+ * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -18,7 +18,15 @@
 #include "helpers.h"
 
 
-void(* resetFunc) (void) = 0; // Create a standard reset function
+// Pin where wifi LED is connected
+#ifdef ESP8266
+    const uint8_t wifiLedPin = 0; // TODO
+#elif ESP32
+    const uint8_t wifiLedPin = 32;
+#endif
+
+// Create a standard reset function
+void(* resetFunc) (void) = 0;
 
 
 /**
@@ -46,7 +54,8 @@ void initWifi(uint8_t row)
     lcd.setCursor(3, row);
     lcd.print("Connecting");
 
-    for (uint8_t i = 0; i <= n; i++) {
+    for (uint8_t i = 0; i <= n; i++)
+    {
         for (uint8_t j = 0; j < ssidAmount; j++) {
             WiFiLib.SSID(i).toCharArray(thisSSID, 64, 0);
 
@@ -97,4 +106,10 @@ void initWifi(uint8_t row)
 
     // Connection established
     lcd.centerPrint("Connected!", row, true);
+
+    if (wifiLedPin != 0)
+    {
+        pinMode(wifiLedPin, OUTPUT);
+        digitalWrite(wifiLedPin, HIGH);
+    }
 }
