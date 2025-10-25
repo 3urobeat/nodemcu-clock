@@ -9,14 +9,13 @@
     </div>
     <br>
     <div>
-        <img width=30% src="./.github/img/demo-clock.jpg">
-        <img width=30% src="./.github/img/demo-spotify.jpg">
+        <img width=40% src="./.github/img/demo-clock.jpg">
+        <img width=40% src="./.github/img/demo-spotify.jpg">
         <br>
         <sup>What it looks like: Clock page (left), Spotify page (right). Enclosure to be added.</sup>
-        <br>
         <h1>
             <sup><sub>Sponsored by</sub></sup>
-            <a target="_blank" href="https://www.pcbway.com/"><img width="5.5%" src="./.github/img/pcbway-logo.png"></a>
+            <a target="_blank" href="https://www.pcbway.com/"><img width="10%" src="./.github/img/pcbway-logo.png"></a>
         </h1>
     </div>
 </div>
@@ -32,7 +31,7 @@ Seriously!
 > Want to get your own proper circuit board just like in the pictures above?  
 > Read the [PCB manual](./pcb/nodemcu-clock/README.md) to order your own in just a few minutes at  
 > 
-> ¸                        <a target="_blank" href="https://www.pcbway.com/QuickOrderOnline.aspx"><img width="20%" src="./.github/img/pcbway-logo.png"></a>  
+> ¸                      <a target="_blank" href="https://www.pcbway.com/QuickOrderOnline.aspx"><img width="35%" src="./.github/img/pcbway-logo.png"></a>  
 > <sup>Thank you PCBWay for sponsoring the circuit board creation phase of this project! 🚀</sup>
 
 &nbsp;
