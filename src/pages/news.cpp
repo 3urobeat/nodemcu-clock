@@ -4,7 +4,7 @@
  * Created Date: 2021-12-12 21:27:54
  * Author: 3urobeat
  *
- * Last Modified: 2025-10-25 22:18:43
+ * Last Modified: 2025-10-25 22:41:56
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -18,7 +18,7 @@
 #include "pages.h"
 
 
-const uint32_t updateIntervalNews = 1200000; // 20 min in ms
+const uint32_t updateIntervalNews = 2400000; // 40 min in ms
 
 // Store last API call timestamp & current article index
 uint32_t lastRefresh;
@@ -81,7 +81,7 @@ namespace newsPage
 
         // Show article date
         lcd.setCursor(0, 2);
-        lcd.print("Published at ");
+        lcd.print("Pub @ ");
         lcd.print(pubAtCache[currentArticle]);
     }
 
@@ -126,7 +126,7 @@ namespace newsPage
 
         // --------------- Get news sources for the user's country ---------------
 
-        // Construct URL (should be fine on stack, we only need it every 20 min so keeping it in heap might be wasted mem)
+        // Construct URL (should be fine on stack, we only need it every 40 min so keeping it in heap might be wasted mem)
         char path[192] = "/v2/top-headlines/sources?country="; // Use http instead of https as the SSL header takes like 20KB of heap, it's crazy
         char *p = path;
 

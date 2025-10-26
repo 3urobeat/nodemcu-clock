@@ -4,10 +4,10 @@
  * Created Date: 2022-12-24 19:02:04
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-10 11:16:30
+ * Last Modified: 2025-10-25 22:28:36
  * Modified By: 3urobeat
  *
- * Copyright (c) 2022 - 2024 3urobeat <https://github.com/3urobeat>
+ * Copyright (c) 2022 - 2025 3urobeat <https://github.com/3urobeat>
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -52,8 +52,8 @@ String processor(const String& var) // I need to use String here because the lib
     if (var == "miniClockFormat_input") return String(Config::miniClockFormat);
 
     if (var == "maxcol_input") return String(Config::maxcol);
-    if (var == "pageOrder_input") return String(Config::pageOrder[0]) + ", " + String(Config::pageOrder[1]) + ", " + String(Config::pageOrder[2]);
-    if (var == "showuntil_input") return String(Config::showuntil[0]) + ", " + String(Config::showuntil[1]) + ", " + String(Config::showuntil[2]);
+    if (var == "pageOrder_input") return String(Config::pageOrder[0]) + ", " + String(Config::pageOrder[1]) + ", " + String(Config::pageOrder[2]) + ", " + String(Config::pageOrder[3]) + ", " + String(Config::pageOrder[4]);
+    if (var == "showuntil_input") return String(Config::showuntil[0]) + ", " + String(Config::showuntil[1]) + ", " + String(Config::showuntil[2]) + ", " + String(Config::showuntil[3]) + ", " + String(Config::showuntil[4]);
     if (var == "alwaysShowTime_input") return Config::alwaysShowTime ? "checked" : ""; // Return checked or replace with nothing
     if (var == "pageElemSwitch_input") return String(Config::pageElemSwitch);
 
