@@ -4,7 +4,7 @@
  * Created Date: 2021-09-01 15:17:00
  * Author: 3urobeat
  *
- * Last Modified: 2025-10-25 18:12:58
+ * Last Modified: 2025-10-26 10:37:30
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -38,9 +38,10 @@ namespace dinoPage
     const int  updateInterval = 250;
     const bool hideMiniClock = false;
 
-    uint8_t chosenAnimation;
-    uint8_t moveOffset;
-    bool    inJump;
+    uint8_t  chosenAnimation;
+    uint8_t  moveOffset;
+    bool     inJump;
+    uint32_t gameOver; // Timestamp to skip page after 5 seconds
 
     /**
      * Setup the dino page
@@ -48,7 +49,8 @@ namespace dinoPage
     void setup()
     {
         moveOffset = 0;
-        inJump = false;
+        inJump     = false;
+        gameOver   = 0;
 
         // Fade in ground
         lcd.setCursor(0, 3);
@@ -98,6 +100,12 @@ namespace dinoPage
      */
     void update()
     {
+        // Check if gameOver and skip page after 5 seconds
+        if (gameOver != 0) {
+            if (gameOver + 5000 < millis()) nextPage();
+            return;
+        }
+
         // Track offset before movingPrint() call so we can detect a moveOffset reset
         uint8_t oldMoveOffset = moveOffset; // Track offset before movingPrint() call so we can detect a moveOffset reset
 
@@ -108,6 +116,14 @@ namespace dinoPage
         // This pixel or the next one is a scrub? Jump!
         if (thisAnimation[moveOffset + 1] == '\x04' || thisAnimation[moveOffset + 2] == '\x04')
         {
+            // Easter Egg: 5% chance of failing to jump (on only one of the two jump triggers)
+            if (random(0, 100) < 5 && thisAnimation[moveOffset + 2] == '\x04') // Checking this here again is fine as C/C++ does short-circuit evaluation
+            {
+                gameOver = millis();
+                lcd.centerPrint("Game Over!", 1);
+                return;
+            }
+
             lcd.setCursor(3, 1);
             lcd.write((byte) 3);
             inJump = true;
