@@ -4,7 +4,7 @@
  * Created Date: 2021-09-05 17:53:00
  * Author: 3urobeat
  *
- * Last Modified: 2025-08-30 15:41:51
+ * Last Modified: 2025-10-25 22:36:17
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -97,13 +97,6 @@ namespace weatherPage
             int offset = lcd.calculateCenterOffset(sunRiseSetStr) + lcd.utf8_strlen(sunRiseSetStr) - 1;
             lcd.setCursor(offset, 2);
             lcd.fadeInPrint(sunRiseSetStr, 25, true, offset, 2);
-
-            // Display arrow up and down arrows at the correct locations, there are currently just placeholders
-            lcd.setCursor(3, 2);
-            lcd.write((byte) 0);
-
-            lcd.setCursor(10, 2);
-            lcd.write((byte) 1);
         }
     }
 
@@ -181,11 +174,11 @@ namespace weatherPage
         char *sunP = sunRiseSetStr; // Pointer to sunRiseSetStr for mystrcat
         char buf[3] = "";           // Temp arr for itoa()
 
-        sunP = mystrcat(sunP, " ");                     // Placeholder for custom arrow up char, will be displayed in update()
+        sunP = mystrcat(sunP, "\x01");                  // Custom arrow up char
         sunP = mystrcat(sunP, Config::miniClockFormat); // Concat miniClockFormat to replace hour and minutes in a sec
         strrpl(sunRiseSetStr, "hh", lcd.toFixedLengthNumber(buf, hour(sunrise), 2), sizeof(sunRiseSetStr) - 1);
         strrpl(sunRiseSetStr, "mm", lcd.toFixedLengthNumber(buf, minute(sunrise), 2), sizeof(sunRiseSetStr) - 1);
-        sunP = mystrcat(sunP, "  ");                    // We can keep using our pointer as the length didn't change because of lcd.toFixedLengthNumber (and placeholder for arrow again)
+        sunP = mystrcat(sunP, " \x02");                 // Custom arrow down char - We can keep using our pointer as the length didn't change because of lcd.toFixedLengthNumber
         sunP = mystrcat(sunP, Config::miniClockFormat); // Concat miniClockFormat again for sunset
         strrpl(sunRiseSetStr, "hh", lcd.toFixedLengthNumber(buf, hour(sunset), 2), sizeof(sunRiseSetStr) - 1);
         strrpl(sunRiseSetStr, "mm", lcd.toFixedLengthNumber(buf, minute(sunset), 2), sizeof(sunRiseSetStr) - 1);
