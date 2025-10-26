@@ -4,10 +4,10 @@
  * Created Date: 2023-01-12 12:40:54
  * Author: 3urobeat
  *
- * Last Modified: 2024-05-11 11:05:39
+ * Last Modified: 2025-10-25 22:18:04
  * Modified By: 3urobeat
  *
- * Copyright (c) 2023 - 2024 3urobeat <https://github.com/3urobeat>
+ * Copyright (c) 2023 - 2025 3urobeat <https://github.com/3urobeat>
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -67,6 +67,74 @@ class WeatherJsonHandler final : public JsonHandler
 };
 
 
+// Json parser class for newsapi.org sources request
+class NewsSourcesJsonHandler final : public JsonHandler
+{
+    private:
+        char    *_sourcesStr;
+        uint8_t  _sourcesStrSize;
+        char    *p;
+
+    public:
+        // Constructor that takes pointers to char arrays where the result should go to
+        NewsSourcesJsonHandler(char *sourceCache, uint8_t sourceCacheSize)
+        {
+            _sourcesStr     = sourceCache;
+            _sourcesStrSize = sourceCacheSize;
+
+            p = _sourcesStr;
+        }
+
+        // Handles retrieving data from json stream
+        void value(ElementPath path, ElementValue value)
+        {
+            // Get the current key
+            const char *key = path.getKey();
+
+            #ifdef CLOCK_DEBUG
+                Serial.print("News Src: ");
+                Serial.print(key);
+                Serial.print(": ");
+                Serial.println(value.getString());
+            #endif
+
+            if (strcmp(key, "id") == 0) {
+                const char *thisSource = value.getString();
+                bool isRoom = (p - _sourcesStr) + (uint8_t) strlen(thisSource) < _sourcesStrSize - 1; // Calculate space left in string
+
+                #ifdef CLOCK_DEBUG
+                    Serial.print("Src Id Len: ");
+                    Serial.print(strlen(thisSource));
+                    Serial.print(" - Util: ");
+                    Serial.print(p - _sourcesStr);
+                    Serial.print(" - Add: ");
+                    Serial.println(isRoom);
+                #endif
+
+                // Append source if there is still room
+                if (isRoom)
+                {
+                    p = mystrcat(_sourcesStr, thisSource);
+                    p = mystrcat(_sourcesStr, ","); // Add divider, last one is overwritten by null byte
+                }
+            }
+        }
+
+        void endDocument() {
+            *(p - 1) = '\0'; // Make sure there is a null char at the end, overwrite last comma
+        }
+
+        virtual ~NewsSourcesJsonHandler() = default; // To fix warning delete-non-virtual-dtor
+
+        // Functions we don't care about (sadly can't be removed)
+        void startDocument() { }
+        void startObject(ElementPath path) { }
+        void endObject(ElementPath path) { }
+        void startArray(ElementPath path) {}
+        void endArray(ElementPath path) {}
+        void whitespace(char c) {}
+};
+
 // Json parser class for newsapi.org request
 class NewsJsonHandler final : public JsonHandler
 {
@@ -78,12 +146,14 @@ class NewsJsonHandler final : public JsonHandler
         char    *_titleCache;
         uint16_t _titleCacheSize;
         uint8_t  _cacheSize;        // Thats the amount of different articles in cache
+        uint8_t *_articleIds;       // Array of article IDs we care about
 
-        uint8_t  _currentIndex = 0; // Stores index of article we are at right now
+        uint8_t  _currentIndex = 0;     // Stores index of cache entry we are at right now
+        uint8_t  _currentArticleId = 0; // Stores ID of article we are at right now
 
     public:
         // Constructor that takes pointers to char arrays where the result should go to
-        NewsJsonHandler(char *sourceCache, uint8_t sourceCacheSize, char *pubAtCache, uint8_t pubAtCacheSize, char *titleCache, uint16_t titleCacheSize, uint8_t cacheSize) // Big boy sheesh
+        NewsJsonHandler(char *sourceCache, uint8_t sourceCacheSize, char *pubAtCache, uint8_t pubAtCacheSize, char *titleCache, uint16_t titleCacheSize, uint8_t cacheSize, uint8_t *articleIds) // Big girl sheesh
         {
             _sourceCache     = sourceCache;
             _sourceCacheSize = sourceCacheSize;
@@ -92,6 +162,7 @@ class NewsJsonHandler final : public JsonHandler
             _titleCache      = titleCache;
             _titleCacheSize  = titleCacheSize;
             _cacheSize       = cacheSize;
+            _articleIds      = articleIds;
         }
 
         // Handles retrieving data from json stream
@@ -100,14 +171,26 @@ class NewsJsonHandler final : public JsonHandler
             // Get the current key
             const char *key = path.getKey();
 
+            if (_currentIndex >= _cacheSize) return; // This should never happen when the URL has the right amount of pages set but let's make sure
+
+            // Check if we care about this article (the rough way, sorry, no need for something dynamic for comparing 4 values)
+            if (_articleIds[0] != _currentArticleId && _articleIds[1] != _currentArticleId && _articleIds[2] != _currentArticleId && _articleIds[3] != _currentArticleId) {
+                // Check if last key of an article was reached and increment index
+                if (strcmp(key, "content") == 0) {
+                    _currentArticleId++;
+                }
+
+                return;
+            }
+
             #ifdef CLOCK_DEBUG
-                Serial.print("News: ");
+                Serial.print("News ");
+                Serial.print(_currentArticleId);
+                Serial.print(": ");
                 Serial.print(key);
                 Serial.print(": ");
                 Serial.println(value.getString());
             #endif
-
-            if (_currentIndex >= _cacheSize) return; // This should never happen when the URL has the right amount of pages set but let's make sure
 
             // Quick pointer arithmetic to make passing 2D arrays easier. We just pass pointer to element 0 of array to function and offset correctly inside function with passed sizes to reach desired element
             if (strcmp(key, "name") == 0) {
@@ -142,6 +225,7 @@ class NewsJsonHandler final : public JsonHandler
 
             } else if (strcmp(key, "content") == 0) {
                 _currentIndex++; // content is the last transmitted key of an article, so lets increment our index
+                _currentArticleId++;
             }
         }
 

@@ -4,7 +4,7 @@
  * Created Date: 2021-12-12 21:27:54
  * Author: 3urobeat
  *
- * Last Modified: 2025-08-28 21:33:34
+ * Last Modified: 2025-10-25 22:18:43
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -124,17 +124,45 @@ namespace newsPage
         memset(titleCache, 0, sizeof(titleCache));
 
 
-        // Construct URL (128 B in stack should be fine, we only need it every 20 min so keeping it in heap might be wasted mem)
-        char path[128] = "/v2/top-headlines?country="; // Use http instead of https as the SSL header takes like 20KB of heap, it's crazy
+        // --------------- Get news sources for the user's country ---------------
+
+        // Construct URL (should be fine on stack, we only need it every 20 min so keeping it in heap might be wasted mem)
+        char path[192] = "/v2/top-headlines/sources?country="; // Use http instead of https as the SSL header takes like 20KB of heap, it's crazy
         char *p = path;
 
         p = mystrcat(p, country);
-        p = mystrcat(p, "&pageSize=4&apiKey=");
+        p = mystrcat(p, "&apiKey=");
         p = mystrcat(p, Config::newsapitoken);
         *(p) = '\0'; // Make sure there is a null char at the end
 
         // Create obj of our parser class and make request
-        NewsJsonHandler *parser = new NewsJsonHandler(sourceCache[0], 32, pubAtCache[0], 6, titleCache[0], 256, 4);
+        char sourcesStr[64] = "";
+        NewsSourcesJsonHandler *srcParser = new NewsSourcesJsonHandler(sourcesStr, 64);
+
+        debug(F("news page: Constructed sources URL and made parser object"));
+
+        httpGetJson("newsapi.org", path, 80, srcParser);
+
+        // Clear up memory
+        delete(srcParser);
+
+
+        // --------------- Get current news from those sources ---------------
+
+        // Construct URL, reuse path
+        strcpy(path, "/v2/top-headlines?sources="); // Use http instead of https as the SSL header takes like 20KB of heap, it's crazy
+        p = path;
+
+        p = mystrcat(p, sourcesStr);
+        p = mystrcat(p, "&pageSize=20&apiKey=");
+        p = mystrcat(p, Config::newsapitoken);
+        *(p) = '\0'; // Make sure there is a null char at the end
+
+        // Get 4 random articles, newsapi isn't great at mixing various sources, our 4 articles will otherwise likely all be from one
+        uint8_t articleIds[4] = { (uint8_t) random(0, 5), (uint8_t) random(6, 10), (uint8_t) random(11, 15), (uint8_t) random(16, 20) };
+
+        // Create obj of our parser class and make request
+        NewsJsonHandler *parser = new NewsJsonHandler(sourceCache[0], 32, pubAtCache[0], 6, titleCache[0], 256, 4, articleIds);
 
         debug(F("news page: Constructed URL and made parser object"));
 
