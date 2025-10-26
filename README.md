@@ -90,7 +90,7 @@ Currently done using the VSCode/VSCodium extension [PlatformIO](https://platform
 - Open the folder using VSCode/VSCodium with the PlatformIO extension installed
 - Connect your board to your PC
   - Linux works out of the box, if Windows requires a driver (CH340?), please refer to the manufacturer's instructions
-- Select your board at 'env:' in the bottom panel. `nodemcuv2` is the ESP8266, `esp-wrover-kit` the ESP32
+- Select your board at 'env:' in the bottom panel. If you are using the official PCB, select `esp32-wroom`.
 - Click the '->' arrow in the bottom panel to compile & upload (flash) the firmware. You might have to hold the 'BOOT'/'FLASH' button on your board
   - Port not found? Open the [configuration file](./platformio.ini) and adjust `upload_port` at the top, then retry  
     Linux uses `/dev/ttyUSBn` syntax, Windows (I think) the `COMn` syntax, where n is the port number
