@@ -4,7 +4,7 @@
  * Created Date: 2021-09-01 15:17:00
  * Author: 3urobeat
  *
- * Last Modified: 2025-10-26 19:13:35
+ * Last Modified: 2025-10-26 20:23:08
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -64,7 +64,7 @@ namespace flappyPage
             // Check if this char indicates a pipe. If yes, print full block char for every row except the opening
             if (thisChar != ' ')
             {
-                for (uint8_t row = 0; row < displayRows; row++)
+                for (uint8_t row = (col >= Config::maxcol - 5 ? 1 : 0); row < displayRows; row++) // Don't overwrite miniClock in first row, causes unnecessary blinking
                 {
                     if (thisChar - '0' != row) // Compare char representing number with number
                     {
@@ -104,7 +104,7 @@ namespace flappyPage
         {
             char thisChar = thisAnimation[col + moveOffset];
 
-            for (uint8_t row = 0; row < displayRows; row++)
+            for (uint8_t row = (col >= Config::maxcol - 5 ? 1 : 0); row < displayRows; row++) // Don't overwrite miniClock in first row, causes unnecessary blinking
             {
                 lcd.setCursor(col, row);
 
