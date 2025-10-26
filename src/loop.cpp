@@ -4,7 +4,7 @@
  * Created Date: 2022-10-30 19:01:32
  * Author: 3urobeat
  *
- * Last Modified: 2025-10-25 14:54:31
+ * Last Modified: 2025-10-26 17:02:16
  * Modified By: 3urobeat
  *
  * Copyright (c) 2022 - 2025 3urobeat <https://github.com/3urobeat>
@@ -78,6 +78,9 @@ void loopHandler()
     } else if (strcmp(Config::pageOrder[currentPage], "weather") == 0) {
         updateFunc = weatherPage::update;
         updateInterval = weatherPage::updateInterval;
+    } else if (strcmp(Config::pageOrder[currentPage], "flappy") == 0) {
+        updateFunc = flappyPage::update;
+        updateInterval = flappyPage::updateInterval;
     } else if (strcmp(Config::pageOrder[currentPage], "news") == 0) {
         updateFunc = newsPage::update;
         updateInterval = newsPage::updateInterval;
@@ -122,6 +125,9 @@ void nextPage()
     } else if (strcmp(Config::pageOrder[currentPage], "weather") == 0) {
         updateTitleBar(weatherPage::title, weatherPage::hideMiniClock);
         weatherPage::setup();
+    } else if (strcmp(Config::pageOrder[currentPage], "flappy") == 0) {
+        updateTitleBar(flappyPage::title, flappyPage::hideMiniClock);
+        flappyPage::setup();
     } else if (strcmp(Config::pageOrder[currentPage], "news") == 0) {
         updateTitleBar(newsPage::title, newsPage::hideMiniClock);
         newsPage::setup();

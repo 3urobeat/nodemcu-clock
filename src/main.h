@@ -4,7 +4,7 @@
  * Created Date: 2021-11-30 17:25:23
  * Author: 3urobeat
  *
- * Last Modified: 2025-08-28 21:40:17
+ * Last Modified: 2025-10-26 17:57:22
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -49,6 +49,7 @@
 
 // Define a few kinda hardcoded values
 #define ssidAmount 5
+#define displayRows 4
 
 
 extern const char version[];
