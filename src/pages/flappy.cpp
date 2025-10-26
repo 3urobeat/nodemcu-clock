@@ -4,7 +4,7 @@
  * Created Date: 2021-09-01 15:17:00
  * Author: 3urobeat
  *
- * Last Modified: 2025-10-26 20:23:08
+ * Last Modified: 2025-10-26 22:52:50
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -99,6 +99,8 @@ namespace flappyPage
      */
     void update()
     {
+        char birdPixelContent = ' '; // Background char that would replace bird at current location
+
         // Move background
         for (uint8_t col = 0; col < Config::maxcol; col++)
         {
@@ -106,9 +108,17 @@ namespace flappyPage
 
             for (uint8_t row = (col >= Config::maxcol - 5 ? 1 : 0); row < displayRows; row++) // Don't overwrite miniClock in first row, causes unnecessary blinking
             {
-                lcd.setCursor(col, row);
+                // Skip pixel where bird is currently displayed to avoid it blinking due to diplay ghosting. Save char to print if bird moves in a moment
+                if (col == 2 && row == currentBirdRow)
+                {
+                    // Print pipe if not empty and not matching row indicating hole position
+                    if (thisChar != ' ' && thisChar - '0' != row) birdPixelContent = (byte) 5; // Full block char
+                    continue;
+                }
 
                 // Print pipe if not empty and not matching row indicating hole position
+                lcd.setCursor(col, row);
+
                 if (thisChar != ' ' && thisChar - '0' != row) // Compare char representing number with number
                 {
                     lcd.write((byte) 5); // Full block char
@@ -131,23 +141,22 @@ namespace flappyPage
 
                 if (abs(rowDifference) == colLookAhead - 1) // - 1 because lookahead can be 4 but display has 3 rows (counting from 0)
                 {
-                    // Move bird up/down, depending on -/+ difference
-                    if (rowDifference > 0)
-                    {
-                        currentBirdRow += 1;
-                    }
-                    else if (rowDifference < 0)
-                    {
-                        currentBirdRow -= 1;
-                    }
+                    // If diff is 0, bird is already on the right row, no need to move
+                    if (rowDifference == 0) break;
+
+                    // Write background pixel that should be at current bird position
+                    lcd.setCursor(2, currentBirdRow);
+                    lcd.write(birdPixelContent);
+
+                    // Move bird up/down, depending on -/+ difference.
+                    currentBirdRow = rowDifference > 0 ? currentBirdRow + 1 : currentBirdRow - 1;
+
+                    lcd.setCursor(2, currentBirdRow);
+                    lcd.write((byte) 3);
                     break; // We took action? Don't make another movement in this update call
                 }
             }
         }
-
-        lcd.setCursor(2, currentBirdRow);
-        lcd.write((byte) 3);
-
 
         moveOffset++;
 
