@@ -4,7 +4,7 @@
  * Created Date: 2021-09-01 15:17:00
  * Author: 3urobeat
  *
- * Last Modified: 2025-10-26 10:37:30
+ * Last Modified: 2025-10-26 17:45:32
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -18,25 +18,26 @@
 #include "pages.h"
 
 
-// Pre-Made animations, stored in flash (PROGMEM) - Doc: https://docs.arduino.cc/language-reference/en/variables/utilities/PROGMEM/
-// First 3 characters must be spaces to avoid dino clipping into scrub during fadein!
-const char anim_0[64] PROGMEM = "    \x04      \x04     \x04       \x04         \x04      \x04    \x04    \x04   \x04     ";
-const char anim_1[64] PROGMEM = "      \x04   \x04      \x04   \x04     \x04      \x04   \x04     \x04      \x04   \x04     ";
-const char anim_2[64] PROGMEM = "     \x04   \x04    \x04        \x04  \x04     \x04     \x04      \x04    \x04      \x04   ";
-const char anim_3[64] PROGMEM = "    \x04      \x04    \x04    \x04   \x04       \x04        \x04     \x04       \x04     ";
-
-#define animAmount 4
-const char *const animations[animAmount] PROGMEM = { anim_0, anim_1, anim_2, anim_3 };
-
-// Buffer for the currently selected animation
-char thisAnimation[64] = "";
-
-
 namespace dinoPage
 {
     const char *title = "";
     const int  updateInterval = 250;
     const bool hideMiniClock = false;
+
+    // TODO: Is this still top scope, so cache is on heap?
+
+    // Pre-Made animations, stored in flash (PROGMEM) - Doc: https://docs.arduino.cc/language-reference/en/variables/utilities/PROGMEM/
+    // First 3 characters must be spaces to avoid dino clipping into scrub during fadein!
+    const char anim_0[64] PROGMEM = "    \x04      \x04     \x04       \x04         \x04      \x04    \x04    \x04   \x04     ";
+    const char anim_1[64] PROGMEM = "      \x04   \x04      \x04   \x04     \x04      \x04   \x04     \x04      \x04   \x04     ";
+    const char anim_2[64] PROGMEM = "     \x04   \x04    \x04        \x04  \x04     \x04     \x04      \x04    \x04      \x04   ";
+    const char anim_3[64] PROGMEM = "    \x04      \x04    \x04    \x04   \x04       \x04        \x04     \x04       \x04     ";
+
+    #define animAmount 4
+    const char *const animations[animAmount] PROGMEM = { anim_0, anim_1, anim_2, anim_3 };
+
+    // Buffer for the currently selected animation
+    char thisAnimation[64] = "";
 
     uint8_t  chosenAnimation;
     uint8_t  moveOffset;
@@ -57,7 +58,7 @@ namespace dinoPage
 
         for (uint8_t i = 0; i < Config::maxcol; i++)
         {
-            lcd.write(5); // Full block char
+            lcd.write((byte) 5); // Full block char
             delay(25);
         }
 
@@ -69,7 +70,7 @@ namespace dinoPage
         /* lcd.setCursor(0, 0);
         lcd.print(chosenAnim); */
 
-        // Print first 20 chars of ground
+        // Print first maxcol chars of level
         lcd.setCursor(0, 2);
         lcd.movingPrint(thisAnimation, &moveOffset, Config::maxcol);
 

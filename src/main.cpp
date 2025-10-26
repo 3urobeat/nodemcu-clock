@@ -4,7 +4,7 @@
  * Created Date: 2021-08-30 11:19:00
  * Author: 3urobeat
  *
- * Last Modified: 2025-03-28 14:48:52
+ * Last Modified: 2025-10-26 17:57:22
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -25,7 +25,7 @@ byte *stack_start; // Measure amount of stack used at start so we can track it l
 
 
 /* --------- Call libs  --------- */
-lcdHelper<LiquidCrystal_PCF8574> lcd(0x27, Config::maxcol, 4);
+lcdHelper<LiquidCrystal_PCF8574> lcd(0x27, Config::maxcol, displayRows);
 
 WiFiUDP   ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 0, 60000); //timeoffset will be added later manually

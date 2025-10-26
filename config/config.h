@@ -4,7 +4,7 @@
  * Created Date: 2022-11-14 19:16:25
  * Author: 3urobeat
  *
- * Last Modified: 2025-10-25 15:12:20
+ * Last Modified: 2025-10-26 11:55:22
  * Modified By: 3urobeat
  *
  * Copyright (c) 2022 - 2025 3urobeat <https://github.com/3urobeat>
@@ -41,8 +41,8 @@ namespace Config
     extern char timeformat[9];
     extern char miniClockFormat[6];
 
-    extern char     pageOrder[5][32];
-    extern uint32_t showuntil[5];
+    extern char     pageOrder[6][32];
+    extern uint32_t showuntil[6];
     extern bool     alwaysShowTime;
     extern uint16_t pageElemSwitch;
 }

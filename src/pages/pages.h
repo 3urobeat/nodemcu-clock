@@ -4,7 +4,7 @@
  * Created Date: 2021-09-01 15:17:00
  * Author: 3urobeat
  *
- * Last Modified: 2025-10-25 14:55:05
+ * Last Modified: 2025-10-26 20:11:17
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -49,6 +49,15 @@ namespace newsPage {
 }
 
 namespace dinoPage {
+    extern const char *title;
+    extern const int  updateInterval;
+    extern const bool hideMiniClock;
+
+    void setup();
+    void update();
+}
+
+namespace flappyPage {
     extern const char *title;
     extern const int  updateInterval;
     extern const bool hideMiniClock;
