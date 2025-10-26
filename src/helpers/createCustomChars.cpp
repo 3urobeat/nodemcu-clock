@@ -4,7 +4,7 @@
  * Created Date: 2023-01-15 23:15:22
  * Author: 3urobeat
  *
- * Last Modified: 2025-10-25 15:54:35
+ * Last Modified: 2025-10-25 22:32:44
  * Modified By: 3urobeat
  *
  * Copyright (c) 2023 - 2025 3urobeat <https://github.com/3urobeat>
@@ -25,35 +25,7 @@ void createCustomChars()
 {
     // Generator: https://arduinogetstarted.com/tutorials/arduino-lcd#content_custom_character
 
-    // Byte 0: Arrow Up - weather page
-    byte arrowUpChar[8] = {
-        0b00000,
-        0b00100,
-        0b01110,
-        0b10101,
-        0b00100,
-        0b00100,
-        0b00100,
-        0b00000
-    };
-
-    lcd.createChar(0, arrowUpChar);
-
-    // Byte 1: Arrow Down - weather page
-    byte arrowDownChar[8] = {
-        0b00000,
-        0b00100,
-        0b00100,
-        0b00100,
-        0b10101,
-        0b01110,
-        0b00100,
-        0b00000
-    };
-
-    lcd.createChar(1, arrowDownChar);
-
-    // Byte 2: Loading - global
+    // Byte 0: Loading - global
     byte loadingChar[8] = {
         0b01101,
         0b10011,
@@ -65,7 +37,35 @@ void createCustomChars()
         0b10110
     };
 
-    lcd.createChar(2, loadingChar);
+    lcd.createChar(0, loadingChar);
+
+    // Byte 1: Arrow Up - weather page
+    byte arrowUpChar[8] = {
+        0b00000,
+        0b00100,
+        0b01110,
+        0b10101,
+        0b00100,
+        0b00100,
+        0b00100,
+        0b00000
+    };
+
+    lcd.createChar(1, arrowUpChar);
+
+    // Byte 2: Arrow Down - weather page
+    byte arrowDownChar[8] = {
+        0b00000,
+        0b00100,
+        0b00100,
+        0b00100,
+        0b10101,
+        0b01110,
+        0b00100,
+        0b00000
+    };
+
+    lcd.createChar(2, arrowDownChar);
 
     // Byte 3: Dino - dino page
     byte dinoChar[8] = {
