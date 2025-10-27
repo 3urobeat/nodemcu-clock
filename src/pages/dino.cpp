@@ -4,7 +4,7 @@
  * Created Date: 2021-09-01 15:17:00
  * Author: 3urobeat
  *
- * Last Modified: 2025-10-26 17:45:32
+ * Last Modified: 2025-10-27 21:24:23
  * Modified By: 3urobeat
  *
  * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
@@ -117,8 +117,8 @@ namespace dinoPage
         // This pixel or the next one is a scrub? Jump!
         if (thisAnimation[moveOffset + 1] == '\x04' || thisAnimation[moveOffset + 2] == '\x04')
         {
-            // Easter Egg: 5% chance of failing to jump (on only one of the two jump triggers)
-            if (random(0, 100) < 5 && thisAnimation[moveOffset + 2] == '\x04') // Checking this here again is fine as C/C++ does short-circuit evaluation
+            // Easter Egg: 2% chance of failing to jump (on only one of the two jump triggers)
+            if (random(0, 100) < 2 && thisAnimation[moveOffset + 2] == '\x04') // Checking this here again is fine as C/C++ does short-circuit evaluation
             {
                 gameOver = millis();
                 lcd.centerPrint("Game Over!", 1);
