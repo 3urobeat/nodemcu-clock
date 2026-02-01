@@ -4,10 +4,10 @@
  * Created Date: 2021-08-30 15:42:00
  * Author: 3urobeat
  *
- * Last Modified: 2025-10-25 14:33:30
+ * Last Modified: 2026-02-01 12:07:30
  * Modified By: 3urobeat
  *
- * Copyright (c) 2021 - 2025 3urobeat <https://github.com/3urobeat>
+ * Copyright (c) 2021 - 2026 3urobeat <https://github.com/3urobeat>
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -45,8 +45,9 @@ void initWifi(uint8_t row)
     // Search for wifi networks in range
     const uint32_t startedScanningTimestamp = millis();
 
-    uint8_t n = WiFiLib.scanNetworks();
-    bool found = false;
+    uint8_t n     = WiFiLib.scanNetworks();
+    bool    found = false;
+    uint8_t foundIndex;
 
     char thisSSID[64]; // wifi SSIDs should have a max length of 32 characters
 
@@ -65,21 +66,21 @@ void initWifi(uint8_t row)
             #endif
 
             if (strlen(thisSSID) > 0 && strcmp(thisSSID, Config::wifiSSID[j]) == 0) { // Checking if thisSSID is >0 seems to make this check a bit more reliable, not exactly sure why though
-                WiFiLib.begin(Config::wifiSSID[j], Config::wifiPW[j]);
-
                 found = true; // Stop parent loop
+                foundIndex = j;
                 break;        // Stop this loop
             }
         }
 
         if (found) break;
+    }
 
-        // Display error message if no network from wifiSSID array was found
-        if (i == n && !found) {
-            lcd.centerPrint("No match found!", row, false);
-            delay(10000); // Wait a few sec and reset to rescan
-            resetFunc();
-        }
+    // Display error message if no network from wifiSSID array was found
+    if (!found)
+    {
+        lcd.centerPrint("No match found!", row, false);
+        delay(10000); // Wait a few sec and reset to rescan
+        resetFunc();
     }
 
     // Set hostname
@@ -97,11 +98,14 @@ void initWifi(uint8_t row)
             resetFunc();
         }
 
+        // Repeatedly attempt to connect, the ESP32 Wroom very often did not manage to connect on the first try
+        WiFiLib.begin(Config::wifiSSID[foundIndex], Config::wifiPW[foundIndex]);
+
         lcd.animationPrint(lcd.animations.waiting, 5, &animationFrame, 13, row); // Use lcdHelper's animationPrint and default waiting animation
 
         handleBacklight(); // Update backlight to make switching on/off during connection phase possible
 
-        delay(500);
+        delay(1000);
     }
 
     // Connection established
